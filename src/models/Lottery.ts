@@ -1,49 +1,31 @@
 import { DataTypes, Model, ModelScopeOptions, Op } from "sequelize";
 import sequelize from "@database/connection";
 
-
-interface XosoInterface extends Model {
+interface LotteryInterface {
     id: number;
     type: string;
-    date: Date;
-    next: Date;
+    date: string;
+    next: string;
     round: number;
     result: string;
     createdAt: Date;
     updatedAt: Date;
     deletedAt: Date;
 }
-class XosoModel extends Model<XosoInterface> implements XosoInterface {
+
+class LotteryModel extends Model<LotteryInterface> implements LotteryInterface {
     public id!: number;
     public type: string;
-    public date: Date;
-    public next: Date;
+    public date: string;
+    public next: string;
     public round: number;
     public result: string;
     public createdAt: Date;
     public updatedAt: Date;
     public deletedAt: Date;
-
-    static readonly scopes: ModelScopeOptions = {
-        bySearch(searchKey) {
-            if (searchKey) {
-                return {
-                    where: {
-                        name: {
-                            [Op.substring]: searchKey,
-                        },
-                    },
-                };
-            }
-
-            return {
-                where: {},
-            };
-        },
-    };
 }
 
-const XosoDefine = {
+const LotteryDefine = {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -52,11 +34,12 @@ const XosoDefine = {
     type: {
         type: DataTypes.STRING(300),
     },
+
     date: {
-        type: DataTypes.DATE,
+        type: DataTypes.STRING(300),
     },
     next: {
-        type: DataTypes.DATE,
+        type: DataTypes.STRING(300),
     },
     round: {
         type: DataTypes.INTEGER,
@@ -75,15 +58,27 @@ const XosoDefine = {
     },
 };
 
-
-XosoModel.init(XosoDefine, {
+LotteryModel.init(LotteryDefine, {
     paranoid: true,
-    scopes: XosoModel.scopes,
-    tableName: "xoso_results",
+    tableName: "lottery_results",
     deletedAt: "deletedAt",
     updatedAt: "updatedAt",
     createdAt: "createdAt",
     sequelize,
 });
 
-export { XosoInterface, XosoModel };
+
+// Func
+const LotteryCheck = async (type: string, round: string) => {
+    const RoundCheck = await LotteryModel.findOne({
+      where: { type, round },
+    });
+    const exportData = (RoundCheck == null) ? false: RoundCheck;
+    return exportData;
+  };
+
+export {
+    LotteryInterface, 
+    LotteryModel,
+    LotteryCheck
+};

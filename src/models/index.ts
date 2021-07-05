@@ -23,7 +23,9 @@ import { TaskCompletionModel } from "@models/TaskCompletion";
 import { CouponCategoryModel } from "@models/CouponCategory";
 import { NotificationModel } from "@models/Notification";
 import { BannerFeedAdModel } from "@models/BannerFeedAd";
+import { LotteryModel } from "@models/Lottery";
 
+// LotteryModel.belongsTo(UserModel, { constraints: false});
 
 UserModel.belongsTo(RoleModel, { as: "role", constraints: false });
 
