@@ -1,0 +1,48 @@
+{
+    "compilerOptions": {
+        "resolveJsonModule": true,
+        "module": "commonjs",
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "target": "es6",
+        "noImplicitAny": true,
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "outDir": "dist",
+        "baseUrl": "./src",
+        "allowJs": true,
+        "checkJs": true,
+        "lib": ["es2019.object"],
+        "typeRoots": ["../node_modules/*", "./types/*"],
+        "paths": {
+            "*": [
+                "../node_modules/*",
+                "./types/*"
+            ],
+            "@models/*": [
+                "./models/*"
+            ],
+            "@services/*": [
+                "./services/*"
+            ],
+            "@database/*": [
+                "./database/*"
+            ],
+            "@util/*": [
+                "./util/*"
+            ],
+            "@controllers/*": [
+                "./controllers/*"
+            ],
+            "@middleware/*": [
+                "./middleware/*"
+            ],
+            "@chats/*": [
+                "./chats/*"
+            ]
+        }
+    },
+    "include": [
+        "./src/**/*"
+    ]
+}
