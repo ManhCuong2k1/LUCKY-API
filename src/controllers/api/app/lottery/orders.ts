@@ -33,7 +33,6 @@ router.post("/", async (req: Request, res: Response) => {
                         roundId: "00"+roundOrder,
                         orderDetail: JSON.stringify({
                             level: body.level,
-                            preriod: body.preriod,
                             data: body.data,
                             totalprice: body.totalprice
                         }),
