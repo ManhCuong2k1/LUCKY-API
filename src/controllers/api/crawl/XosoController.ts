@@ -1,5 +1,7 @@
 import express, { Response, Request } from "express";
 import Crawl from "./Crawl";
+import helper from "@controllers/api/helper/helper";
+
 
 const router = express.Router();
 
@@ -88,6 +90,10 @@ router.get("/", (req: Request, res: Response) => {
 router.get("/get-keno-round", async (req: express.Request, res: Response) => {
     const a = await Crawl.getKenoCurrentRound();
     res.send(a);
+});
+
+router.get("/dd", (req: Request, res: Response) => {
+    res.send(helper.addMinuteToTime("2021/7/07 20:0:0", 10));
 });
 
 export default router;

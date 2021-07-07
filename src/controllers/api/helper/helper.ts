@@ -1,3 +1,5 @@
+import { times } from "lodash";
+
 const timeStamp = () => {
     return Math.floor(Date.now() / 1000);
 };
@@ -11,11 +13,19 @@ const timeConverter = (timestamp: number) => {
     const hour = a.getHours();
     const min = a.getMinutes();
     const sec = a.getSeconds();
-    const time = date + "/" + month + "/" + year + " - " + hour + ":" + min + ":" + sec;
+    const time = year + "-" + date + "-" + month + " " + hour + ":" + min + ":" + sec;
     return time;
+};
+
+const addMinuteToTime = (time: any, minutes: number) => {
+    const parseTime = new Date(time);
+    let timeStamp = parseTime.setTime(parseTime.getTime() + (minutes * 60 * 1000));
+        timeStamp = timeStamp / 1000;
+    return timeConverter(timeStamp);
 };
 
 export default {
     timeStamp,
-    timeConverter
+    timeConverter,
+    addMinuteToTime
 };

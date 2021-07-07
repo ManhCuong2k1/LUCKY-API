@@ -45,7 +45,7 @@ const LotteryOrdersDefine = {
         type: DataTypes.STRING(300),
     },
     orderDetail: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
     },
     orderStatus: {
         type: DataTypes.STRING(300),
