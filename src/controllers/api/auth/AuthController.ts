@@ -1,6 +1,6 @@
 import { ValidationError, ValidationErrorItem } from "sequelize";
 import express, { Response, Request } from "express";
-import { generateAuthToken, findCredentials, UserModel } from "@models/User";
+import { generateAuthToken, findCredentials, UserModel, findPhone } from "@models/User";
 import { sendSuccess, sendError } from "@util/response";
 import { auth } from "@middleware/auth";
 import { TaskCompletionModel } from "@models/TaskCompletion";
@@ -120,6 +120,21 @@ router.get("/me", auth, async (req, res) => {
   }
 });
 
+
+ router.post("/checkphone", async (req: Request, res: Response) => {
+  try {
+    console.log(req.body);
+    const phone = req.body.phone;
+    const user = await findPhone(phone);
+    res.json({ user });
+  } catch (e) {
+    res.status(401).send({
+      code: e.message,
+    });
+  }
+});
+
+
 /**
  * @openapi
  * /auth/register:
@@ -155,7 +170,11 @@ router.get("/me", auth, async (req, res) => {
  */
 router.post("/register", async (req: Request, res: Response) => {
   try {
+
+
     const params = req.parameters.permit(UserModel.CREATEABLE_PARAMETERS).value();
+    console.log(params);
+
     let referrer;
     if (params.referrerCode) referrer = await UserModel.scope([{ method: ["byReferralCode", params.referrerCode] }]).findOne();
     if (referrer) params.referrerId = referrer.id;

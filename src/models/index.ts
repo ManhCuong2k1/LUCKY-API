@@ -24,9 +24,11 @@ import { CouponCategoryModel } from "@models/CouponCategory";
 import { NotificationModel } from "@models/Notification";
 import { BannerFeedAdModel } from "@models/BannerFeedAd";
 import { LotteryModel } from "@models/Lottery";
+import { LotteryOrdersModel } from "@models/LotteryOrder";
 
 // LotteryModel.belongsTo(UserModel, { constraints: false});
 
+LotteryOrdersModel.belongsTo(UserModel, { as: "user", constraints: false });
 UserModel.belongsTo(RoleModel, { as: "role", constraints: false });
 
 FeedModel.belongsTo(UserModel, { as: "author", constraints: false });

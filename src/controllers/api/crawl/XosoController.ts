@@ -85,4 +85,9 @@ router.get("/", (req: Request, res: Response) => {
 });
 
 
+router.get("/get-keno-round", async (req: express.Request, res: Response) => {
+    const a = await Crawl.getKenoCurrentRound();
+    res.send(a);
+});
+
 export default router;
