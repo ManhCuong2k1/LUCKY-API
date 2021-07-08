@@ -5,14 +5,15 @@ import sequelize from "@database/connection";
 
 
 import getmoneyorder from "./lottery/getmoneyorder";
-import lotteryOrder from "./lottery/orders";
-
+import orders from "./lottery/orders";
+import history from "./lottery/history";
 
 const router = Router();
 
 
 router.use("/getmoneyorder", getmoneyorder);
-router.use("/orders", lotteryOrder);
+router.use("/orders", orders);
+router.use("/history", history);
 
 
 
