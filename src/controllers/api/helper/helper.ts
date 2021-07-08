@@ -17,6 +17,11 @@ const timeConverter = (timestamp: number) => {
     return time;
 };
 
+const getTime = (timeStamp: any) => {
+    // chuỗi timestamp không nhân với 1000 
+    return new Date(timeStamp * 1000);
+};
+
 const addMinuteToTime = (time: any, minutes: number) => {
     const parseTime = new Date(time);
     let timeStamp = parseTime.setTime(parseTime.getTime() + (minutes * 60 * 1000));
@@ -26,6 +31,7 @@ const addMinuteToTime = (time: any, minutes: number) => {
 
 export default {
     timeStamp,
+    getTime,
     timeConverter,
     addMinuteToTime
 };
