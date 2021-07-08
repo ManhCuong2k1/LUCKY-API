@@ -3,7 +3,7 @@ import AuthController from "./auth/AuthController";
 import AdminController from "./admin/AdminController";
 import UploadController from "./upload/UploadImageController";
 import AppController from "./app/AppController";
-// import { auth, authorAdmin } from "../../middleware/auth";
+import { auth, authorAdmin } from "../../middleware/auth";
 
 import TikiVoucherController from "./crawl/TikiController";
 import ShoppeVoucherController from "./crawl/ShoppeController";
@@ -18,7 +18,7 @@ const router = express.Router();
 
 router.use("/auth", AuthController);
 router.use("/admin", AdminController);
-router.use("/app", AppController);
+router.use("/app", auth, AppController);
 router.use("/upload", UploadController);
 
 // Tiki Router

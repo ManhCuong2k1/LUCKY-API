@@ -1,12 +1,16 @@
 import express, { Response, Request } from "express";
-
 import Crawl from "./Crawl";
+import helper from "@controllers/api/helper/helper";
+
+
 const router = express.Router();
 
 
 router.get("/", (req: Request, res: Response) => {
     res.status(403).send("403");
 });
+
+
 
 
 /**
@@ -26,7 +30,7 @@ router.get("/", (req: Request, res: Response) => {
  */
  router.get("/sync/:type", async (req: Request, res: Response) => {
     switch (req.params.type) {
-        case "XosoKeno":
+        case "keno":
             try {
                 const crawling = await Crawl.XosoKenoData();
                 return res.send(crawling);
@@ -36,7 +40,7 @@ router.get("/", (req: Request, res: Response) => {
                 });
             }
         break;
-        case "XosoPower":
+        case "power":
             try {
                 const crawling = await Crawl.XosoPowerData();
                 return res.send(crawling);
@@ -46,7 +50,7 @@ router.get("/", (req: Request, res: Response) => {
                 });
             }
         break;
-        case "XosoMega":
+        case "mega":
             try {
                 const crawling = await Crawl.XosoMegaData();
                 return res.send(crawling);
@@ -56,7 +60,7 @@ router.get("/", (req: Request, res: Response) => {
                 });
             }
         break;
-        case "XosoMax4d":
+        case "max4d":
             try {
                 const crawling = await Crawl.XosoMax4dData();
                 return res.send(crawling);
@@ -66,7 +70,7 @@ router.get("/", (req: Request, res: Response) => {
                 });
             }
         break;
-        case "XosoMax3d":
+        case "max3d":
             try {
                 const crawling = await Crawl.XosoMax3dData();
                 return res.send(crawling);
@@ -82,5 +86,14 @@ router.get("/", (req: Request, res: Response) => {
     }
 });
 
+
+router.get("/get-keno-round", async (req: express.Request, res: Response) => {
+    const a = await Crawl.getKenoCurrentRound();
+    res.send(a);
+});
+
+router.get("/dd", (req: Request, res: Response) => {
+    res.send(helper.addMinuteToTime("2021/7/07 20:0:0", 10));
+});
 
 export default router;

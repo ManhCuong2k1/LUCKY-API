@@ -6,7 +6,7 @@ import lazadaHelper from "./CrawlHelper/lazada";
 
 import LazadaModel from "@models/LazadaVoucher";
 import { DiscountCrawlModel, checkExisted } from "@models/DiscountCrawl";
-import { XosoModel } from "@models/Xoso";
+import { LotteryModel, LotteryCheck } from "@models/Lottery";
 
 
 const TikiCrawl = async () => {
@@ -632,7 +632,7 @@ const getShopeeDetail = async (coupon: any) => {
 
 const XosoGetNextTime = async (type: string) => {
   try {
-	// config header để vào trang kết quả keno
+    // config header để vào trang kết quả keno
     const options = {
       "method": "GET",
       "rejectUnauthorized": false,
@@ -645,22 +645,22 @@ const XosoGetNextTime = async (type: string) => {
     let timeNext;
     let status = true;
     switch (type) {
-    	case "power": 
-     		timeNext = helper.cutstring(dataResp, "var cd3='", "';");
-    	break;
-    	case "mega":
+      case "power":
+        timeNext = helper.cutstring(dataResp, "var cd3='", "';");
+        break;
+      case "mega":
         timeNext = helper.cutstring(dataResp, "var cd1='", "';");
-    	break;
-		  case "max3d":
-        timeNext = helper.cutstring(dataResp, "var cd5='", "';");    
-		  break;    
+        break;
+      case "max3d":
+        timeNext = helper.cutstring(dataResp, "var cd5='", "';");
+        break;
       case "max4d":
-        timeNext = helper.cutstring(dataResp, "var cd2='", "';");    
-      break;
+        timeNext = helper.cutstring(dataResp, "var cd2='", "';");
+        break;
       default:
         status = false;
         timeNext = null;
-      break;
+        break;
     }
 
 
@@ -670,7 +670,7 @@ const XosoGetNextTime = async (type: string) => {
       msg: "Success"
     };
 
-  }catch (e) {
+  } catch (e) {
     console.log(e);
     return {
       status: false,
@@ -684,7 +684,7 @@ const XosoKenoData = async () => {
 
   try {
 
-  	// config header để vào trang kết quả keno
+    // config header để vào trang kết quả keno
     const options = {
       "method": "GET",
       "rejectUnauthorized": false,
@@ -738,16 +738,19 @@ const XosoKenoData = async () => {
     dataXoso["chanleresult"] = chanleResult;
     dataXoso["lonnhoResult"] = lonnhoResult;
 
-    const xoso = await XosoModel.create({
-      type: 'keno',
-      date: dataXoso["date"],
-      next: '',
-      round: dataXoso["round"],
-      result: dataXoso["result"]
-    });
-    
+    const LotteryCheckExits = await LotteryCheck("keno", dataXoso["round"]);
 
+    if (!LotteryCheckExits) {
+      const dataImport: any = {
+        type: "keno",
+        date: dataXoso["date"],
+        next: null,
+        round: dataXoso["round"],
+        result: JSON.stringify(dataXoso["result"])
+      };
 
+      LotteryModel.create(dataImport);
+    }
 
     return {
       status: true,
@@ -755,7 +758,7 @@ const XosoKenoData = async () => {
       msg: "Success"
     };
 
-  }catch (e) {
+  } catch (e) {
     console.log(e);
     return {
       status: false,
@@ -805,13 +808,28 @@ const XosoPowerData = async () => {
     dataXoso["round"] = helper.cutstring(lastRow, "target=\"_self\">", "</a>");
     dataXoso["result"] = arrNumber;
     dataXoso["next"] = getNextTime.next;
+
+    const LotteryCheckExits = await LotteryCheck("power", dataXoso["round"]);
+
+    if (!LotteryCheckExits) {
+      const dataImport: any = {
+        type: "power",
+        date: dataXoso["date"],
+        next: dataXoso["next"],
+        round: dataXoso["round"],
+        result: JSON.stringify(dataXoso["result"])
+      };
+
+      LotteryModel.create(dataImport);
+    }
+
     return {
       status: true,
       data: dataXoso,
       msg: "Success"
     };
 
-  }catch (e) {
+  } catch (e) {
     console.log(e);
     return {
       status: false,
@@ -862,13 +880,27 @@ const XosoMegaData = async () => {
     dataXoso["result"] = arrNumber;
     dataXoso["next"] = getNextTime.next;
 
+    const LotteryCheckExits = await LotteryCheck("mega", dataXoso["round"]);
+
+    if (!LotteryCheckExits) {
+      const dataImport: any = {
+        type: "mega",
+        date: dataXoso["date"],
+        next: dataXoso["next"],
+        round: dataXoso["round"],
+        result: JSON.stringify(dataXoso["result"])
+      };
+
+      LotteryModel.create(dataImport);
+    }
+
     return {
       status: true,
       data: dataXoso,
       msg: "Success"
     };
 
-  }catch (e) {
+  } catch (e) {
     console.log(e);
     return {
       status: false,
@@ -908,7 +940,7 @@ const XosoMax4dData = async () => {
     dataXoso["giainhat"] = arrNumber;
 
     // lấy nội dung giải nhì trong bảng
-    dataXoso["giainhi"] = {};    
+    dataXoso["giainhi"] = {};
     html = helper.cutstring(tableResult, "<h5>Giải Nhì</h5>", "<div class=\"clearfix visible-lg\">");
     list = helper.cutstring(html, "<div class=\"day_so_ket_qua_v2 \" style=\"padding-right:10px\">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
@@ -919,7 +951,7 @@ const XosoMax4dData = async () => {
     dataXoso["giainhi"]["list2"] = arrNumber;
 
     // lấy nội dung giải ba trong bảng
-    dataXoso["giaiba"] = {};    
+    dataXoso["giaiba"] = {};
     html = helper.cutstring(tableResult, "<h5>Giải Ba</h5>", "<div class=\"clearfix visible-lg\">");
     html = html.split("<!-- /day_so_ket_qua_v2 -->");
 
@@ -954,14 +986,29 @@ const XosoMax4dData = async () => {
     const getNextTime = await XosoGetNextTime("max4d");
 
     const dataExport: any = {};
-    dataExport["date"] = helper.cutstring(data, "ngày <b>", "</b>");    
+    dataExport["date"] = helper.cutstring(data, "ngày <b>", "</b>");
     dataExport["round"] = helper.cutstring(data, "<h5>Kỳ quay thưởng <b>#", "</b>");
     dataExport["result"] = dataXoso;
     dataExport["next"] = getNextTime.next;
 
+    const LotteryCheckExits = await LotteryCheck("max4d", dataExport["round"]);
+
+    if (!LotteryCheckExits) {
+      const dataImport: any = {
+        type: "max4d",
+        date: dataExport["date"],
+        next: dataExport["next"],
+        round: dataExport["round"],
+        result: JSON.stringify(dataExport["result"])
+      };
+
+      LotteryModel.create(dataImport);
+    }
+
+
     return dataExport;
 
-  }catch (e) {
+  } catch (e) {
     console.log(e);
     return {
       status: false,
@@ -1039,7 +1086,7 @@ const XosoMax3dData = async () => {
 
 
     // lấy nội dung giải ba trong bảng
-    dataXoso["giaiba"] = {};    
+    dataXoso["giaiba"] = {};
     html = helper.cutstring(tableResult, "<h5>Giải Ba</h5>", "<div class=\"clearfix visible-lg\">");
     html = html.split("<div class=\"col-xs-4 padding_2\">");
 
@@ -1122,14 +1169,28 @@ const XosoMax3dData = async () => {
     const getNextTime = await XosoGetNextTime("max4d");
 
     const dataExport: any = {};
-    dataExport["date"] = helper.cutstring(data, "ngày <b>", "</b>");    
+    dataExport["date"] = helper.cutstring(data, "ngày <b>", "</b>");
     dataExport["round"] = helper.cutstring(data, "<h5>Kỳ quay thưởng <b>#", "</b>");
     dataExport["result"] = dataXoso;
     dataExport["next"] = getNextTime.next;
 
+    const LotteryCheckExits = await LotteryCheck("max3d", dataExport["round"]);
+
+    if (!LotteryCheckExits) {
+      const dataImport: any = {
+        type: "max3d",
+        date: dataExport["date"],
+        next: dataExport["next"],
+        round: dataExport["round"],
+        result: JSON.stringify(dataExport["result"])
+      };
+
+      LotteryModel.create(dataImport);
+    }
+
     return dataExport;
 
-  }catch (e) {
+  } catch (e) {
     console.log(e);
     return {
       status: false,
@@ -1138,6 +1199,38 @@ const XosoMax3dData = async () => {
   }
 };
 
+const getKenoCurrentRound = async () => {
+  try {
+    const options = {
+      "method": "GET",
+      "rejectUnauthorized": false,
+      "url": "https://www.minhchinh.com/livekqxs/xstt/KN.php",
+      "headers": {}
+    };
+
+    // lấy nội dung kỳ quay số  kết quả Kano
+    const dataResp = await request(options);
+    let objData: any = helper.cutstring(dataResp, "xsdt[8]=", "; key=");
+        objData = JSON.parse(objData);
+    const dataExport: any = {};
+    dataExport["current_round"] = "00"+ objData.next_ky;
+    dataExport["finish_time"] = objData.next_date;
+    return {
+      status: true,
+      data: dataExport,
+      message: "success"
+    };
+
+
+  } catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      msg: error.message
+    };
+  }
+
+};
 
 
 export default {
@@ -1149,5 +1242,6 @@ export default {
   XosoPowerData,
   XosoMegaData,
   XosoMax3dData,
-  XosoMax4dData
+  XosoMax4dData,
+  getKenoCurrentRound
 };

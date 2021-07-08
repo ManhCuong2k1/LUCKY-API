@@ -28,6 +28,7 @@ interface UserInterface {
   gender: string;
   dateOfBirth: Date;
   phone: string;
+  identify: string;
   status: string;
   isEnableReceiveEmail: boolean;
   totalFeed?: number;
@@ -51,6 +52,7 @@ class UserModel extends Model<UserInterface> implements UserInterface {
   public gender: string;
   public dateOfBirth: Date;
   public phone: string;
+  public identify: string;
   public status: string;
   public isEnableReceiveEmail: boolean;
   public totalFeed?: number;
@@ -69,7 +71,7 @@ class UserModel extends Model<UserInterface> implements UserInterface {
     WORKING: "working",
   };
   static readonly CREATEABLE_PARAMETERS = ["name", "username", "nickname", "email", "referrerCode",
-    "avatar", "password", "gender", "dateOfBirth", "phone"]
+    "avatar", "password", "gender", "dateOfBirth", "phone", "identify"]
 
   public addFollowingHashtags: BelongsToManyAddAssociationsMixin<
     HashTagModel,
@@ -180,6 +182,7 @@ const UserDefine = {
   },
   dateOfBirth: { type: DataTypes.DATEONLY },
   phone: { type: DataTypes.STRING },
+  identify: { type: DataTypes.STRING },
   status: {
     type: DataTypes.ENUM({ values: Object.values(UserModel.STATUS_ENUM) }),
     defaultValue: UserModel.STATUS_ENUM.WORKING,
@@ -195,7 +198,7 @@ UserModel.init(UserDefine, {
   paranoid: true,
   scopes: UserModel.scopes,
   hooks: UserModel.hooks,
-  indexes: [{ unique: true, fields: ["username"] }],
+  indexes: [{ unique: true, fields: ["username"] }, { unique: true, fields: ["phone"] }],
   tableName: "users",
   updatedAt: "updatedAt",
   createdAt: "createdAt",
@@ -204,9 +207,9 @@ UserModel.init(UserDefine, {
 });
 
 // Func
-const findCredentials = async (username: string, password: string) => {
+const findCredentials = async (phone: string, password: string) => {
   const user = await UserModel.findOne({
-    where: { username, status: UserModel.STATUS_ENUM.WORKING },
+    where: { phone, status: UserModel.STATUS_ENUM.WORKING },
   });
   if (user == null) {
     throw new Error(ERROR_CODES.InvalidLoginCredentials);
@@ -224,4 +227,24 @@ const generateAuthToken = async (user: UserInterface | UserModel) => {
   return token;
 };
 
-export { UserModel, UserInterface, generateAuthToken, findCredentials };
+const findPhone = async (phone: string) => {
+  const user = await UserModel.findOne({
+    where: { phone, status: UserModel.STATUS_ENUM.WORKING },
+  });
+  if (user == null) {
+    throw new Error(ERROR_CODES.InvalidLoginCredentials);
+  }
+  return {
+    name: user.name,
+    username: user.username,
+    nickname: user.nickname,
+    roleId: user.roleId,
+    avatar: user.avatar,
+    phone: user.phone,
+    status: user.status,
+    totalCoin: user.totalCoin,
+    createdAt: user.createdAt
+  };
+};
+
+export { UserModel, UserInterface, generateAuthToken, findCredentials, findPhone };
