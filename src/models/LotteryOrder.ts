@@ -8,6 +8,7 @@ interface LotteryOrdersInterface {
     roundId: string;
     orderDetail: string;    
     orderStatus: string;
+    resultDetail: string;
     resultStatus: string;
     finishTime: string;
     createdAt: Date;
@@ -20,8 +21,9 @@ class LotteryOrdersModel extends Model<LotteryOrdersInterface> implements Lotter
     public userId: string;
     public type: string;
     public roundId: string;
-    public orderDetail: string;    
+    public orderDetail: string;
     public orderStatus: string;
+    public resultDetail: string;
     public resultStatus: string;
     public finishTime: string;
     public createdAt: Date;
@@ -49,6 +51,9 @@ const LotteryOrdersDefine = {
     },
     orderStatus: {
         type: DataTypes.STRING(300),
+    },
+    resultDetail: {
+        type: DataTypes.TEXT
     },
     resultStatus: {
         type: DataTypes.STRING,

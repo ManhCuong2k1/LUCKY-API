@@ -98,7 +98,7 @@ class UserModel extends Model<UserInterface> implements UserInterface {
       return { where: { referralCode } };
     },
     byReferrer(referrerId) {
-      return { where: { referrerId }};
+      return { where: { referrerId } };
     },
     bySearch(searchKey) {
       if (searchKey) {
@@ -232,19 +232,48 @@ const findPhone = async (phone: string) => {
     where: { phone, status: UserModel.STATUS_ENUM.WORKING },
   });
   if (user == null) {
-    throw new Error(ERROR_CODES.InvalidLoginCredentials);
+    return {
+      status: false,
+      message: "can't find phone",
+    };
+  } else {
+    return {
+      status: true,
+      data: {
+        name: user.name,
+        username: user.username,
+        nickname: user.nickname,
+        roleId: user.roleId,
+        avatar: user.avatar,
+        phone: user.phone,
+        status: user.status,
+        totalCoin: user.totalCoin,
+        createdAt: user.createdAt
+      },
+      messgae: "success"
+    };
   }
-  return {
-    name: user.name,
-    username: user.username,
-    nickname: user.nickname,
-    roleId: user.roleId,
-    avatar: user.avatar,
-    phone: user.phone,
-    status: user.status,
-    totalCoin: user.totalCoin,
-    createdAt: user.createdAt
-  };
 };
 
-export { UserModel, UserInterface, generateAuthToken, findCredentials, findPhone };
+const checkCoin = async (userId: number) => {
+  const user = await UserModel.findOne({
+    where: {
+      id: userId,
+      status: UserModel.STATUS_ENUM.WORKING
+    },
+  });
+  if (user == null) {
+    throw new Error(ERROR_CODES.InvalidLoginCredentials);
+  }
+  return user.totalCoin;
+};
+
+
+export {
+  UserModel,
+  UserInterface,
+  generateAuthToken,
+  findCredentials,
+  findPhone,
+  checkCoin
+};

@@ -123,10 +123,9 @@ router.get("/me", auth, async (req, res) => {
 
  router.post("/checkphone", async (req: Request, res: Response) => {
   try {
-    console.log(req.body);
     const phone = req.body.phone;
     const user = await findPhone(phone);
-    res.json({ user });
+    res.json(user);
   } catch (e) {
     res.status(401).send({
       code: e.message,
