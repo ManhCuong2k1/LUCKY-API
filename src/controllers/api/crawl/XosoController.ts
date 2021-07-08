@@ -1,7 +1,7 @@
 import express, { Response, Request } from "express";
 import Crawl from "./Crawl";
 import helper from "@controllers/api/helper/helper";
-
+import update from "../app/lottery/updateresult";
 
 const router = express.Router();
 
@@ -33,6 +33,7 @@ router.get("/", (req: Request, res: Response) => {
         case "keno":
             try {
                 const crawling = await Crawl.XosoKenoData();
+                const updateData = update.updateResult('keno', crawling.data);
                 return res.send(crawling);
             } catch (e) {
                 res.status(401).send({

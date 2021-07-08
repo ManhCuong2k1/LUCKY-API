@@ -6,7 +6,7 @@ interface LotteryInterface {
     type: string;
     date: string;
     next: string;
-    round: number;
+    round: string;
     result: string;
     createdAt: Date;
     updatedAt: Date;
@@ -18,7 +18,7 @@ class LotteryModel extends Model<LotteryInterface> implements LotteryInterface {
     public type: string;
     public date: string;
     public next: string;
-    public round: number;
+    public round: string;
     public result: string;
     public createdAt: Date;
     public updatedAt: Date;
@@ -42,7 +42,7 @@ const LotteryDefine = {
         type: DataTypes.STRING(300),
     },
     round: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING(300),
     },
     result: {
         type: DataTypes.TEXT,

@@ -123,10 +123,9 @@ router.get("/me", auth, async (req, res) => {
 
  router.post("/checkphone", async (req: Request, res: Response) => {
   try {
-    console.log(req.body);
     const phone = req.body.phone;
     const user = await findPhone(phone);
-    res.json({ user });
+    res.json(user);
   } catch (e) {
     res.status(401).send({
       code: e.message,
@@ -170,11 +169,8 @@ router.get("/me", auth, async (req, res) => {
  */
 router.post("/register", async (req: Request, res: Response) => {
   try {
-
-
     const params = req.parameters.permit(UserModel.CREATEABLE_PARAMETERS).value();
-    console.log(params);
-
+ 
     let referrer;
     if (params.referrerCode) referrer = await UserModel.scope([{ method: ["byReferralCode", params.referrerCode] }]).findOne();
     if (referrer) params.referrerId = referrer.id;
@@ -193,4 +189,13 @@ router.post("/register", async (req: Request, res: Response) => {
   }
 });
 
+
+router.post("/otp", async (req: Request, res: Response) => {
+
+
+  res.send("sended otp code!");
+});
+
+
 export default router;
+ 
