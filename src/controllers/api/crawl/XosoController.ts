@@ -33,7 +33,7 @@ router.get("/", (req: Request, res: Response) => {
         case "keno":
             try {
                 const crawling = await Crawl.XosoKenoData();
-                const updateData = update.updateResult('keno', crawling.data);
+                const updateData = update.updateResult("keno", crawling.data);
                 return res.send(crawling);
             } catch (e) {
                 res.status(401).send({

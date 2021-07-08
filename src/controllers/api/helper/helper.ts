@@ -29,9 +29,37 @@ const addMinuteToTime = (time: any, minutes: number) => {
     return timeConverter(timeStamp);
 };
 
+const countCharExits = (string: string, word: string) => {
+    const count = string.split(word).length - 1;
+ 
+    let stringExport = "";
+ 
+    for(let i = 1; i <= count; i++) {
+        stringExport += word;
+    }
+ 
+    return stringExport;
+};
+
+const checkItemExist = (array1: any, array2: any) => {
+    const arrExport = [];
+
+    for(var i in array1) {
+        for(var i2 in array2) {
+            if(array1[i] == array2[i2]) {
+                arrExport.push(array1[i]);
+            }
+        }
+    }
+
+    return arrExport;
+}
+
+
 export default {
     timeStamp,
     getTime,
     timeConverter,
-    addMinuteToTime
+    addMinuteToTime,
+    checkItemExist
 };
