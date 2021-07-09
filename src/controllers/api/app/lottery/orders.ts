@@ -9,12 +9,13 @@ const router = Router();
 router.post("/", async (req: Request, res: Response) => {
 
         try {
+
             const user: any = req.user;
             const body = req.body;
+            let status = true, message;
             
-
-            switch (body.game) {
-                case "keno": 
+            switch (body.game) { // kiểm tra user order game nào
+                case "keno":
 
                     const currentTime = helper.getTime(helper.timeStamp());
                     const checkTimeStart = (currentTime.getHours() >= 6) ? true: false; // start if time >= 6h AM
@@ -48,7 +49,6 @@ router.post("/", async (req: Request, res: Response) => {
                             await UserData.save();
                             await UserData.reload();
 
-
                             // order
                             for(let i = 1; i <= body.preriod; i++) {
 
@@ -57,55 +57,51 @@ router.post("/", async (req: Request, res: Response) => {
                                     roundOrder = Number(roundOrder) + 1;
                                 }
 
-                                const dataImport: any = {
-                                    userId: user.id,
-                                    type: "keno",
-                                    roundId: "00"+roundOrder,
-                                    orderDetail: JSON.stringify({
-                                        level: body.level,
-                                        data: body.data,
-                                        totalprice: orderPrice
-                                    }),
-                                    orderStatus: "delay",
-                                    resultStatus: "Chờ Xổ " + timeOrder,
-                                    finishTime: timeOrder,
-                                    moreDetail: "Đại lý giữ hộ vé"
-                                };
+                                switch(body.childgame) {  // kiểm tra user order chidlgaame nao
+                                    case "basic": // choi số trùng bình thường
+                                        const dataImport: any = {
+                                            userId: user.id,
+                                            type: "keno",
+                                            roundId: "00"+roundOrder,
+                                            orderDetail: JSON.stringify({
+                                                childgame: "basic",
+                                                level: body.level,
+                                                data: body.data,
+                                                totalprice: orderPrice
+                                            }),
+                                            orderStatus: "delay",
+                                            resultStatus: "Chờ Xổ " + timeOrder,
+                                            finishTime: timeOrder,
+                                            moreDetail: "Đại lý giữ hộ vé"
+                                        };
+                                        LotteryOrdersModel.create(dataImport);
+                                        isFirst = false;
+                                        status = true, message = 'Đặt Vé Thành Công!';
+                                    break;
 
-                                console.log(dataImport);
+                                    default:
+                                        status = false, message = 'error order type params';
+                                    break;
+                                }
 
-                                LotteryOrdersModel.create(dataImport);
- 
-                                isFirst = false;
                             }
 
-                            res.json({
-                                status: true,
-                                message: "Đặt Vé Thành Công!"
-                            });
                         }else {
-                            res.json({
-                                status: false,
-                                message: "Bạn không đủ tiền!"
-                            });
+                            status = false, message = 'Bạn không đủ tiền';
                         }
 
                     }else {
-                        res.json({
-                            status: false,
-                            message: "Không thể mua vé trong khoảng thời gian này! Vui lòng đọc hướng dẫn mua vé Keno!"
-                        });
+                        status = false, message = 'Không thể mua vé trong khoảng thời gian này! Vui lòng đọc hướng dẫn mua vé Keno!';
                     }
 
                 break;
 
                 default:
-                    res.json({
-                        status: false,
-                        message: "error order type params"
-                    });
-                    break;
+                    status = true, message = 'error order type params';
+                break;
             }
+
+            res.json({ status, message });
 
         } catch (err) {
             console.log(err);
