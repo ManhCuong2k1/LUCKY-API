@@ -33,6 +33,7 @@ interface UserInterface {
   isEnableReceiveEmail: boolean;
   totalFeed?: number;
   totalCoin: number;
+  totalReward: number;
   roleId: number;
   createdAt: Date;
   updatedAt: Date;
@@ -57,6 +58,7 @@ class UserModel extends Model<UserInterface> implements UserInterface {
   public isEnableReceiveEmail: boolean;
   public totalFeed?: number;
   public totalCoin: number;
+  public totalReward: number;
   public roleId: number;
   public createdAt: Date;
   public updatedAt: Date;
@@ -189,6 +191,7 @@ const UserDefine = {
   },
   isEnableReceiveEmail: { type: DataTypes.BOOLEAN, defaultValue: true },
   totalCoin: { type: DataTypes.INTEGER, defaultValue: 0 },
+  totalReward: { type: DataTypes.INTEGER, defaultValue: 0 },
   createdAt: { type: DataTypes.DATE },
   updatedAt: { type: DataTypes.DATE },
   deletedAt: { type: DataTypes.DATE },
@@ -248,6 +251,7 @@ const findPhone = async (phone: string) => {
         phone: user.phone,
         status: user.status,
         totalCoin: user.totalCoin,
+        totalReward: user.totalReward,
         createdAt: user.createdAt
       },
       messgae: "success"
@@ -255,18 +259,6 @@ const findPhone = async (phone: string) => {
   }
 };
 
-const checkCoin = async (userId: number) => {
-  const user = await UserModel.findOne({
-    where: {
-      id: userId,
-      status: UserModel.STATUS_ENUM.WORKING
-    },
-  });
-  if (user == null) {
-    throw new Error(ERROR_CODES.InvalidLoginCredentials);
-  }
-  return user.totalCoin;
-};
 
 
 export {
@@ -274,6 +266,5 @@ export {
   UserInterface,
   generateAuthToken,
   findCredentials,
-  findPhone,
-  checkCoin
+  findPhone
 };

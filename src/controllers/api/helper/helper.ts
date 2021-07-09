@@ -44,8 +44,8 @@ const countCharExits = (string: string, word: string) => {
 const checkItemExist = (array1: any, array2: any) => {
     const arrExport = [];
 
-    for(var i in array1) {
-        for(var i2 in array2) {
+    for(const i in array1) {
+        for(const i2 in array2) {
             if(array1[i] == array2[i2]) {
                 arrExport.push(array1[i]);
             }
@@ -53,7 +53,7 @@ const checkItemExist = (array1: any, array2: any) => {
     }
 
     return arrExport;
-}
+};
 
 
 export default {
