@@ -12,6 +12,7 @@ interface LotteryOrdersInterface {
     resultStatus: string;
     finishTime: string;
     itemImages: string;
+    moreDetail: string;
     createdAt: Date;
     updatedAt: Date;
     deletedAt: Date;
@@ -28,6 +29,7 @@ class LotteryOrdersModel extends Model<LotteryOrdersInterface> implements Lotter
     public resultStatus: string;
     public finishTime: string;
     public itemImages: string;
+    public moreDetail: string;
     public createdAt: Date;
     public updatedAt: Date;
     public deletedAt: Date;
@@ -65,6 +67,9 @@ const LotteryOrdersDefine = {
     },
     itemImages: {
         type: DataTypes.TEXT,
+    },
+    moreDetail: {
+        type: DataTypes.STRING,
     },
     createdAt: {
         type: DataTypes.DATE,

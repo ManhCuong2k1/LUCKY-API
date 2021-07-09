@@ -13,7 +13,7 @@ router.post("/", async (req: Request, res: Response) => {
             const body = req.body;
             
 
-            switch (req.body.game) {
+            switch (body.game) {
                 case "keno": 
 
                     const currentTime = helper.getTime(helper.timeStamp());
@@ -21,27 +21,35 @@ router.post("/", async (req: Request, res: Response) => {
                     const checkTimeStop = (currentTime.getHours() < 22) ? true: false; // stop if time < 22h PM
                     const isActiveOrder = (checkTimeStart && checkTimeStop) ? true: false;
 
-                    if(isActiveOrder) {
+                    
+                    if(isActiveOrder) { // kiểm tra đơn hàng có thể order trong thời gian cho phép hay không
 
-                        const currentRound: any = await Crawl.getKenoCurrentRound();
+                        const currentRound: any = await Crawl.getKenoCurrentRound(); // lấy thông tin phiên keno hiện tại
 
                         let timeOrder = currentRound.data.finish_time;
                         let roundOrder = Number(currentRound.data.current_round);
                         let isFirst = true;
                         let totalPrice = 0;
 
+                        // tính tiền 1 đơn
                         body.data.forEach((data: any) => {
                             totalPrice = totalPrice + data.price;
                         });
 
-                        if(user.totalCoin >= totalPrice) {
+                        const orderPrice = totalPrice; // tiền 1 đơn
+                        totalPrice = totalPrice * body.preriod; // tiền thanh toán khi đặt liên tiếp các kỳ
 
+                        if(user.totalCoin >= totalPrice) { // kiểm tra tài khoản có đủ tiền hay không
+
+                            // trừ tiền truocứ khi order 
                             const UserData = await UserModel.findOne({ where: { id : user.id } });
                             if (!UserData) throw new Error("Not found user");
                             UserData.totalCoin = UserData.totalCoin - totalPrice;
                             await UserData.save();
                             await UserData.reload();
 
+
+                            // order
                             for(let i = 1; i <= body.preriod; i++) {
 
                                 if(isFirst == false) {
@@ -56,15 +64,18 @@ router.post("/", async (req: Request, res: Response) => {
                                     orderDetail: JSON.stringify({
                                         level: body.level,
                                         data: body.data,
-                                        totalprice: body.totalprice
+                                        totalprice: orderPrice
                                     }),
                                     orderStatus: "delay",
                                     resultStatus: "Chờ Xổ " + timeOrder,
-                                    finishTime: timeOrder
+                                    finishTime: timeOrder,
+                                    moreDetail: "Đại lý giữ hộ vé"
                                 };
 
-                                LotteryOrdersModel.create(dataImport);
+                                console.log(dataImport);
 
+                                LotteryOrdersModel.create(dataImport);
+ 
                                 isFirst = false;
                             }
 
