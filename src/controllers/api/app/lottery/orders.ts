@@ -12,8 +12,8 @@ router.post("/", async (req: Request, res: Response) => {
 
             const user: any = req.user;
             const body = req.body;
-            let status = true, message;
-            
+            let status = true, message, dataImport: any = null;
+
             switch (body.game) { // kiểm tra user order game nào
                 case "keno":
 
@@ -59,7 +59,7 @@ router.post("/", async (req: Request, res: Response) => {
 
                                 switch(body.childgame) {  // kiểm tra user order chidlgaame nao
                                     case "basic": // choi số trùng bình thường
-                                        const dataImport: any = {
+                                        dataImport = {
                                             userId: user.id,
                                             type: "keno",
                                             roundId: "00"+roundOrder,
@@ -74,30 +74,51 @@ router.post("/", async (req: Request, res: Response) => {
                                             finishTime: timeOrder,
                                             moreDetail: "Đại lý giữ hộ vé"
                                         };
-                                        LotteryOrdersModel.create(dataImport);
+
                                         isFirst = false;
-                                        status = true, message = 'Đặt Vé Thành Công!';
+                                        status = true, message = "Đặt Vé Thành Công!";
+                                    break;
+
+                                    case "chanle_lonnho": // chơi kiểu chẵn lẻ 
+                                        dataImport = {
+                                            userId: user.id,
+                                            type: "keno",
+                                            roundId: "00"+roundOrder,
+                                            orderDetail: JSON.stringify({
+                                                childgame: "chanle",
+                                                data: body.data,
+                                                totalprice: orderPrice
+                                            }),
+                                            orderStatus: "delay",
+                                            resultStatus: "Chờ Xổ " + timeOrder,
+                                            finishTime: timeOrder,
+                                            moreDetail: "Đại lý giữ hộ vé"
+                                        };
+                                        isFirst = false;
+                                        status = true, message = "Đặt Vé Thành Công!";
                                     break;
 
                                     default:
-                                        status = false, message = 'error order type params';
+                                        status = false, message = "error order type params childgame";
                                     break;
                                 }
+
+                                const dbExecQuery = (dataImport !== null) ? await LotteryOrdersModel.create(dataImport) : '';
 
                             }
 
                         }else {
-                            status = false, message = 'Bạn không đủ tiền';
+                            status = false, message = "Bạn không đủ tiền";
                         }
 
                     }else {
-                        status = false, message = 'Không thể mua vé trong khoảng thời gian này! Vui lòng đọc hướng dẫn mua vé Keno!';
+                        status = false, message = "Không thể mua vé trong khoảng thời gian này! Vui lòng đọc hướng dẫn mua vé Keno!";
                     }
 
                 break;
 
                 default:
-                    status = true, message = 'error order type params';
+                    status = true, message = "error order type params game";
                 break;
             }
 
