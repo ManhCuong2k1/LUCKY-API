@@ -8,14 +8,11 @@ const router = Router();
 
 
 router.get("/results/:type", async (req: Request, res: Response) => {
-    let data;
     switch (req.params.type) {
         case "keno":
             try {
-
                 const getData = await LotteryModel.findAll();
                 res.json(getData);
-
             }catch (error) {
                 res.json({
                     status: false,
@@ -30,6 +27,23 @@ router.get("/results/:type", async (req: Request, res: Response) => {
                 message: "error order type params"
             });
         break;
+    }
+});
+
+
+
+router.get("/orders", async (req: Request, res: Response) => {
+    
+    if(req.query.id != null || req.query.id != '') {
+        const ordersData = await LotteryOrdersModel.findOne({
+            where: {
+                id: req.query.id
+            }
+        });
+        res.json(ordersData);
+    }else {
+        const ordersData = await LotteryOrdersModel.findAll();
+        res.json(ordersData);
     }
 
 
