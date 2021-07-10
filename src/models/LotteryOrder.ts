@@ -6,7 +6,7 @@ interface LotteryOrdersInterface {
     userId: string;
     type: string;
     roundId: string;
-    orderDetail: string;    
+    orderDetail: string;
     orderStatus: string;
     resultDetail: string;
     resultStatus: string;
@@ -33,6 +33,16 @@ class LotteryOrdersModel extends Model<LotteryOrdersInterface> implements Lotter
     public createdAt: Date;
     public updatedAt: Date;
     public deletedAt: Date;
+    static readonly ORDERSTATUS_ENUM = {
+        DELAY: "delay",
+        PRINTED: "printed",
+        DRAWNED: "drawned",
+        CANCELED: "canceled"
+    };
+    static readonly RESULTSTATUS_ENUM = {
+        WINNED: "Trúng Giải",
+        DRAWNED: "Đã Xổ Vé"
+    };
 }
 
 const LotteryOrdersDefine = {
@@ -93,6 +103,6 @@ LotteryOrdersModel.init(LotteryOrdersDefine, {
 
 
 export {
-    LotteryOrdersInterface, 
+    LotteryOrdersInterface,
     LotteryOrdersModel
 };
