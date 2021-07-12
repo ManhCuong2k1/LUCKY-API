@@ -103,7 +103,7 @@ router.post("/", async (req: Request, res: Response) => {
                                     break;
                                 }
 
-                                const dbExecQuery = (dataImport !== null) ? await LotteryOrdersModel.create(dataImport) : '';
+                                const dbExecQuery = (dataImport !== null) ? await LotteryOrdersModel.create(dataImport) : "";
 
                             }
 
