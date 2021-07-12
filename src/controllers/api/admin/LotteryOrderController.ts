@@ -3,84 +3,63 @@ import { LotteryOrdersInterface, LotteryOrdersModel } from "@models/LotteryOrder
 import { Op } from "sequelize";
 import upload from "@middleware/upload";
 import { saveFile } from "@util/resizeImage";
+import { resolve } from "bluebird";
 const router = Router();
 
-router.get("/", async (req: Request, res: Response) => {
-  try {
-
-    const lotteryOrder = await LotteryOrdersModel.findAll();
-
-    res.send({ data: lotteryOrder });
-  } catch (e) {
-    res.status(400).send({
-      error: e.message,
+const getdata = async (typeGame: any) => {
+    const data = await LotteryOrdersModel.findAll({
+        where: {
+            type: typeGame
+        }
     });
-  }
+    // console.log(data.dataValues);
+    
+    return data;
+};
+
+router.get("/", async (req: Request, res: Response) => {
+    try {
+        const lotteryOrder = await LotteryOrdersModel.findAll();
+
+        res.send({ data: lotteryOrder });
+    } catch (e) {
+        res.status(400).send({
+        error: e.message,
+        });
+    }
 });
 
 router.get("/:type", async (req: Request, res: Response) => {
     try {
         const typeGame = req.params.type;
-
-        // const listOrderGame = await LotteryOrdersModel.findAll({
-        //     where: {
-        //         type: typeGame
-        //     }
-        // });
-        // res.send({ data: listOrderGame });
-
+        let listGameType: any = [];
+        
         switch(typeGame) {
             case "keno":
-                const listOrderGameKeno = await LotteryOrdersModel.findAll({
-                    where: {
-                        type: typeGame
-                    }
-                });
-                res.send({ data: listOrderGameKeno });
+                listGameType = await getdata(typeGame);
                 break;
             case "power":
-                const listOrderGamePower = await LotteryOrdersModel.findAll({
-                  where: {
-                      type: typeGame
-                  }
-                });
-                res.send({ data: listOrderGamePower });
+                listGameType = await getdata(typeGame);
                 break;
             case "mega":
-                const listOrderGameMega = await LotteryOrdersModel.findAll({
-                  where: {
-                      type: typeGame
-                  }
-                });
-                res.send({ data: listOrderGameMega });
+                listGameType = await getdata(typeGame);
                 break;
-            case "plus-3d":
-                const listOrderGamePlus = await LotteryOrdersModel.findAll({
-                  where: {
-                      type: typeGame
-                  }
-                });
-                res.send({ data: listOrderGamePlus });
+            case "plus3d":
+                listGameType = await getdata(typeGame);
                 break;
             case "3d":
-                const listOrderGame3d = await LotteryOrdersModel.findAll({
-                  where: {
-                      type: typeGame
-                  }
-                });
-                res.send({ data: listOrderGame3d });
+                listGameType = await getdata(typeGame);
                 break;
             case "4d":
-                const listOrderGame4d = await LotteryOrdersModel.findAll({
-                  where: {
-                      type: typeGame
-                  }
-                });
-                res.send({ data: listOrderGame4d });
+                listGameType = await getdata(typeGame);
                 break;
             default:
-              // code block
+                res.json({
+                    status: false,
+                    message: "error"
+                });
         }
+        res.send({ data: listGameType });
     } catch (e) {
         res.status(400).send({
             error: e.message,
@@ -88,14 +67,22 @@ router.get("/:type", async (req: Request, res: Response) => {
     }
 });
 
-router.post("/:id/images", upload.single("image"), async (req: Request, res: Response) => {
+router.post("/:id/images", upload.array("images"), async (req: Request, res: Response) => {
     try {
         const user = req.params.id;
         const orderItem = await LotteryOrdersModel.findByPk(user);
-        console.log(orderItem);
-        if (!req.file) throw new Error("No file to upload");
-        const fileName = await saveFile(req.file);
-        return res.send({ url: fileName });
+        if (!req.files) throw new Error("No file to upload");
+        
+        const data = Object.values(req.files);
+        const objectData: any = [];        
+        await data.forEach(async (element: any) => {            
+            const fileName = await saveFile(element);
+            objectData.push(fileName);
+            orderItem.itemImages = JSON.stringify(objectData);
+            orderItem.orderStatus = LotteryOrdersModel.ORDERSTATUS_ENUM.PRINTED;
+            await orderItem.save();
+            res.send({ itemImages: orderItem.itemImages , orderStatus: orderItem.orderStatus});
+        });
     } catch (e) {
         console.log(e.message);
         res.status(400).send({

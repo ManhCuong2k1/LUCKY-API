@@ -14,14 +14,13 @@ interface SizeInterface {
 
 const saveFile = async (file: any, size?: SizeInterface) => {
     const imageFolder =  path.join(__dirname, "../../public/images");
-    const fileName: string = getFileName();
+    const fileName: string = getFileName();       
     const filePath = path.resolve(`${imageFolder}/${fileName}.jpg`);
     await sharp(file.buffer)
         .toFormat("jpeg")
         .jpeg( { quality: 90})
         .toFile(filePath);
-
-    return `${config.HOST_URL}/images/${fileName}.jpg`;
+    return `/${fileName}.jpg`;
 };
 
 export {

@@ -742,7 +742,7 @@ const XosoKenoData = async () => {
 
     const arrImport: any = {};
     arrImport["chanle"] = dataXoso["chanleresult"];
-    arrImport["lonnho"] = dataXoso["lonnhoResult"]
+    arrImport["lonnho"] = dataXoso["lonnhoResult"];
     arrImport["data"] = dataXoso["result"];
 
 
