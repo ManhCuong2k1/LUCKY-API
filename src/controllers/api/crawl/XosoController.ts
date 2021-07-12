@@ -89,12 +89,18 @@ router.get("/", (req: Request, res: Response) => {
 
 
 router.get("/get-keno-round", async (req: express.Request, res: Response) => {
-    const a = await Crawl.getKenoCurrentRound();
-    res.send(a);
+    const getKenoRoud = await Crawl.getKenoCurrentRound();
+    const datExport: any = {
+        status: true,
+        data: {
+            current_round: getKenoRoud.data.current_round,
+            finish_time: Date.parse(getKenoRoud.data.finish_time)
+        },
+        message: 'success'
+    };
+
+    res.send(datExport);
 });
 
-router.get("/dd", (req: Request, res: Response) => {
-    res.send(helper.addMinuteToTime("2021/7/07 20:0:0", 10));
-});
 
 export default router;

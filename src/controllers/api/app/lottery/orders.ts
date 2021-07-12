@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
 import helper from "@controllers/api/helper/helper";
 import Crawl from "../../crawl/Crawl";
-import { LotteryTicketInterface, LotteryTicketModel } from "@model/LotteryTicket";
+import { LotteryTicketInterface, LotteryTicketModel } from "@models/LotteryTicket";
 import { LotteryOrdersInterface, LotteryOrdersModel } from "@models/LotteryOrder";
 import { UserModel } from "@models/User";
 const router = Router();
@@ -43,7 +43,15 @@ router.post("/", async (req: Request, res: Response) => {
 
                         if(user.totalCoin >= totalPrice) { // kiểm tra tài khoản có đủ tiền hay không
 
-                            const creatTicket = await 
+                            const dataTicket:any  = {
+                                userId: user.id,
+                                type: body.game,
+                                totalCoin: totalPrice,
+                                orderDetail: "Mua Vé Keno",
+                                orderStatus: LotteryTicketModel.TICKET_ENUM.DELAY,
+                                resultDetail: "Chờ Xổ"
+                            }
+                            const creatTicket = await LotteryTicketModel.create(dataTicket);
 
 
                             // trừ tiền truocứ khi order 
@@ -64,6 +72,7 @@ router.post("/", async (req: Request, res: Response) => {
                                 switch(body.childgame) {  // kiểm tra user order chidlgaame nao
                                     case "basic": // choi số trùng bình thường
                                         dataImport = {
+                                            ticketId: creatTicket.id,
                                             userId: user.id,
                                             type: "keno",
                                             roundId: "00"+roundOrder,
@@ -85,6 +94,7 @@ router.post("/", async (req: Request, res: Response) => {
 
                                     case "chanle_lonnho": // chơi kiểu chẵn lẻ 
                                         dataImport = {
+                                            ticketId: creatTicket.id,
                                             userId: user.id,
                                             type: "keno",
                                             roundId: "00"+roundOrder,
