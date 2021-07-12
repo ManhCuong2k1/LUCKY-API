@@ -1,6 +1,7 @@
 import { Request, Response, Router } from "express";
 import helper from "@controllers/api/helper/helper";
 import Crawl from "../../crawl/Crawl";
+import { LotteryTicketInterface, LotteryTicketModel } from "@model/LotteryTicket";
 import { LotteryOrdersInterface, LotteryOrdersModel } from "@models/LotteryOrder";
 import { UserModel } from "@models/User";
 const router = Router();
@@ -41,6 +42,9 @@ router.post("/", async (req: Request, res: Response) => {
                         totalPrice = totalPrice * body.preriod; // tiền thanh toán khi đặt liên tiếp các kỳ
 
                         if(user.totalCoin >= totalPrice) { // kiểm tra tài khoản có đủ tiền hay không
+
+                            const creatTicket = await 
+
 
                             // trừ tiền truocứ khi order 
                             const UserData = await UserModel.findOne({ where: { id : user.id } });

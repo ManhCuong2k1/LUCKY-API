@@ -740,6 +740,15 @@ const XosoKenoData = async () => {
 
     const LotteryCheckExits = await LotteryCheck("keno", dataXoso["round"]);
 
+<<<<<<< Updated upstream
+=======
+    const arrImport: any = {};
+    arrImport["chanle"] = dataXoso["chanleresult"];
+    arrImport["lonnho"] = dataXoso["lonnhoResult"];
+    arrImport["data"] = dataXoso["result"];
+
+
+>>>>>>> Stashed changes
     if (!LotteryCheckExits) {
       const dataImport: any = {
         type: "keno",

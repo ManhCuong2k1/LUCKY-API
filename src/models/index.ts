@@ -25,6 +25,7 @@ import { NotificationModel } from "@models/Notification";
 import { BannerFeedAdModel } from "@models/BannerFeedAd";
 import { LotteryModel } from "@models/Lottery";
 import { LotteryOrdersModel } from "@models/LotteryOrder";
+import { LotteryTicketModel } from "@models/LotteryTicket";
 
 // LotteryModel.belongsTo(UserModel, { constraints: false});
 
