@@ -34,7 +34,7 @@ router.get("/results/:type", async (req: Request, res: Response) => {
 
 router.get("/orders", async (req: Request, res: Response) => {
     
-    if(req.query.id != null || req.query.id != '') {
+    if(req.query.id != null || req.query.id != "") {
         const ordersData = await LotteryOrdersModel.findOne({
             where: {
                 id: req.query.id

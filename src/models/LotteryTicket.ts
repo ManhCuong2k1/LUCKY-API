@@ -1,41 +1,33 @@
 import { DataTypes, Model, ModelScopeOptions, Op } from "sequelize";
 import sequelize from "@database/connection";
 
-interface LotteryOrdersInterface {
+interface LotteryTicketInterface {
     id: number;
-    ticketId: number;
     userId: string;
     type: string;
-    roundId: string;
-    orderDetail: string;    
+    totalCoin: number;
+    orderDetail: string;
     orderStatus: string;
     resultDetail: string;
     resultStatus: string;
-    finishTime: string;
-    itemImages: string;
-    moreDetail: string;
     createdAt: Date;
     updatedAt: Date;
     deletedAt: Date;
 }
 
-class LotteryOrdersModel extends Model<LotteryOrdersInterface> implements LotteryOrdersInterface {
+class LotteryTicketModel extends Model<LotteryTicketInterface> implements LotteryTicketInterface {
     public id!: number;
-    public ticketId: number;
     public userId: string;
     public type: string;
-    public roundId: string;
+    public totalCoin: number;
     public orderDetail: string;
     public orderStatus: string;
     public resultDetail: string;
     public resultStatus: string;
-    public finishTime: string;
-    public itemImages: string;
-    public moreDetail: string;
     public createdAt: Date;
     public updatedAt: Date;
     public deletedAt: Date;
-    static readonly ORDERSTATUS_ENUM = {
+    static readonly TICKET_ENUM = {
         DELAY: "delay",
         PRINTED: "printed",
         DRAWNED: "drawned",
@@ -45,17 +37,13 @@ class LotteryOrdersModel extends Model<LotteryOrdersInterface> implements Lotter
         WINNED: "Trúng Giải",
         DRAWNED: "Đã Xổ Vé"
     };
-
 }
 
-const LotteryOrdersDefine = {
+const LotteryTicketDefine = {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
-    },
-    ticketId: {
-        type: DataTypes.INTEGER,
     },
     userId: {
         type: DataTypes.STRING(300),
@@ -63,8 +51,8 @@ const LotteryOrdersDefine = {
     type: {
         type: DataTypes.STRING(300),
     },
-    roundId: {
-        type: DataTypes.STRING(300),
+    totalCoin: {
+        type: DataTypes.INTEGER()
     },
     orderDetail: {
         type: DataTypes.TEXT,
@@ -78,15 +66,6 @@ const LotteryOrdersDefine = {
     resultStatus: {
         type: DataTypes.STRING,
     },
-    finishTime: {
-        type: DataTypes.STRING(300),
-    },
-    itemImages: {
-        type: DataTypes.TEXT,
-    },
-    moreDetail: {
-        type: DataTypes.STRING,
-    },
     createdAt: {
         type: DataTypes.DATE,
     },
@@ -98,9 +77,9 @@ const LotteryOrdersDefine = {
     },
 };
 
-LotteryOrdersModel.init(LotteryOrdersDefine, {
+LotteryTicketModel.init(LotteryTicketDefine, {
     paranoid: true,
-    tableName: "lottery_orders",
+    tableName: "lottery_tickets",
     deletedAt: "deletedAt",
     updatedAt: "updatedAt",
     createdAt: "createdAt",
@@ -109,6 +88,6 @@ LotteryOrdersModel.init(LotteryOrdersDefine, {
 
 
 export {
-    LotteryOrdersInterface, 
-    LotteryOrdersModel
+    LotteryTicketInterface,
+    LotteryTicketModel
 };
