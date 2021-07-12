@@ -85,7 +85,7 @@ router.post("/", async (req: Request, res: Response) => {
                                             type: "keno",
                                             roundId: "00"+roundOrder,
                                             orderDetail: JSON.stringify({
-                                                childgame: "chanle",
+                                                childgame: "chanle_lonnho",
                                                 data: body.data,
                                                 totalprice: orderPrice
                                             }),
