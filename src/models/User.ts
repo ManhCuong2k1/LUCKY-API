@@ -210,15 +210,16 @@ UserModel.init(UserDefine, {
 });
 
 // Func
-const findCredentials = async (phone: string, password: string) => {
+const findCredentials = async (username: string, password: string) => {
   const user = await UserModel.findOne({
-    where: { phone, status: UserModel.STATUS_ENUM.WORKING },
+    where: { phone: username, status: UserModel.STATUS_ENUM.WORKING },
   });
   if (user == null) {
     throw new Error(ERROR_CODES.InvalidLoginCredentials);
   }
   const passwordHash = encryptPassword(password);
   const passwordMatch = passwordHash == user.password;
+
   if (!passwordMatch) throw new Error(ERROR_CODES.InvalidLoginCredentials);
   return user;
 };

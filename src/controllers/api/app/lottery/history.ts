@@ -1,12 +1,11 @@
 import { Request, Response, Router } from "express";
-import helper from "@controllers/api/helper/helper";
 import Crawl from "../../crawl/Crawl";
+
+import { LotteryInterface, LotteryModel } from "@models/Lottery";
 import { LotteryOrdersInterface, LotteryOrdersModel } from "@models/LotteryOrder";
 import { LotteryTicketInterface, LotteryTicketModel } from "@models/LotteryTicket";
-import { LotteryInterface, LotteryModel } from "@models/Lottery";
+
 const router = Router();
-
-
 
 router.get("/results/:type", async (req: Request, res: Response) => {
     switch (req.params.type) {
@@ -31,9 +30,6 @@ router.get("/results/:type", async (req: Request, res: Response) => {
             });
         break;
     }
-
-
 });
-
 
 export default router;

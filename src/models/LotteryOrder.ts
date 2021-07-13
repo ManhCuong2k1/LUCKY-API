@@ -12,7 +12,6 @@ interface LotteryOrdersInterface {
     resultDetail: string;
     resultStatus: string;
     finishTime: string;
-    itemImages: string;
     moreDetail: string;
     createdAt: Date;
     updatedAt: Date;
@@ -30,11 +29,21 @@ class LotteryOrdersModel extends Model<LotteryOrdersInterface> implements Lotter
     public resultDetail: string;
     public resultStatus: string;
     public finishTime: string;
-    public itemImages: string;
     public moreDetail: string;
     public createdAt: Date;
     public updatedAt: Date;
     public deletedAt: Date;
+    static readonly ORDERSTATUS_ENUM = {
+        DELAY: "delay",
+        PRINTED: "printed",
+        DRAWNED: "drawned",
+        CANCELED: "canceled"
+    };
+    static readonly RESULTSTATUS_ENUM = {
+        WINNED: "Trúng Giải",
+        DRAWNED: "Đã Xổ Vé"
+    };
+
 }
 
 const LotteryOrdersDefine = {
@@ -69,9 +78,6 @@ const LotteryOrdersDefine = {
     },
     finishTime: {
         type: DataTypes.STRING(300),
-    },
-    itemImages: {
-        type: DataTypes.TEXT,
     },
     moreDetail: {
         type: DataTypes.STRING,

@@ -1,7 +1,7 @@
 import express, { Response, Request } from "express";
 import Crawl from "./Crawl";
 import helper from "@controllers/api/helper/helper";
-import update from "../app/lottery/updateresult";
+import updateTicket from "../app/lottery/updateresult";
 
 const router = express.Router();
 
@@ -33,7 +33,7 @@ router.get("/", (req: Request, res: Response) => {
         case "keno":
             try {
                 const crawling = await Crawl.XosoKenoData();
-                const updateData = update.updateResult("keno", crawling.data);
+                const updateData = updateTicket.updateResult("keno", crawling.data);
                 return res.send(crawling);
             } catch (e) {
                 res.status(401).send({
@@ -87,20 +87,23 @@ router.get("/", (req: Request, res: Response) => {
     }
 });
 
-
+/* eslint-disable no-alert, no-console */
 router.get("/get-keno-round", async (req: express.Request, res: Response) => {
-    const getKenoRoud = await Crawl.getKenoCurrentRound();
+    
+    const getKenoRoud: any = await Crawl.getKenoCurrentRound();
     const datExport: any = {
         status: true,
         data: {
-            current_round: getKenoRoud.data.current_round,
-            finish_time: Date.parse(getKenoRoud.data.finish_time)
+            current_round: getKenoRoud.data.current_round, // eslint-disable-line
+            finish_time: Date.parse(getKenoRoud.data.finish_time) // eslint-disable-line
         },
-        message: 'success'
+        message: "success"
     };
 
     res.send(datExport);
 });
+/* eslint-enable no-alert, no-console */
+
 
 
 export default router;

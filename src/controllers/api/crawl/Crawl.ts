@@ -740,13 +740,19 @@ const XosoKenoData = async () => {
 
     const LotteryCheckExits = await LotteryCheck("keno", dataXoso["round"]);
 
+    const arrImport: any = {};
+    arrImport["chanle"] = dataXoso["chanleresult"];
+    arrImport["lonnho"] = dataXoso["lonnhoResult"];
+    arrImport["data"] = dataXoso["result"];
+
+
     if (!LotteryCheckExits) {
       const dataImport: any = {
         type: "keno",
         date: dataXoso["date"],
         next: null,
         round: dataXoso["round"],
-        result: JSON.stringify(dataXoso["result"])
+        result: JSON.stringify(arrImport)
       };
 
       LotteryModel.create(dataImport);
@@ -1204,7 +1210,7 @@ const getKenoCurrentRound = async () => {
     const options = {
       "method": "GET",
       "rejectUnauthorized": false,
-      "url": "https://www.minhchinh.com/livekqxs/xstt/KN.php",
+      "url": "https://www.minhchinh.com/livekqxs/xstt/KN.php?_="+ helper.randomString(13),
       "headers": {}
     };
 
