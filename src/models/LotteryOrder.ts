@@ -3,16 +3,15 @@ import sequelize from "@database/connection";
 
 interface LotteryOrdersInterface {
     id: number;
-    ticketId: number;
     userId: string;
     type: string;
+    ticketId: number;
     roundId: string;
     orderDetail: string;    
     orderStatus: string;
     resultDetail: string;
     resultStatus: string;
     finishTime: string;
-    itemImages: string;
     moreDetail: string;
     createdAt: Date;
     updatedAt: Date;
@@ -21,16 +20,15 @@ interface LotteryOrdersInterface {
 
 class LotteryOrdersModel extends Model<LotteryOrdersInterface> implements LotteryOrdersInterface {
     public id!: number;
-    public ticketId: number;
     public userId: string;
     public type: string;
+    public ticketId: number;
     public roundId: string;
     public orderDetail: string;
     public orderStatus: string;
     public resultDetail: string;
     public resultStatus: string;
     public finishTime: string;
-    public itemImages: string;
     public moreDetail: string;
     public createdAt: Date;
     public updatedAt: Date;
@@ -80,9 +78,6 @@ const LotteryOrdersDefine = {
     },
     finishTime: {
         type: DataTypes.STRING(300),
-    },
-    itemImages: {
-        type: DataTypes.TEXT,
     },
     moreDetail: {
         type: DataTypes.STRING,

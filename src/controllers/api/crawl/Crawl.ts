@@ -1210,7 +1210,7 @@ const getKenoCurrentRound = async () => {
     const options = {
       "method": "GET",
       "rejectUnauthorized": false,
-      "url": "https://www.minhchinh.com/livekqxs/xstt/KN.php",
+      "url": "https://www.minhchinh.com/livekqxs/xstt/KN.php?_="+ helper.randomString(13),
       "headers": {}
     };
 

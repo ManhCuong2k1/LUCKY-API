@@ -5,11 +5,12 @@ interface LotteryTicketInterface {
     id: number;
     userId: string;
     type: string;
-    totalCoin: number;
+    preriod: number;
+    totalPrice: number;
     orderDetail: string;
     orderStatus: string;
     resultDetail: string;
-    resultStatus: string;
+    moreDetail: string;
     createdAt: Date;
     updatedAt: Date;
     deletedAt: Date;
@@ -19,11 +20,12 @@ class LotteryTicketModel extends Model<LotteryTicketInterface> implements Lotter
     public id!: number;
     public userId: string;
     public type: string;
-    public totalCoin: number;
+    public preriod: number;
+    public totalPrice: number;
     public orderDetail: string;
     public orderStatus: string;
     public resultDetail: string;
-    public resultStatus: string;
+    public moreDetail: string;
     public createdAt: Date;
     public updatedAt: Date;
     public deletedAt: Date;
@@ -51,7 +53,10 @@ const LotteryTicketDefine = {
     type: {
         type: DataTypes.STRING(300),
     },
-    totalCoin: {
+    preriod: {
+        type: DataTypes.INTEGER,
+    },
+    totalPrice: {
         type: DataTypes.INTEGER()
     },
     orderDetail: {
@@ -63,7 +68,7 @@ const LotteryTicketDefine = {
     resultDetail: {
         type: DataTypes.TEXT
     },
-    resultStatus: {
+    moreDetail: {
         type: DataTypes.STRING,
     },
     createdAt: {

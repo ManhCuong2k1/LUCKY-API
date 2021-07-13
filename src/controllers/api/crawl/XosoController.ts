@@ -94,7 +94,7 @@ router.get("/get-keno-round", async (req: express.Request, res: Response) => {
     const datExport: any = {
         status: true,
         data: {
-            current_round: Number(getKenoRoud.data.current_round), // eslint-disable-line
+            current_round: getKenoRoud.data.current_round, // eslint-disable-line
             finish_time: Date.parse(getKenoRoud.data.finish_time) // eslint-disable-line
         },
         message: "success"
