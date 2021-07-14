@@ -12,7 +12,12 @@ const updateResult = async (game: string, data: any) => {
     switch (game) {
         case "keno":
             try {
-                const OrderItem = await LotteryOrdersModel.findAll({ where: { type: game, roundId: data.round, orderStatus: LotteryOrdersModel.ORDERSTATUS_ENUM.PRINTED } });
+                const OrderItem = await LotteryOrdersModel.findAll({ 
+                    where: { 
+                        type: game, 
+                        roundId: data.round, 
+                        orderStatus: LotteryOrdersModel.ORDERSTATUS_ENUM.DELAY
+                    } });
 
                 OrderItem.forEach(async (orderData: any) => {
                     const orderDetail = JSON.parse(orderData.orderDetail);
