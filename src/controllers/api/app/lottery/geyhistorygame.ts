@@ -7,19 +7,43 @@ import { LotteryTicketInterface, LotteryTicketModel } from "@models/LotteryTicke
 const router = Router();
 
 router.get("/results/:type", async (req: Request, res: Response) => {
-    switch (req.params.type) {
-        case "keno":
             try {
-                if (req.query.id != null || req.query.id != "") {
-                    const ordersData = await LotteryModel.findOne({
+                if (typeof req.query.id !== "undefined") {
+                    const resultsData = await LotteryModel.findOne({
                         where: {
                             id: req.query.id
                         }
                     });
-                    res.json(ordersData);
+                    res.json(resultsData);
                 } else {
-                    const ordersData = await LotteryModel.findAll();
-                    res.json(ordersData);
+                    const resultsData = await LotteryModel.findAll({ 
+                        where: { 
+                            type: req.params.type 
+                            }, order: [["id", "DESC"]]
+                        });
+
+                    const dataExport: any = [];
+                    if(resultsData.length > 0) {
+                        resultsData.forEach((resultsData: any) => {
+                            const dataPush = {
+                                id: resultsData.id,
+                                type: resultsData.type,
+                                date: resultsData.date,
+                                next: resultsData.next,
+                                round: resultsData.round,
+                                result: JSON.parse(resultsData.result),
+                                createdAt: resultsData.createdAt,
+                                updatedAt: resultsData.updatedAt
+                            };
+                            dataExport.push(dataPush);
+                        });
+                        res.json(dataExport);
+                    }else {
+                        res.json({
+                            status: false,
+                            message: "Chưa có kết quả nào" 
+                        });
+                    }
                 }
             } catch (error) {
                 res.json({
@@ -27,28 +51,18 @@ router.get("/results/:type", async (req: Request, res: Response) => {
                     message: error
                 });
             }
-            break;
-
-        default:
-            res.json({
-                status: false,
-                message: "error order type params"
-            });
-            break;
-    }
 });
 
 
-router.get("/tickets/:type", async (req: Request, res: Response) => {
+router.get("/tickets", async (req: Request, res: Response) => {
 
-    switch (req.params.type) {
-        case "keno":
             try {
                 if (typeof req.query.id !== "undefined") {
+
                     const ticketsData = await LotteryTicketModel.findOne({
                         where: {
                             id: req.query.id
-                        }
+                        }, order: [["id", "DESC"]]
                     });
 
                     if (ticketsData != null) {
@@ -86,11 +100,15 @@ router.get("/tickets/:type", async (req: Request, res: Response) => {
                     }
 
                 } else {
-                    const ticketsData = await LotteryTicketModel.findAll();
+                    const ticketsData = await LotteryTicketModel.findAll({
+                        order: [["id", "DESC"]]
+                    });
+
+                    console.log(ticketsData);
 
                     if (ticketsData != null) {
 
-                        let dataExport: any = [];
+                        const dataExport: any = [];
 
                         ticketsData.forEach(async (ticket: any) => {
 
@@ -141,17 +159,7 @@ router.get("/tickets/:type", async (req: Request, res: Response) => {
                     message: error
                 });
             }
-            break;
-
-        default:
-            res.json({
-                status: false,
-                message: "error order type params"
-            });
-            break;
-    }
 });
-
 
 
 router.get("/ticketDetail/:type/:id", async (req: Request, res: Response) => {

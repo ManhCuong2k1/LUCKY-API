@@ -26,13 +26,18 @@ import { BannerFeedAdModel } from "@models/BannerFeedAd";
 import { LotteryModel } from "@models/Lottery";
 import { LotteryTicketModel } from "@models/LotteryTicket";
 import { LotteryOrdersModel } from "@models/LotteryOrder";
-import { LotteryTicketModel } from "@models/LotteryTicket";
+import { LotteryImagesModel } from "@models/LotteryImages";
+
+
 
 // LotteryModel.belongsTo(UserModel, { constraints: false});
 
 LotteryOrdersModel.belongsTo(UserModel, { as: "user", constraints: false });
 LotteryTicketModel.belongsTo(UserModel, { as: "user", constraints: false });
 LotteryOrdersModel.belongsTo(LotteryTicketModel, { as: "ticket", constraints: false });
+LotteryImagesModel.belongsTo(LotteryTicketModel, { as: "ticket", constraints: false });
+
+
 
 UserModel.belongsTo(RoleModel, { as: "role", constraints: false });
 
