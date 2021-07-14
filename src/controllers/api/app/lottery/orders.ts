@@ -44,8 +44,6 @@ router.post("/", async (req: Request, res: Response) => {
                     const orderPrice = totalPrice; // tiền 1 đơn
                     totalPrice = (totalPrice * body.preriod) + fee; // tiền thanh toán khi đặt liên tiếp các kỳ
 
-                    console.log(totalPrice);
-
                     if (user.totalCoin >= totalPrice) { // kiểm tra tài khoản có đủ tiền hay không
 
                         const UserData = await UserModel.findOne({ where: { id: user.id } });
@@ -72,6 +70,7 @@ router.post("/", async (req: Request, res: Response) => {
 
                             if (isFirst == false) {
                                 timeOrder = helper.addMinuteToTime(timeOrder, 10);
+                                console.log(timeOrder);
                                 roundOrder = Number(roundOrder) + 1;
                             }
 
@@ -93,6 +92,8 @@ router.post("/", async (req: Request, res: Response) => {
                                         finishTime: timeOrder,
                                         moreDetail: "Đại lý giữ hộ vé"
                                     };
+
+                                    console.log(timeOrder);
 
                                     isFirst = false;
                                     status = true, message = "Đặt Vé Thành Công!";

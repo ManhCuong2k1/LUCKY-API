@@ -3,7 +3,7 @@ import sequelize from "@database/connection";
 
 interface LotteryTicketInterface {
     id: number;
-    userId: string;
+    userId: number;
     type: string;
     preriod: number;
     totalPrice: number;
@@ -18,7 +18,7 @@ interface LotteryTicketInterface {
 
 class LotteryTicketModel extends Model<LotteryTicketInterface> implements LotteryTicketInterface {
     public id!: number;
-    public userId: string;
+    public userId: number;
     public type: string;
     public preriod: number;
     public totalPrice: number;
@@ -33,6 +33,7 @@ class LotteryTicketModel extends Model<LotteryTicketInterface> implements Lotter
         DELAY: "delay",
         PRINTED: "printed",
         DRAWNED: "drawned",
+        WINNED: "winned",
         CANCELED: "canceled"
     };
     static readonly RESULTSTATUS_ENUM = {
@@ -48,7 +49,7 @@ const LotteryTicketDefine = {
         autoIncrement: true,
     },
     userId: {
-        type: DataTypes.STRING(300),
+        type: DataTypes.INTEGER,
     },
     type: {
         type: DataTypes.STRING(300),

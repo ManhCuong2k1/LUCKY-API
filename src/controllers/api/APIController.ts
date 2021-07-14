@@ -21,22 +21,6 @@ router.use("/admin", AdminController);
 router.use("/app", auth, AppController);
 router.use("/upload", UploadController);
 
-// Tiki Router
-router.use("/tikivoucher", TikiVoucherController);
-// Shoppe Router
-router.use("/shopeevoucher", ShoppeVoucherController);
-// Lazada Router
-router.use("/lazadavoucher", LazadaVoucherController);
-
-// Shoppe Api Masoffer
-router.use("/shopee", ShopeeMasofferController);
-// Shoppe Item Get
-router.use("/shopee-item", ShopeeItemController);
-// Init Crawl Category
-
-// Check Shopee Voucher
-router.use("/validate-voucher", CheckShopeeController);
-
 // API XoSo
 router.use("/xoso", XosoController);
 
