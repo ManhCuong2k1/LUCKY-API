@@ -8,6 +8,7 @@ import upload from "@middleware/upload";
 import { saveFile } from "@util/resizeImage";
 import { resolve } from "bluebird";
 import { includes } from "lodash";
+import { RESERVED_EVENTS } from "socket.io/dist/socket";
 const router = Router();
 
 const getdata = async (typeGame: any) => {
@@ -22,7 +23,7 @@ const getdata = async (typeGame: any) => {
 
 router.get("/", async (req: Request, res: Response) => {
     try {
-        const lotteryOrder = await LotteryTicketModel.findAll({
+        const ticketAll = await LotteryTicketModel.findAll({
             include: [{
                 model: UserModel,
                 as: "user",
@@ -37,7 +38,36 @@ router.get("/", async (req: Request, res: Response) => {
             }
             ],
         });
-        res.send({ data: lotteryOrder });
+        res.send({ data: ticketAll });
+    } catch (e) {
+        res.status(400).send({
+        error: e.message,
+        });
+    }
+});
+
+router.get("/detail/:id", async (req: Request, res: Response) => {
+    try {
+        const idTicket = req.params.id;
+        const ticketDetail = await LotteryTicketModel.findOne({
+            where: {
+                id: idTicket
+            },
+            include: [{
+                model: UserModel,
+                as: "user",
+            },
+            {
+                model: LotteryImagesModel,
+                as : "image"
+            },
+            {
+                model: LotteryOrdersModel,
+                as: "orders"
+            }
+            ],
+        });
+        res.json({data: ticketDetail});
     } catch (e) {
         res.status(400).send({
         error: e.message,
@@ -85,6 +115,7 @@ router.get("/:type", async (req: Request, res: Response) => {
 
 router.post("/:id/images", upload.single("image"), async (req: Request, res: Response) => {
     try {
+
         const id = req.params.id;
         
         const orderItem = await LotteryTicketModel.findByPk(id);
@@ -100,7 +131,7 @@ router.post("/:id/images", upload.single("image"), async (req: Request, res: Res
         const dataImages = await LotteryImagesModel.create(dataConfig);
         orderItem.orderStatus = LotteryTicketModel.TICKET_ENUM.PRINTED;
         await orderItem.save();
-        res.send({status: orderItem.orderStatus, dataImages})
+        res.send({status: orderItem.orderStatus, dataImages});
     } catch (e) {
         console.log(e.message);
         res.status(400).send({
