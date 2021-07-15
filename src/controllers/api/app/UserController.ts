@@ -1,8 +1,11 @@
-import { Router } from "express";
+import { Request, Response, Router } from "express";
 import { UserInterface, UserModel } from "@models/User";
 import { Sequelize } from "sequelize";
 import { FeedInterface, FeedModel } from "@models/Feed";
 import { HashTagInterface, HashTagModel } from "@models/HashTag";
+import { findCredentials } from "@models/User";
+import { encryptPassword } from "@util/md5password";
+
 const router = Router();
 
 /**
