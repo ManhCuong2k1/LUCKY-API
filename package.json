@@ -69,6 +69,7 @@
         "path": "^0.12.7",
         "pug": "^3.0.2",
         "redis": "^3.1.0",
+        "redis-server": "^1.2.2",
         "request": "^2.88.2",
         "request-promise": "^4.2.6",
         "sequelize": "^6.3.5",

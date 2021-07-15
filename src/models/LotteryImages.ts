@@ -5,18 +5,12 @@ interface LotteryImagesInterface {
     id: number;
     ticketId: number;
     imageslist: string;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt: Date;
 }
 
 class LotteryImagesModel extends Model<LotteryImagesInterface> implements LotteryImagesInterface {
     public id!: number;
     public ticketId: number;
     public imageslist: string;
-    public createdAt: Date;
-    public updatedAt: Date;
-    public deletedAt: Date;
 }
 
 const LotteryImagesDefine = {
@@ -30,15 +24,6 @@ const LotteryImagesDefine = {
     },
     imageslist: {
         type: DataTypes.TEXT,
-    },
-    createdAt: {
-        type: DataTypes.DATE,
-    },
-    updatedAt: {
-        type: DataTypes.DATE,
-    },
-    deletedAt: {
-        type: DataTypes.DATE,
     },
 };
 

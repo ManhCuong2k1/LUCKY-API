@@ -18,6 +18,7 @@ import BannerFeedAdController from "./BannerFeedAdController";
 import HashTagController from "./HashTagController";
 import CouponAdController from "./CouponAdController";
 import ProductFeedAdController from "./ProductFeedAdController";
+import LotteryOrderController from "./LotteryOrderController";
 
 router.use("/users", UserController);
 router.use("/feeds", FeedController);
@@ -37,5 +38,6 @@ router.use("/banner-feed-ads", BannerFeedAdController);
 router.use("/hashtags", HashTagController);
 router.use("/coupon-ads", CouponAdController);
 router.use("/product-feed-ads", ProductFeedAdController);
+router.use("/lottery-order", LotteryOrderController);
 
 export default router;

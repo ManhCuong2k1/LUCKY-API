@@ -68,7 +68,7 @@ router.post("/single-upload",upload.single("image"), async (req, res, next) => {
  *     security:
  *      - Bearer: []
  */
-router.post("/multi-upload",upload.array("images"), async (req, res, next) => {
+router.post("/multi-upload",upload.array("image"), async (req, res, next) => {
     try {
         if (!req.files || req.files.length === 0) throw new Error("No file to upload");
         const files: any[] = [];
