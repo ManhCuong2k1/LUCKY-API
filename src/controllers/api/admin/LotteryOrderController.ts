@@ -1,14 +1,12 @@
 import { Router, Request, Response } from "express";
-import { LotteryOrdersInterface, LotteryOrdersModel } from "@models/LotteryOrder";
-import { LotteryImagesInterface,  LotteryImagesModel } from "@models/LotteryImages";
-import { UserModel, UserInterface, } from "@models/User";
-import { LotteryTicketInterface,  LotteryTicketModel } from "@models/LotteryTicket";
+import { LotteryOrdersModel } from "@models/LotteryOrder";
+import { LotteryImagesModel } from "@models/LotteryImages";
+import { UserModel } from "@models/User";
+import { LotteryTicketModel } from "@models/LotteryTicket";
+import { GridInterface } from "@models/Transformers/Grid";
 import { Op } from "sequelize";
 import upload from "@middleware/upload";
 import { saveFile } from "@util/resizeImage";
-import { resolve } from "bluebird";
-import { includes } from "lodash";
-import { RESERVED_EVENTS } from "socket.io/dist/socket";
 const router = Router();
 
 const getdata = async (typeGame: any) => {
@@ -23,7 +21,10 @@ const getdata = async (typeGame: any) => {
 
 router.get("/", async (req: Request, res: Response) => {
     try {
-        const ticketAll = await LotteryTicketModel.findAll({
+        const page: number = parseInt(req.query.page ? req.query.page.toString() : "1");
+        const pageSize: number = parseInt(req.query.pageSize ? req.query.pageSize.toString() : "1");
+        const cursor: number = (page - 1) * pageSize;
+        const { rows, count } = await LotteryTicketModel.findAndCountAll({
             include: [{
                 model: UserModel,
                 as: "user",
@@ -37,8 +38,19 @@ router.get("/", async (req: Request, res: Response) => {
                 as: "orders"
             }
             ],
+            limit: pageSize,
+            offset: cursor,
+            order: [
+                ["createdAt", "DESC"],
+            ],
         });
-        res.send({ data: ticketAll });
+        const responseData: GridInterface<LotteryTicketModel> = {
+            data: rows,
+            page: page,
+            pageSize: pageSize,
+            total: count
+        };
+        res.send(responseData );
     } catch (e) {
         res.status(400).send({
         error: e.message,
