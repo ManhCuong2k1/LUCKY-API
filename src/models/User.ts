@@ -9,7 +9,7 @@ import {
 } from "sequelize";
 import sequelize from "@database/connection";
 import { ERROR_CODES } from "@util/constants";
-import { encryptPassword } from "@util/crypto";
+import { encryptPassword } from "@util/md5password";
 import config from "../config";
 import jwt from "jsonwebtoken";
 import { HashTagModel } from "@models/HashTag";

@@ -6,11 +6,9 @@ import sequelize from "@database/connection";
 import orders from "./lottery/orders";
 import history from "./lottery/geyhistorygame";
 
-
 const router = Router();
 
 router.use("/orders", orders);
 router.use("/history", history);
-
 
 export default router;

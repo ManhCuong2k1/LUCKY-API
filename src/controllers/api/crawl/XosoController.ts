@@ -2,6 +2,9 @@ import express, { Response, Request } from "express";
 import Crawl from "./Crawl";
 import helper from "@controllers/api/helper/helper";
 import updateTicket from "../app/lottery/updateresult";
+import { LotteryInterface, LotteryModel } from "@models/Lottery";
+import { LotteryOrdersInterface, LotteryOrdersModel } from "@models/LotteryOrder";
+import { LotteryTicketInterface, LotteryTicketModel } from "@models/LotteryTicket";
 
 const router = express.Router();
 
@@ -103,6 +106,59 @@ router.get("/get-keno-round", async (req: express.Request, res: Response) => {
     res.send(datExport);
 });
 /* eslint-enable no-alert, no-console */
+
+
+
+
+router.get("/results/:type", async (req: Request, res: Response) => {
+    try {
+        if (typeof req.query.id !== "undefined") {
+            const resultsData = await LotteryModel.findOne({
+                where: {
+                    id: req.query.id,
+                    type: req.query.type
+                }
+            });
+            res.json(resultsData);
+        } else {
+            const resultsData = await LotteryModel.findAll({
+                where: {
+                    type: req.params.type
+                }, order: [["id", "DESC"]]
+            });
+
+            const dataExport: any = {};
+            dataExport["data"] = [];
+
+            if (resultsData.length > 0) {
+                resultsData.forEach((resultsData: any) => {
+                    const dataPush = {
+                        id: resultsData.id,
+                        type: resultsData.type,
+                        date: resultsData.date,
+                        next: resultsData.next,
+                        round: resultsData.round,
+                        result: JSON.parse(resultsData.result),
+                        createdAt: resultsData.createdAt,
+                        updatedAt: resultsData.updatedAt
+                    };
+                    dataExport["data"].push(dataPush);
+                });
+                res.json(dataExport);
+            } else {
+                res.json({
+                    status: false,
+                    message: "Chưa có kết quả nào"
+                });
+            }
+        }
+    } catch (error) {
+        res.json({
+            status: false,
+            message: error
+        });
+    }
+});
 
 
 
