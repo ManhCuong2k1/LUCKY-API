@@ -1,9 +1,13 @@
 import { Router, Request, Response } from "express";
 import { LotteryOrdersInterface, LotteryOrdersModel } from "@models/LotteryOrder";
+import { LotteryImagesInterface,  LotteryImagesModel } from "@models/LotteryImages";
+import { UserModel, UserInterface, } from "@models/User";
+import { LotteryTicketInterface,  LotteryTicketModel } from "@models/LotteryTicket";
 import { Op } from "sequelize";
 import upload from "@middleware/upload";
 import { saveFile } from "@util/resizeImage";
 import { resolve } from "bluebird";
+import { includes } from "lodash";
 const router = Router();
 
 const getdata = async (typeGame: any) => {
@@ -12,15 +16,27 @@ const getdata = async (typeGame: any) => {
             type: typeGame
         }
     });
-    // console.log(data.dataValues);
     
     return data;
 };
 
 router.get("/", async (req: Request, res: Response) => {
     try {
-        const lotteryOrder = await LotteryOrdersModel.findAll();
-
+        const lotteryOrder = await LotteryTicketModel.findAll({
+            include: [{
+                model: UserModel,
+                as: "user",
+            },
+            {
+                model: LotteryImagesModel,
+                as : "image"
+            },
+            {
+                model: LotteryOrdersModel,
+                as: "orders"
+            }
+            ],
+        });
         res.send({ data: lotteryOrder });
     } catch (e) {
         res.status(400).send({
@@ -67,22 +83,24 @@ router.get("/:type", async (req: Request, res: Response) => {
     }
 });
 
-router.post("/:id/images", upload.array("images"), async (req: Request, res: Response) => {
+router.post("/:id/images", upload.single("image"), async (req: Request, res: Response) => {
     try {
-        const user = req.params.id;
-        const orderItem = await LotteryOrdersModel.findByPk(user);
-        if (!req.files) throw new Error("No file to upload");
+        const id = req.params.id;
         
-        const data = Object.values(req.files);
-        const objectData: any = [];        
-        await data.forEach(async (element: any) => {            
-            const fileName = await saveFile(element);
-            objectData.push(fileName);
-            orderItem.itemImages = JSON.stringify(objectData);
-            orderItem.orderStatus = LotteryOrdersModel.ORDERSTATUS_ENUM.PRINTED;
-            await orderItem.save();
-            res.send({ itemImages: orderItem.itemImages , orderStatus: orderItem.orderStatus});
-        });
+        const orderItem = await LotteryTicketModel.findByPk(id);
+        if (!req.file) throw new Error("No file to upload");
+        
+        const data = req.file;
+        
+        const fileName = await saveFile(data);
+        const dataConfig: any = {
+            ticketId: parseInt(id),
+            imageslist: fileName
+        };
+        const dataImages = await LotteryImagesModel.create(dataConfig);
+        orderItem.orderStatus = LotteryTicketModel.TICKET_ENUM.PRINTED;
+        await orderItem.save();
+        res.send({status: orderItem.orderStatus, dataImages})
     } catch (e) {
         console.log(e.message);
         res.status(400).send({
