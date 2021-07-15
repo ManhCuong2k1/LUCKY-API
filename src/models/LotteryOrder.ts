@@ -41,10 +41,10 @@ class LotteryOrdersModel extends Model<LotteryOrdersInterface> implements Lotter
         CANCELED: "canceled"
     };
     static readonly RESULTSTATUS_ENUM = {
-        WINNED: "Trúng Giải",
-        DRAWNED: "Đã Xổ Vé"
+        WINNED: "TRÚNG GIẢI",
+        DRAWNED: "ĐÃ XỔ VÉ",
+        DELAY: "Chờ Xổ"
     };
-
 }
 
 const LotteryOrdersDefine = {

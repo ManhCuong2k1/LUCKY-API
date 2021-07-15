@@ -37,8 +37,9 @@ class LotteryTicketModel extends Model<LotteryTicketInterface> implements Lotter
         CANCELED: "canceled"
     };
     static readonly RESULTSTATUS_ENUM = {
-        WINNED: "Trúng Giải",
-        DRAWNED: "Đã Xổ Vé"
+        WINNED: "TRÚNG GIẢI",
+        DRAWNED: "ĐÃ IN VÉ",
+        DELAY: "CHỜ IN VÉ"
     };
 }
 
