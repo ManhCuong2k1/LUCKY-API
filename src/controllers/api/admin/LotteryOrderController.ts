@@ -75,14 +75,14 @@ router.post("/:id/images", upload.array("images"), async (req: Request, res: Res
         
         const data = Object.values(req.files);
         const objectData: any = [];        
-        await data.forEach(async (element: any) => {            
-            const fileName = await saveFile(element);
-            objectData.push(fileName);
-            orderItem.itemImages = JSON.stringify(objectData);
-            orderItem.orderStatus = LotteryOrdersModel.ORDERSTATUS_ENUM.PRINTED;
-            await orderItem.save();
-            res.send({ itemImages: orderItem.itemImages , orderStatus: orderItem.orderStatus});
-        });
+        // await data.forEach(async (element: any) => {            
+        //     const fileName = await saveFile(element);
+        //     objectData.push(fileName);
+        //     orderItem = JSON.stringify(objectData);
+        //     orderItem.orderStatus = LotteryOrdersModel.ORDERSTATUS_ENUM.PRINTED;
+        //     await orderItem.save();
+        //     res.send({ itemImages: orderItem.itemImages , orderStatus: orderItem.orderStatus});
+        // });
     } catch (e) {
         console.log(e.message);
         res.status(400).send({
