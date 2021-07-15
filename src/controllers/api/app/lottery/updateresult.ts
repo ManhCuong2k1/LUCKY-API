@@ -75,7 +75,7 @@ const updateResult = async (game: string, data: any) => {
                         // CHẴN LẺ KENO
                         case "chanle_lonnho":
                             dataUpdateChanLe = {}, dataUpdateChanLe.data = [], dataUpdateChanLe.result = {};
-                            let isWinChanLe: boolean = false, updateRewardChanLe: number = 0;
+                            const isWinChanLe: boolean = false, updateRewardChanLe: number = 0;
 
 
 

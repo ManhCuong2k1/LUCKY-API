@@ -59,7 +59,7 @@ router.post("/", async (req: Request, res: Response) => {
                             totalPrice: totalPrice,
                             orderDetail: "Mua Vé Số Keno",
                             orderStatus: LotteryTicketModel.TICKET_ENUM.DELAY,
-                            resultDetail: "Chờ Xổ",
+                            resultDetail: LotteryTicketModel.RESULTSTATUS_ENUM.DELAY,
                             moreDetail: "Đại lý giữ hộ vé"
                         };
                         const creatTicket = await LotteryTicketModel.create(dataTicket);
@@ -88,7 +88,7 @@ router.post("/", async (req: Request, res: Response) => {
                                             totalprice: orderPrice
                                         }),
                                         orderStatus: "delay",
-                                        resultStatus: "Chờ Xổ " + timeOrder,
+                                        resultStatus: LotteryOrdersModel.RESULTSTATUS_ENUM.DELAY + " " + timeOrder,
                                         finishTime: timeOrder,
                                         moreDetail: "Đại lý giữ hộ vé"
                                     };
@@ -111,7 +111,7 @@ router.post("/", async (req: Request, res: Response) => {
                                             totalprice: orderPrice
                                         }),
                                         orderStatus: "delay",
-                                        resultStatus: "Chờ Xổ " + timeOrder,
+                                        resultStatus: LotteryOrdersModel.RESULTSTATUS_ENUM.DELAY + " " + timeOrder,
                                         finishTime: timeOrder,
                                         moreDetail: "Đại lý giữ hộ vé"
                                     };
