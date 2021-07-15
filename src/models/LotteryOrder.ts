@@ -4,7 +4,7 @@ import sequelize from "@database/connection";
 interface LotteryOrdersInterface {
     id: number;
     ticketId: number;
-    userId: string;
+    userId: number;
     type: string;
     roundId: string;
     orderDetail: string;    
@@ -21,7 +21,7 @@ interface LotteryOrdersInterface {
 class LotteryOrdersModel extends Model<LotteryOrdersInterface> implements LotteryOrdersInterface {
     public id!: number;
     public ticketId: number;
-    public userId: string;
+    public userId: number;
     public type: string;
     public roundId: string;
     public orderDetail: string;
@@ -37,6 +37,7 @@ class LotteryOrdersModel extends Model<LotteryOrdersInterface> implements Lotter
         DELAY: "delay",
         PRINTED: "printed",
         DRAWNED: "drawned",
+        WINNED: "winned",
         CANCELED: "canceled"
     };
     static readonly RESULTSTATUS_ENUM = {
@@ -56,7 +57,7 @@ const LotteryOrdersDefine = {
         type: DataTypes.INTEGER,
     },
     userId: {
-        type: DataTypes.STRING(300),
+        type: DataTypes.INTEGER,
     },
     type: {
         type: DataTypes.STRING(300),
