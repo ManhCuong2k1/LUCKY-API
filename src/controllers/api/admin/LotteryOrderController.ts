@@ -125,29 +125,30 @@ router.get("/:type", async (req: Request, res: Response) => {
     }
 });
 
-router.post("/:id/images", upload.single("file"), async (req: Request, res: Response) => {
+router.post("/:id/images", upload.array("files"), async (req: Request, res: Response) => {
     try {
         const id = req.params.id;
-        console.log("here");
         
         const orderItem = await LotteryTicketModel.findByPk(id);
-        if (!req.file) throw new Error("No file to upload");
         
-        const data = req.file;
+        if (!req.files) throw new Error("No file to upload");
         
-        const fileName = await saveFile(data);
-        const dataConfig: any = {
-            ticketId: parseInt(id),
-            imageslist: fileName
-        };
-        const dataImages = await LotteryImagesModel.create(dataConfig);
-        orderItem.orderStatus = LotteryTicketModel.TICKET_ENUM.PRINTED;
-        await orderItem.save();
-        res.send({status: orderItem.orderStatus, dataImages});
+        const data = Object.values(req.files);
+        
+        const arrImages: any = [];        
+        await data.forEach(async (element: any) => {            
+            const fileName = await saveFile(element);
+            const objectData: any = {
+                imageslist: fileName,
+                ticketId: id
+            };
+            await LotteryImagesModel.create(objectData);
+            orderItem.orderStatus = LotteryOrdersModel.ORDERSTATUS_ENUM.PRINTED;
+            arrImages.push(fileName);
+            await orderItem.save();
+        });
     } catch (e) {
         console.log(e.message);
-        console.log('loi');
-        
         res.status(400).send({
             error: e.message
         });
