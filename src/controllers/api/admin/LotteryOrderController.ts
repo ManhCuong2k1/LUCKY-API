@@ -137,7 +137,7 @@ router.post("/:id/images", upload.array("files"), async (req: Request, res: Resp
         });
         const orderItem = await LotteryOrdersModel.findAll({
             where: {
-                ticketId: req.params.id
+                LotteryTicketModelId: req.params.id
             }
         });
         
