@@ -3,13 +3,13 @@ import sequelize from "@database/connection";
 
 interface LotteryImagesInterface {
     id: number;
-    ticketId: number;
+    LotteryTicketModelId: number;
     imageslist: string;
 }
 
 class LotteryImagesModel extends Model<LotteryImagesInterface> implements LotteryImagesInterface {
     public id!: number;
-    public ticketId: number;
+    public LotteryTicketModelId: number;
     public imageslist: string;
 }
 
@@ -19,7 +19,7 @@ const LotteryImagesDefine = {
         primaryKey: true,
         autoIncrement: true,
     },
-    ticketId: {
+    LotteryTicketModelId: {
         type: DataTypes.INTEGER,
     },
     imageslist: {

@@ -1,6 +1,8 @@
 import { Router } from "express";
 import upload from "@middleware/upload";
 import { saveFile } from "@util/resizeImage";
+import { LotteryImagesInterface,  LotteryImagesModel } from "@models/LotteryImages";
+import { GridInterface } from "@models/Transformers/Grid";
 
 const router = Router();
 
@@ -95,6 +97,37 @@ router.post("/multi-upload",upload.array("image"), async (req, res, next) => {
         });
     }
 });
+
+router.get("/images", async (req, res) => {
+    try {
+        // const user: any = req.user;
+        const page: number = parseInt(req.query.page ? req.query.page.toString() : "1");
+        const pageSize: number = parseInt(req.query.pageSize ? req.query.pageSize.toString() : "99999");
+        const cursor: number = (page - 1) * pageSize;
+        const { rows, count } = await LotteryImagesModel.findAndCountAll({
+            // where: {
+            //     ticketId: user.id
+            // },
+            limit: pageSize,
+            offset: cursor,
+            order: [
+                ["createdAt", "DESC"],
+            ],
+        });
+        const responseData: GridInterface<LotteryImagesModel> = {
+            data: rows,
+            page: page,
+            pageSize: pageSize,
+            total: count
+        };
+        res.send(responseData);
+    } catch (e) {
+        res.status(400).send({
+            error: e.message
+        });
+    }
+});
+
 
 
 export default router;

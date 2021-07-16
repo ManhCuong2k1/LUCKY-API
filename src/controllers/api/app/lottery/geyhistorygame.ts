@@ -137,7 +137,7 @@ router.get("/ticketDetail", async (req: Request, res: Response) => {
             
             const ticketImages = await LotteryImagesModel.findAll({
                 where: {
-                    ticketId: req.query.id
+                    LotteryTicketModelId: req.query.id
                 },
                 order: [["id", "ASC"]]
             });
