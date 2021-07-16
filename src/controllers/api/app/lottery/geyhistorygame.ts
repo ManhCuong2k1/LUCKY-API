@@ -60,8 +60,7 @@ router.get("/tickets/:type", async (req: Request, res: Response) => {
             const orderStatus = (req.params.type == "win") ? LotteryTicketModel.TICKET_ENUM.DRAWNED : req.params.type;
             const resultsDetail = (req.params.type == "win") ? LotteryTicketModel.RESULTSTATUS_ENUM.WINNED : "";
     
-            const condition = (req.params.type == "win" && resultsDetail != "") ? "`LotteryTicketModel`.`userId`='"+ user.id +"' AND `LotteryTicketModel`.`orderStatus` = '"+ orderStatus +"' AND `LotteryTicketModel`.`resultDetail` = '"+ resultsDetail +"'" : (req.params.type == "drawned") ? "`LotteryTicketModel`.`userId`='"+ user.id +"' AND `LotteryTicketModel`.`orderStatus` = '"+ orderStatus +"' AND `LotteryTicketModel`.`resultDetail` <> '"+LotteryTicketModel.RESULTSTATUS_ENUM.WINNED+"'" : "`LotteryTicketModel`.`userId`='"+ user.id +"' AND `LotteryTicketModel`.`orderStatus` = '"+ orderStatus +"'";
-
+            const condition = (req.params.type == "win" && resultsDetail != "") ? "`LotteryTicketModel`.`userId`='"+ user.id +"' AND `LotteryTicketModel`.`orderStatus` = '"+ orderStatus +"' AND `LotteryTicketModel`.`resultDetail` = '"+ resultsDetail +"'" : (req.params.type == "drawned") ? "`LotteryTicketModel`.`userId`='"+ user.id +"' AND (`LotteryTicketModel`.`orderStatus` = '"+ orderStatus +"' OR `LotteryTicketModel`.`orderStatus` = 'canceled') AND `LotteryTicketModel`.`resultDetail` <> '"+LotteryTicketModel.RESULTSTATUS_ENUM.WINNED+"'" : "`LotteryTicketModel`.`userId`='"+ user.id +"' AND `LotteryTicketModel`.`orderStatus` = '"+ orderStatus +"'";
             const ticketsData = await LotteryTicketModel.findAll({
                 where: Sequelize.literal(condition),
                 order: [["id", "DESC"]]

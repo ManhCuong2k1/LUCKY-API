@@ -718,7 +718,7 @@ const XosoKenoData = async () => {
     let le = 0;
     let lon = 0;
     let nho = 0;
-
+ 
     // loop các số và set lại giá trị cho các biến trên
     for (const i in arrNumber) {
       if (Number(arrNumber[i]) % 2 == 0) chan++; else le++;
@@ -734,6 +734,12 @@ const XosoKenoData = async () => {
     const dataXoso: any = {};
     dataXoso["date"] = helper.cutstring(lastRow, "target=\"_self\">", "</a>");
     dataXoso["round"] = helper.cutstring(lastRow, "target=\"_self\">#", "</a>");
+    dataXoso["total"] = {
+      chan,
+      le,
+      lon,
+      nho
+    };
     dataXoso["result"] = arrNumber;
     dataXoso["chanleresult"] = chanleResult;
     dataXoso["lonnhoResult"] = lonnhoResult;

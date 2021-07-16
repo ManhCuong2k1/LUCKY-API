@@ -4,6 +4,7 @@ import { generateAuthToken, findCredentials, UserModel, findPhone } from "@model
 import { sendSuccess, sendError } from "@util/response";
 import { auth } from "@middleware/auth";
 import { TaskCompletionModel } from "@models/TaskCompletion";
+import { encryptPassword } from "@util/md5password";
 
 const router = express.Router();
 
@@ -196,6 +197,51 @@ router.post("/otp", async (req: Request, res: Response) => {
   res.send("sended otp code!");
 });
 
+
+router.put("/update-password", auth, async (req: Request, res: Response) => {
+  try {
+      const { oldPassword, password } = req.body;
+      const userLogin: any = req.user;
+      if (password == null || oldPassword == null || password == "" || oldPassword == "") {
+        res.json({status: false,message: "missing field list"});
+      }else {
+        const verifiedUser = await findCredentials(userLogin.phone, oldPassword);
+        if (verifiedUser) {
+            verifiedUser.password = encryptPassword(password);
+            await verifiedUser.save();
+            const userJSON: any = verifiedUser.toJSON();
+            if (userJSON.password !== null) {
+                userJSON.passwordStatus = "hasPassword";
+            }
+            delete userJSON.password;
+            res.send({ status: true, user: userJSON });
+        } else {
+          res.json({status: false, message: "wrong old password!"});
+        }        
+      }
+
+  } catch (e) {
+      res.status(400).send({status: false, message: e.message});
+  }
+});
+
+router.put("/me", auth, async (req, res) => {
+  try {
+      const user: any = req.user;
+      const userDB: any = await UserModel.findByPk(user.id);
+
+      await userDB.update(req.body);
+      await userDB.reload();
+      const userJSON: any = userDB.toJSON();
+      if (userJSON.password) {
+          userJSON.passwordStatus = "hasPassword";
+      }
+      delete userJSON.password;
+      res.send({ data: userJSON });
+  } catch (e) {
+      res.status(400).send({status: false, message: e.message});
+  }
+});
 
 export default router;
  

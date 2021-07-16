@@ -7,7 +7,7 @@ import LotteryHelper from "./helper";
 
 const updateResult = async (game: string, data: any) => {
 
-    let status: boolean = true, message: any, dataUpdate: any = null;
+    let status: boolean = true, message: any, dataUpdate: any = null, dataUpdateChanLe: any = null;
 
     switch (game) {
         case "keno":
@@ -23,6 +23,8 @@ const updateResult = async (game: string, data: any) => {
                     const orderDetail = JSON.parse(orderData.orderDetail);
 
                     switch (orderDetail.childgame) {
+                        
+                        // ĐẶT SỐ TRUYỀN THỐNG KENO
                         case "basic":
                             dataUpdate = {}, dataUpdate.data = [], dataUpdate.result = {};
                             let isWin: boolean = false, updateReward: number = 0;
@@ -69,10 +71,17 @@ const updateResult = async (game: string, data: any) => {
 
                         break;
 
-                        case "chanle_lonnho":
-                            console.log("chanle");
 
-                            break;
+                        // CHẴN LẺ KENO
+                        case "chanle_lonnho":
+                            dataUpdateChanLe = {}, dataUpdateChanLe.data = [], dataUpdateChanLe.result = {};
+                            const isWinChanLe: boolean = false, updateRewardChanLe: number = 0;
+
+
+
+
+                            
+                        break;
                     }
                 });
 
