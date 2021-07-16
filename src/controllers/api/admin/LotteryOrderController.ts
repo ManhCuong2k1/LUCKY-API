@@ -21,8 +21,8 @@ const getdata = async (typeGame: any) => {
 
 router.get("/", async (req: Request, res: Response) => {
     try {
-        const page: number = parseInt(req.query.page ? req.query.page.toString() : "16");
-        const pageSize: number = parseInt(req.query.pageSize ? req.query.pageSize.toString() : "99");
+        const page: number = parseInt(req.query.page ? req.query.page.toString() : "1");
+        const pageSize: number = parseInt(req.query.pageSize ? req.query.pageSize.toString() : "16");
         const cursor: number = (page - 1) * pageSize;
         const { rows, count } = await LotteryTicketModel.findAndCountAll({
             include: [{
@@ -31,7 +31,7 @@ router.get("/", async (req: Request, res: Response) => {
             },
             {
                 model: LotteryImagesModel,
-                as : "ticket"
+                as : "image"
             },
             {
                 model: LotteryOrdersModel,
@@ -125,19 +125,23 @@ router.get("/:type", async (req: Request, res: Response) => {
     }
 });
 
-router.post("/:id/images", upload.array("files"), async (req: Request, res: Response) => {
+router.post("/:id/images", upload.array("file"), async (req: Request, res: Response) => {
     try {
         if (!req.files) throw new Error("No file to upload");
         
         const ticketItem = await LotteryTicketModel.findOne({ 
             where: { 
                 id: req.params.id,
-                orderStatus: LotteryTicketModel.TICKET_ENUM.DELAY
+                [Op.or]: [
+                    { orderStatus: LotteryTicketModel.TICKET_ENUM.DELAY }, 
+                    { orderStatus: LotteryTicketModel.TICKET_ENUM.PRINTED }
+                ],
             } 
         });
+        
         const orderItem = await LotteryOrdersModel.findAll({
             where: {
-                LotteryTicketModelId: req.params.id
+                ticketId: req.params.id
             }
         });
         
@@ -148,7 +152,7 @@ router.post("/:id/images", upload.array("files"), async (req: Request, res: Resp
                 const fileName = await saveFile(element);
                 const objectData: any = {
                     imageslist: fileName,
-                    ticketId: req.params.id
+                    LotteryTicketModelId: req.params.id
                 };
                 await LotteryImagesModel.create(objectData);
                 orderItem.forEach( async (element) => {
@@ -160,7 +164,8 @@ router.post("/:id/images", upload.array("files"), async (req: Request, res: Resp
                 
                 await ticketItem.save();
             });
-            res.send({data: orderItem});
+            
+            res.send({data: ticketItem});
         } else {
             res.send({
                 status: false, 
