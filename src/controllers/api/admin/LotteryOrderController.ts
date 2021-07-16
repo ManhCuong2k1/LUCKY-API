@@ -21,8 +21,8 @@ const getdata = async (typeGame: any) => {
 
 router.get("/", async (req: Request, res: Response) => {
     try {
-        const page: number = parseInt(req.query.page ? req.query.page.toString() : "1");
-        const pageSize: number = parseInt(req.query.pageSize ? req.query.pageSize.toString() : "1");
+        const page: number = parseInt(req.query.page ? req.query.page.toString() : "16");
+        const pageSize: number = parseInt(req.query.pageSize ? req.query.pageSize.toString() : "99");
         const cursor: number = (page - 1) * pageSize;
         const { rows, count } = await LotteryTicketModel.findAndCountAll({
             include: [{
@@ -125,10 +125,10 @@ router.get("/:type", async (req: Request, res: Response) => {
     }
 });
 
-router.post("/:id/images", upload.single("image"), async (req: Request, res: Response) => {
+router.post("/:id/images", upload.single("file"), async (req: Request, res: Response) => {
     try {
-
         const id = req.params.id;
+        console.log("here");
         
         const orderItem = await LotteryTicketModel.findByPk(id);
         if (!req.file) throw new Error("No file to upload");
@@ -146,6 +146,8 @@ router.post("/:id/images", upload.single("image"), async (req: Request, res: Res
         res.send({status: orderItem.orderStatus, dataImages});
     } catch (e) {
         console.log(e.message);
+        console.log('loi');
+        
         res.status(400).send({
             error: e.message
         });
