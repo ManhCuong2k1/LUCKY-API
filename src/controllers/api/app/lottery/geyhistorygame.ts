@@ -5,6 +5,8 @@ import { LotteryInterface, LotteryModel } from "@models/Lottery";
 import { LotteryOrdersInterface, LotteryOrdersModel } from "@models/LotteryOrder";
 import { LotteryTicketInterface, LotteryTicketModel } from "@models/LotteryTicket";
 import sequelize, { Sequelize } from "sequelize";
+import { LotteryImagesInterface, LotteryImagesModel } from "@models/LotteryImages";
+
 const router = Router();
 
 router.get("/tickets/:type", async (req: Request, res: Response) => {
@@ -125,33 +127,52 @@ router.get("/ticketDetail", async (req: Request, res: Response) => {
     const user: any = req.user;
     try {
         if (typeof req.query.id !== "undefined") {
-            const ticketsData = await LotteryOrdersModel.findAll({
+
+            const ticketData = await LotteryTicketModel.findOne({
+                where: {
+                    userId: user.id,
+                    id: req.query.id
+                }
+            });
+            
+            const ticketImages = await LotteryImagesModel.findAll({
+                where: {
+                    LotteryTicketModelId: req.query.id
+                },
+                order: [["id", "ASC"]]
+            });
+
+            const ordersData = await LotteryOrdersModel.findAll({
                 where: {
                     userId: user.id,
                     ticketId: req.query.id
                 },
                 order: [["id", "ASC"]]
             });
-            const dataExport: any = {};
-            dataExport["data"] = [];
 
-            ticketsData.forEach((ticket: any) => {
+            const dataExport: any = {};
+            dataExport["ticket"] = ticketData;
+            dataExport["images"] = ticketImages;
+            dataExport["order"] = [];
+
+            ordersData.forEach((order: any) => {
                 const dataPush = {
-                    id: ticket.id,
-                    ticketId: ticket.ticketId,
-                    userId: ticket.userId,
-                    type: ticket.type,
-                    roundId: ticket.roundId,
-                    orderDetail: JSON.parse(ticket.orderDetail),
-                    orderStatus: ticket.orderStatus,
-                    resultDetail: JSON.parse(ticket.resultDetail),
-                    resultStatus: ticket.resultStatus,
-                    finishTime: ticket.finishTime,
-                    moreDetail: ticket.moreDetail,
-                    createdAt: ticket.createdAt,
-                    updatedAt: ticket.updatedAt
+                    id: order.id,
+                    ticketId: order.ticketId,
+                    userId: order.userId,
+                    type: order.type,
+                    roundId: order.roundId,
+                    orderDetail: JSON.parse(order.orderDetail),
+                    orderStatus: order.orderStatus,
+                    resultDetail: JSON.parse(order.resultDetail),
+                    resultStatus: order.resultStatus,
+                    finishTime: order.finishTime,
+                    moreDetail: order.moreDetail,
+                    createdAt: order.createdAt,
+                    updatedAt: order.updatedAt
                 };
-                dataExport["data"].push(dataPush);
+
+                dataExport["order"].push(dataPush);
             });
 
             res.json(dataExport);
@@ -163,6 +184,7 @@ router.get("/ticketDetail", async (req: Request, res: Response) => {
             });
         }
     } catch (error) {
+        console.log(error);
         res.json({
             status: false,
             message: error

@@ -13,7 +13,6 @@ interface LotteryTicketInterface {
     moreDetail: string;
     createdAt: Date;
     updatedAt: Date;
-    deletedAt: Date;
 }
 
 class LotteryTicketModel extends Model<LotteryTicketInterface> implements LotteryTicketInterface {
@@ -28,7 +27,6 @@ class LotteryTicketModel extends Model<LotteryTicketInterface> implements Lotter
     public moreDetail: string;
     public createdAt: Date;
     public updatedAt: Date;
-    public deletedAt: Date;
     static readonly TICKET_ENUM = {
         DELAY: "delay",
         PRINTED: "printed",
@@ -79,15 +77,11 @@ const LotteryTicketDefine = {
     updatedAt: {
         type: DataTypes.DATE,
     },
-    deletedAt: {
-        type: DataTypes.DATE,
-    },
 };
 
 LotteryTicketModel.init(LotteryTicketDefine, {
     paranoid: true,
     tableName: "lottery_tickets",
-    deletedAt: "deletedAt",
     updatedAt: "updatedAt",
     createdAt: "createdAt",
     sequelize,
