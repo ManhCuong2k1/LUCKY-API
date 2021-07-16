@@ -73,7 +73,7 @@ class UserModel extends Model<UserInterface> implements UserInterface {
     WORKING: "working",
   };
   static readonly CREATEABLE_PARAMETERS = ["name", "username", "nickname", "email", "referrerCode",
-    "avatar", "gender", "dateOfBirth", "phone", "identify"]
+    "avatar", "password", "gender", "dateOfBirth", "phone", "identify"]
 
   public addFollowingHashtags: BelongsToManyAddAssociationsMixin<
     HashTagModel,
@@ -87,11 +87,6 @@ class UserModel extends Model<UserInterface> implements UserInterface {
   static readonly hooks: Partial<ModelHooks<UserModel>> = {
     async beforeValidate(record) {
       record.referralCode = await UserModel.generateReferralCode();
-    },
-    beforeSave(record) {
-      if (record.password) {
-        record.password = encryptPassword(record.password);
-      }
     },
   }
 

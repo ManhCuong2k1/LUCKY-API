@@ -1,6 +1,6 @@
 import { ValidationError, ValidationErrorItem } from "sequelize";
 import express, { Response, Request } from "express";
-import { generateAuthToken, findCredentials, UserModel, findPhone } from "@models/User";
+import { generateAuthToken, findCredentials, UserModel, findPhone, UserInterface } from "@models/User";
 import { sendSuccess, sendError } from "@util/response";
 import { auth } from "@middleware/auth";
 import { TaskCompletionModel } from "@models/TaskCompletion";
@@ -170,18 +170,18 @@ router.get("/me", auth, async (req, res) => {
  */
 router.post("/register", async (req: Request, res: Response) => {
   try {
-    const params = req.parameters.permit(UserModel.CREATEABLE_PARAMETERS).value();
- 
-    let referrer;
-    if (params.referrerCode) referrer = await UserModel.scope([{ method: ["byReferralCode", params.referrerCode] }]).findOne();
-    if (referrer) params.referrerId = referrer.id;
-    const user = await UserModel.create(params);
-    if (referrer) TaskCompletionModel.completeReferTask(referrer);
-    await user.reload();
+    const user: UserInterface = req.body;
+    if (user.username == null || user.password == null || user.username == "" || user.password == "") throw new Error("Username or password invalid");
+    const passwordHash = encryptPassword(user.password);
+    user.password = passwordHash;
+    const userSaved = await UserModel.create(user);
+    await userSaved.reload();
+    
     const token: string = await generateAuthToken(user);
-    const userJSON: any = user.toJSON();
+    const userJSON: any = userSaved.toJSON();
     delete userJSON.password;
     sendSuccess(res, { user: userJSON, token  });
+
   } catch (error) {
     if (error instanceof ValidationError) {
       return sendError(res, 422, error.errors.map((err: ValidationErrorItem) => err.message), error);
@@ -192,8 +192,6 @@ router.post("/register", async (req: Request, res: Response) => {
 
 
 router.post("/otp", async (req: Request, res: Response) => {
-
-
   res.send("sended otp code!");
 });
 

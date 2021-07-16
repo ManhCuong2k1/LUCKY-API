@@ -93,8 +93,6 @@ router.post("/", async (req: Request, res: Response) => {
                                         moreDetail: "Đại lý giữ hộ vé"
                                     };
 
-                                    console.log(timeOrder);
-
                                     isFirst = false;
                                     status = true, message = "Đặt Vé Thành Công!";
                                     break;
