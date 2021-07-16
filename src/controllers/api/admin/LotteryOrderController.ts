@@ -110,7 +110,7 @@ router.get("/:type", async (req: Request, res: Response) => {
     }
 });
 
-router.post("/:id/images", upload.single("image"), async (req: Request, res: Response) => {
+router.post("/:id/images", upload.array("image"), async (req: Request, res: Response) => {
     try {
         if (!req.file) throw new Error("No file to upload");
 
@@ -120,8 +120,12 @@ router.post("/:id/images", upload.single("image"), async (req: Request, res: Res
                 orderStatus: LotteryTicketModel.TICKET_ENUM.DELAY
             } });
 
+
+        console.log(req.file);
+
         if(orderItem !== null) {
             const data = req.file;
+            
             const fileName = await saveFile(data);
             const dataConfig: any = {
                 ticketId: parseInt(req.params.id),

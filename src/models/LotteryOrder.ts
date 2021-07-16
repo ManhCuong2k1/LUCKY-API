@@ -15,7 +15,6 @@ interface LotteryOrdersInterface {
     moreDetail: string;
     createdAt: Date;
     updatedAt: Date;
-    deletedAt: Date;
 }
 
 class LotteryOrdersModel extends Model<LotteryOrdersInterface> implements LotteryOrdersInterface {
@@ -32,7 +31,6 @@ class LotteryOrdersModel extends Model<LotteryOrdersInterface> implements Lotter
     public moreDetail: string;
     public createdAt: Date;
     public updatedAt: Date;
-    public deletedAt: Date;
     static readonly ORDERSTATUS_ENUM = {
         DELAY: "delay",
         PRINTED: "printed",
@@ -89,15 +87,11 @@ const LotteryOrdersDefine = {
     updatedAt: {
         type: DataTypes.DATE,
     },
-    deletedAt: {
-        type: DataTypes.DATE,
-    },
 };
 
 LotteryOrdersModel.init(LotteryOrdersDefine, {
     paranoid: true,
     tableName: "lottery_orders",
-    deletedAt: "deletedAt",
     updatedAt: "updatedAt",
     createdAt: "createdAt",
     sequelize,

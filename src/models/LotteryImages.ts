@@ -30,7 +30,6 @@ const LotteryImagesDefine = {
 LotteryImagesModel.init(LotteryImagesDefine, {
     paranoid: true,
     tableName: "lottery_images",
-    deletedAt: "deletedAt",
     updatedAt: "updatedAt",
     createdAt: "createdAt",
     sequelize,
