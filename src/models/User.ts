@@ -73,7 +73,7 @@ class UserModel extends Model<UserInterface> implements UserInterface {
     WORKING: "working",
   };
   static readonly CREATEABLE_PARAMETERS = ["name", "username", "nickname", "email", "referrerCode",
-    "avatar", "password", "gender", "dateOfBirth", "phone", "identify"]
+    "avatar", "gender", "dateOfBirth", "phone", "identify"]
 
   public addFollowingHashtags: BelongsToManyAddAssociationsMixin<
     HashTagModel,

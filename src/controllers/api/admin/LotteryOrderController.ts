@@ -134,6 +134,7 @@ router.post("/:id/images", upload.array("image"), async (req: Request, res: Resp
             const dataImages = await LotteryImagesModel.create(dataConfig);
             orderItem.orderStatus = LotteryTicketModel.TICKET_ENUM.PRINTED;
             orderItem.resultDetail = LotteryTicketModel.RESULTSTATUS_ENUM.DRAWNED;
+
             await orderItem.save();
             res.send({status: orderItem.orderStatus, dataImages});            
         }else {

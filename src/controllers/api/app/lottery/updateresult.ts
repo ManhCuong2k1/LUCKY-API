@@ -36,7 +36,6 @@ const updateResult = async (game: string, data: any) => {
 
                                 const checkSame = LotteryHelper.checkSame(arrBet, arrResult);
 
-                                if (checkSame.length > 0) {
                                     let reward = LotteryHelper.checkResult(arrBet.length, checkSame.length);
                                         reward = reward * (i.price / 10000);
 
@@ -55,7 +54,6 @@ const updateResult = async (game: string, data: any) => {
                                         await UserData.save();
                                         await UserData.reload();
                                     }
-                                }
 
                             }
 
@@ -75,8 +73,9 @@ const updateResult = async (game: string, data: any) => {
                         // CHẴN LẺ KENO
                         case "chanle_lonnho":
                             dataUpdateChanLe = {}, dataUpdateChanLe.data = [], dataUpdateChanLe.result = {};
-                            let isWinChanLe: boolean = false, updateRewardChanLe: number = 0;
+                            const isWinChanLe: boolean = false, updateRewardChanLe: number = 0;
                              
+                            /***
                             for (const i of orderDetail.data) {
 
                                 const arrBet = LotteryHelper.arrayStringToNumber(i.number);
@@ -106,8 +105,7 @@ const updateResult = async (game: string, data: any) => {
                                 }
 
                             }
-
-
+                            ***/
 
                         break;
                     }
