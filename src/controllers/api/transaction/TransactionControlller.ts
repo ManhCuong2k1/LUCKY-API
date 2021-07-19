@@ -20,7 +20,7 @@ router.post("/endpoint/:type", async (req: Request, res: Response) => {
         const transaction: any = req.body;
 
         switch (req.params.type) {
-            case 'momo':
+            case "momo":
 
                 if (typeof transaction.transId !== "undefined") {
                     const idRecharge = transaction.requestId.split(process.env.MOMO_PREFIX_TRANSACTION)[1];
@@ -49,8 +49,8 @@ router.post("/endpoint/:type", async (req: Request, res: Response) => {
                             res.json(dbTransaction);
                         } else {
                             res.json({
-                                status: false, message: 'This transaction has been processed before'
-                            })
+                                status: false, message: "This transaction has been processed before"
+                            });
                         }
                     } else {
                         dbTransaction.status = LotteryRechargeModel.STATUS_ENUM.ERROR;
@@ -61,8 +61,8 @@ router.post("/endpoint/:type", async (req: Request, res: Response) => {
 
                 } else {
                     res.json({
-                        status: false, message: 'error request!'
-                    })
+                        status: false, message: "error request!"
+                    });
                 }
                 break;
         }
