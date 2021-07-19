@@ -3,7 +3,6 @@ import express, { Response, Request } from "express";
 import { generateAuthToken, findCredentials, UserModel, findPhone, UserInterface } from "@models/User";
 import { sendSuccess, sendError } from "@util/response";
 import { auth } from "@middleware/auth";
-import { TaskCompletionModel } from "@models/TaskCompletion";
 import { encryptPassword } from "@util/md5password";
 
 const router = express.Router();
@@ -235,7 +234,7 @@ router.put("/me", auth, async (req, res) => {
           userJSON.passwordStatus = "hasPassword";
       }
       delete userJSON.password;
-      res.send({ data: userJSON });
+      res.send({ user: userJSON });
   } catch (e) {
       res.status(400).send({status: false, message: e.message});
   }
