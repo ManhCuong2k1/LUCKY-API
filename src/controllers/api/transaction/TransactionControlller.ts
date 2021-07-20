@@ -3,6 +3,7 @@ import { LotteryRechargeModel } from "@models/LotteryRecharge";
 import express, { Response, Request, Router } from "express";
 import { auth } from "@middleware/auth";
 import momo from "./sdk/momo";
+import vnpay from "./sdk/vnpay";
 import dotenv from "dotenv";
 import { sendError } from "@util/response";
 import { UserModel } from "@models/User";
@@ -64,7 +65,8 @@ router.post("/endpoint/:type", async (req: Request, res: Response) => {
                         status: false, message: "error request!"
                     });
                 }
-                break;
+            break;
+                
         }
 
     } catch (error) {
@@ -81,22 +83,46 @@ router.post("/", auth, async (req: Request, res: Response) => {
         switch (transaction.method) {
             case "momo":
                 
-                const dataTransaction: any = {
+                const dataTransactionMomo: any = {
                     userId: user.id,
                     amount: Number(transaction.amount),
-                    method: transaction.method,
+                    method: LotteryRechargeModel.METHOD_ENUM.MOMO,
                     status: LotteryRechargeModel.STATUS_ENUM.UNPAID,
                     detail: "Chờ Xử Lý"
                 };
-                const makeTransaction = await LotteryRechargeModel.create(dataTransaction);
+                const makeTransactionMomo = await LotteryRechargeModel.create(dataTransactionMomo);
                 console.log("SEND REQUEST TO MOMO...");
                 const momoService = new momo();
-                momoService.orderId = process.env.MOMO_PREFIX_TRANSACTION + makeTransaction.id.toString();
+                momoService.orderId = process.env.MOMO_PREFIX_TRANSACTION + makeTransactionMomo.id.toString();
                 momoService.amount = transaction.amount.toString();
-                momoService.requestId = process.env.MOMO_PREFIX_TRANSACTION + makeTransaction.id.toString();
+                momoService.requestId = process.env.MOMO_PREFIX_TRANSACTION + makeTransactionMomo.id.toString();
                 momoService.orderInfo = "Nạp Tiền Lucky PlayLot";
-                const postTransaction = await momoService.makePayment();
-                res.send(postTransaction);
+                const postTransactionMomo = await momoService.makePayment();
+                res.send(postTransactionMomo);
+                break;
+
+                case "vnpay":
+                
+                    const dataTransactionVnpay: any = {
+                        userId: user.id,
+                        amount: Number(transaction.amount),
+                        method: LotteryRechargeModel.METHOD_ENUM.VNPAY,
+                        status: LotteryRechargeModel.STATUS_ENUM.UNPAID,
+                        detail: "Chờ Xử Lý"
+                    };
+                    const makeTransactionVnpay = await LotteryRechargeModel.create(dataTransactionVnpay);
+                    console.log("SEND REQUEST TO VNPAY...");
+                    const vnpayService = new vnpay();
+                    vnpayService.amount = Number(transaction.amount.toString());
+                    vnpayService.ipAccess = "118.71.10.19";
+                    vnpayService.bankCode = req.body.bankcode;
+                    vnpayService.orderId = process.env.MOMO_PREFIX_TRANSACTION + makeTransactionVnpay.id.toString();
+                    vnpayService.orderType = "topup"; // giữ nguyên
+                    vnpayService.orderInfo = "Nạp Tiền Lucky PlayLot";
+                    vnpayService.orderDescription = "Nạp Tiền Lucky PlayLot";
+                    const postTransactionVnpay = await vnpayService.makePayment();
+                
+                    res.json({ status: true, url: postTransactionVnpay});
                 break;
 
             default:

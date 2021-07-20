@@ -6,6 +6,7 @@ import { LotteryOrdersInterface, LotteryOrdersModel } from "@models/LotteryOrder
 import { LotteryTicketInterface, LotteryTicketModel } from "@models/LotteryTicket";
 import sequelize, { Sequelize } from "sequelize";
 import { LotteryImagesInterface, LotteryImagesModel } from "@models/LotteryImages";
+import { GridInterface } from "@models/Transformers/Grid";
 
 const router = Router();
 
@@ -61,8 +62,19 @@ router.get("/tickets/:type", async (req: Request, res: Response) => {
 
             const orderStatus = (req.params.type == "win") ? LotteryTicketModel.TICKET_ENUM.DRAWNED : req.params.type;
             const resultsDetail = (req.params.type == "win") ? LotteryTicketModel.RESULTSTATUS_ENUM.WINNED : "";
+            const condition = (req.params.type == "win" && resultsDetail != "") ? "`LotteryTicketModel`.`userId`='" + user.id + "' AND `LotteryTicketModel`.`orderStatus` = '" + orderStatus + "' AND `LotteryTicketModel`.`resultDetail` = '" + resultsDetail + "'" : (req.params.type == "drawned") ? "`LotteryTicketModel`.`userId`='" + user.id + "' AND (`LotteryTicketModel`.`orderStatus` = '" + orderStatus + "' OR `LotteryTicketModel`.`orderStatus` = 'canceled') AND `LotteryTicketModel`.`resultDetail` <> '" + LotteryTicketModel.RESULTSTATUS_ENUM.WINNED + "'" : "`LotteryTicketModel`.`userId`='" + user.id + "' AND `LotteryTicketModel`.`orderStatus` = '" + orderStatus + "'";
+
+            const page: number = parseInt(req.query.page ? req.query.page.toString() : "1");
+            const pageSize: number = parseInt(req.query.pageSize ? req.query.pageSize.toString() : "16");
+            const cursor: number = (page - 1) * pageSize;
+
+            const { rows, count } = await LotteryTicketModel.findAndCountAll({
+                where: Sequelize.literal(condition),
+                limit: pageSize,
+                offset: cursor,
+                order: [["id", "DESC"]],
+            });
     
-            const condition = (req.params.type == "win" && resultsDetail != "") ? "`LotteryTicketModel`.`userId`='"+ user.id +"' AND `LotteryTicketModel`.`orderStatus` = '"+ orderStatus +"' AND `LotteryTicketModel`.`resultDetail` = '"+ resultsDetail +"'" : (req.params.type == "drawned") ? "`LotteryTicketModel`.`userId`='"+ user.id +"' AND (`LotteryTicketModel`.`orderStatus` = '"+ orderStatus +"' OR `LotteryTicketModel`.`orderStatus` = 'canceled') AND `LotteryTicketModel`.`resultDetail` <> '"+LotteryTicketModel.RESULTSTATUS_ENUM.WINNED+"'" : "`LotteryTicketModel`.`userId`='"+ user.id +"' AND `LotteryTicketModel`.`orderStatus` = '"+ orderStatus +"'";
             const ticketsData = await LotteryTicketModel.findAll({
                 where: Sequelize.literal(condition),
                 order: [["id", "DESC"]]
@@ -99,13 +111,14 @@ router.get("/tickets/:type", async (req: Request, res: Response) => {
 
                 });
 
-                res.send({
-                    data: await LotteryTicketModel.findAll({
-                        where: Sequelize.literal(condition),
-                        order: [["id", "DESC"]]
-                    })
-                });
-
+                const responseData: GridInterface<LotteryTicketModel> = {
+                    data: rows,
+                    page: page,
+                    pageSize: pageSize,
+                    total: count
+                };
+                res.json(responseData);
+        
             } else {
                 res.json({
                     status: false,
@@ -134,7 +147,7 @@ router.get("/ticketDetail", async (req: Request, res: Response) => {
                     id: req.query.id
                 }
             });
-            
+
             const ticketImages = await LotteryImagesModel.findAll({
                 where: {
                     LotteryTicketModelId: req.query.id

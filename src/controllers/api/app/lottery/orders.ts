@@ -76,6 +76,7 @@ router.post("/", async (req: Request, res: Response) => {
 
                             switch (body.childgame) {  // kiểm tra user order chidlgaame nao
                                 case "basic": // choi số trùng bình thường
+
                                     dataImport = {
                                         ticketId: creatTicket.id,
                                         userId: user.id,

@@ -68,7 +68,7 @@ const LotteryRechargeDefine = {
 
 LotteryRechargeModel.init(LotteryRechargeDefine, {
     paranoid: true,
-    tableName: "lottery_recharge",
+    tableName: "lottery_recharges",
     updatedAt: "updatedAt",
     createdAt: "createdAt",
     sequelize,
