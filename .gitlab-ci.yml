@@ -4,7 +4,7 @@ stages:
 
 variables:
   CI_REGISTRY: gitlab.flextech.asia:5050
-  IMAGE_TAG: $CI_REGISTRY/5p-studio/os-web-piggy-admin-api:$CI_COMMIT_REF_NAME
+  IMAGE_TAG: $CI_REGISTRY/lucky-playlot/os-app-admin-api:$CI_COMMIT_REF_NAME
 
 build:
   stage: build
@@ -28,13 +28,3 @@ deploy_develop:
     name: develop
   only:
     - develop
-
-deploy_production:
-  stage: deploy
-  script:
-    - echo image_tag $IMAGE_TAG ci_commit $CI_COMMIT_SHORT_SHA
-    - sshpass -p $SERVER_PASS_7 ssh $SERVER_USER_7@$SERVER_HOST_7 "docker-compose pull $APP_NAME && docker-compose up --force-recreate -d $APP_NAME"
-  environment:
-    name: production
-  only:
-    - master
