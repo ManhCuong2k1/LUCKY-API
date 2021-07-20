@@ -1,7 +1,6 @@
 FROM node:16-alpine AS build
 WORKDIR /app
 COPY package*.json /app/
-COPY yarn.lock /app/
 RUN apk add --no-cache git
 RUN yarn
 COPY tsconfig.json /app/
