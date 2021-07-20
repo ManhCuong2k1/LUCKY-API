@@ -12,7 +12,6 @@ import { ERROR_CODES } from "@util/constants";
 import { encryptPassword } from "@util/md5password";
 import config from "../config";
 import jwt from "jsonwebtoken";
-import { HashTagModel } from "@models/HashTag";
 import { ModelHooks } from "sequelize/types/lib/hooks";
 
 interface UserInterface {
@@ -74,15 +73,6 @@ class UserModel extends Model<UserInterface> implements UserInterface {
   };
   static readonly CREATEABLE_PARAMETERS = ["name", "username", "nickname", "email", "referrerCode",
     "avatar", "password", "gender", "dateOfBirth", "phone", "identify"]
-
-  public addFollowingHashtags: BelongsToManyAddAssociationsMixin<
-    HashTagModel,
-    number
-  >;
-  public removeFollowingHashtags: BelongsToManyRemoveAssociationsMixin<
-    HashTagModel,
-    number
-  >;
 
   static readonly hooks: Partial<ModelHooks<UserModel>> = {
     async beforeValidate(record) {
