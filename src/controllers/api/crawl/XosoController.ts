@@ -3,8 +3,6 @@ import Crawl from "./Crawl";
 import helper from "@controllers/api/helper/helper";
 import updateTicket from "../app/lottery/updateresult";
 import { LotteryInterface, LotteryModel } from "@models/Lottery";
-import { LotteryOrdersInterface, LotteryOrdersModel } from "@models/LotteryOrder";
-import { LotteryTicketInterface, LotteryTicketModel } from "@models/LotteryTicket";
 
 const router = express.Router();
 
@@ -12,8 +10,6 @@ const router = express.Router();
 router.get("/", (req: Request, res: Response) => {
     res.status(403).send("403");
 });
-
-
 
 
 /**

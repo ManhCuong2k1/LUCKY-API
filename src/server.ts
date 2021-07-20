@@ -3,7 +3,6 @@ import errorHandler from "errorhandler";
 
 import app from "./app";
 import socket from "socket.io";
-import handleSocket from "./chats/socket";
 import config from "./config";
 import { redisClient } from "@database/redis";
 
@@ -24,21 +23,5 @@ const server = app.listen(config.PORT, () => {
     console.log("  Press CTRL-C to stop\n");
 });
 
-
-/**
- * Socket server
- */
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
-const io = socket(server, {
-    cors: {
-        origin: "*",
-        methods: ["GET", "POST", "OPTIONS"],
-    }
-});
-
-io.on("connection", (socket: any) => {
-    handleSocket(io, socket);
-});
 
 export default server;
