@@ -2,9 +2,7 @@ require("module-alias/register");
 import errorHandler from "errorhandler";
 
 import app from "./app";
-import socket from "socket.io";
 import config from "./config";
-import { redisClient } from "@database/redis";
 
 /**
  * Error Handler. Provides full stack - remove for production

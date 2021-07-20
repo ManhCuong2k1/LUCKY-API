@@ -1,5 +1,4 @@
 import request from "request";
-import { object } from "underscore";
 
 const crawlPage = (url: any, option: any) => {
     try {
