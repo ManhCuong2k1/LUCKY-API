@@ -128,6 +128,23 @@ router.get("/images", async (req, res) => {
     }
 });
 
+router.get("/images/:id", async (req, res) => {
+    try {
+        const id = req.params.id;
+        const responseData = await LotteryImagesModel.findAll({
+            where: {
+                LotteryTicketModelId: id,
+            }
+        });
+        res.send(responseData);
+    } catch (e) {
+        res.status(400).send({
+            error: e.message
+        });
+    }
+});
+
+
 
 
 export default router;
