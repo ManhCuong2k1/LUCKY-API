@@ -22,12 +22,25 @@ const getdata = async (typeGame: any) => {
 router.get("/", async (req: Request, res: Response) => {
     try {
         const page: number = parseInt(req.query.page ? req.query.page.toString() : "1");
-        const pageSize: number = parseInt(req.query.pageSize ? req.query.pageSize.toString() : "16");
+        const pageSize: number = parseInt(req.query.pageSize ? req.query.pageSize.toString() : "20");
         const cursor: number = (page - 1) * pageSize;
+
+        const searchKey: any = req.query.searchKey ? req.query.searchKey : null;
+        let phone = null;
+
+        if (searchKey) {
+            phone = { [Op.like]: `%${searchKey}%` };
+        }
+
+        const where = Object.assign({},
+            phone === null ? null : { phone },
+        );
+
         const { rows, count } = await LotteryTicketModel.findAndCountAll({
             include: [{
                 model: UserModel,
                 as: "user",
+                where,
             },
             {
                 model: LotteryImagesModel,
@@ -38,6 +51,7 @@ router.get("/", async (req: Request, res: Response) => {
                 as: "orders"
             }
             ],
+            distinct: true,
             limit: pageSize,
             offset: cursor,
             order: [
@@ -177,6 +191,60 @@ router.post("/:id/images", upload.array("file"), async (req: Request, res: Respo
         res.status(400).send({
             error: e.message
         });
+    }
+});
+
+router.put("/updateImage/:id", async (req: Request, res: Response) => {
+    try {
+        const idTicket = req.params.id;
+        const idImage1 = req.body.imageId1;
+        const idImage2 = req.body.imageId2;
+
+        const ticketItem = await LotteryTicketModel.findOne({ 
+            where: { 
+                id: idTicket,
+                [Op.or]: [
+                    { orderStatus: LotteryTicketModel.TICKET_ENUM.DELAY }, 
+                    { orderStatus: LotteryTicketModel.TICKET_ENUM.PRINTED }
+                ],
+            } 
+        });
+
+        const orderItem = await LotteryOrdersModel.findAll({
+            where: {
+                ticketId: idTicket
+            }
+        });
+
+        const dataImage: any = await LotteryImagesModel.findAll({
+            where: {
+                [Op.or]: [
+                    { id: idImage1 }, 
+                    { id: idImage2 }
+                ],
+            }
+        });
+
+        orderItem.forEach( async (element) => {
+            element.orderStatus = await LotteryOrdersModel.ORDERSTATUS_ENUM.PRINTED;
+            await element.save();
+        });
+        
+        dataImage[0].LotteryTicketModelId = parseInt(idTicket);
+        dataImage[1].LotteryTicketModelId = parseInt(idTicket);
+        ticketItem.orderStatus = await LotteryTicketModel.TICKET_ENUM.PRINTED;
+        ticketItem.resultDetail = await LotteryTicketModel.RESULTSTATUS_ENUM.DRAWNED;
+        
+        await ticketItem.save();
+        
+        await dataImage[0].save();
+        await dataImage[1].save();
+        res.send(dataImage);
+    } catch (error) {
+        res.send({
+            status: false, 
+            message: "can\'t upload image with ID: "+ req.params.id
+        });   
     }
 });
 
