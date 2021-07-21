@@ -8,28 +8,31 @@ import { LotteryTicketInterface, LotteryTicketModel } from "@models/LotteryTicke
 const router = Router();
 
 router.get("/results/:type", async (req: Request, res: Response) => {
+
     switch (req.params.type) {
         case "keno":
             try {
+                console.log(req);
 
-                const getData = await LotteryModel.findAll();
-                res.json(getData);
+                } catch (error) {
+                    res.json({
+                        status: false,
+                        message: error
+                    });
+                }
+                break;
 
-            }catch (error) {
-                res.json({
-                    status: false,
-                    message: error
-                });
-            }
-        break;
-
-        default:
+            default:
             res.json({
                 status: false,
                 message: "error order type params"
             });
-        break;
+            break;
     }
+
+
+
+
 });
 
 export default router;

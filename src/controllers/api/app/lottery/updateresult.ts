@@ -1,5 +1,6 @@
 import { LotteryModel } from "@models/Lottery";
 import { LotteryOrdersInterface, LotteryOrdersModel } from "@models/LotteryOrder";
+import { LotteryTicketInterface, LotteryTicketModel } from "@models/LotteryTicket";
 import { UserModel } from "@models/User";
 import helper from "../../helper/helper";
 import LotteryHelper from "./helper";
@@ -48,6 +49,12 @@ const updateResult = async (game: string, data: any) => {
                                         isWin = true;
                                         updateReward = updateReward + reward;
                                         
+                                        const ticketData = await LotteryTicketModel.findByPk(orderData.ticketId);
+                                        if (!ticketData) throw new Error("Not found Ticket");
+                                        ticketData.totalreward = ticketData.totalreward + updateReward;
+                                        await ticketData.save();
+                                        await ticketData.reload();
+
                                         const UserData = await UserModel.findOne({ where: { id: orderData.userId } });
                                         if (!UserData) throw new Error("Not found user");
                                         UserData.totalReward = UserData.totalReward + updateReward;
@@ -131,6 +138,13 @@ const updateResult = async (game: string, data: any) => {
                                         isWinChanLe = true;
                                         updateRewardChanLe = updateRewardChanLe + reward;
                                         
+
+                                        const ticketData = await LotteryTicketModel.findByPk(orderData.ticketId);
+                                        if (!ticketData) throw new Error("Not found Ticket");
+                                        ticketData.totalreward = ticketData.totalreward + updateReward;
+                                        await ticketData.save();
+                                        await ticketData.reload();
+
                                         const UserData = await UserModel.findOne({ where: { id: orderData.userId } });
                                         if (!UserData) throw new Error("Not found user");
                                         UserData.totalReward = UserData.totalReward + reward;

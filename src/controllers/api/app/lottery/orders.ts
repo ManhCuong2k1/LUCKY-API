@@ -3,6 +3,7 @@ import helper from "@controllers/api/helper/helper";
 import Crawl from "../../crawl/Crawl";
 import { LotteryTicketInterface, LotteryTicketModel } from "@models/LotteryTicket";
 import { LotteryOrdersInterface, LotteryOrdersModel } from "@models/LotteryOrder";
+import { LotteryInterface, LotteryModel } from "@models/Lottery";
 import { UserModel } from "@models/User";
 const router = Router();
 
@@ -76,6 +77,7 @@ router.post("/", async (req: Request, res: Response) => {
 
                             switch (body.childgame) {  // kiểm tra user order chidlgaame nao
                                 case "basic": // choi số trùng bình thường
+
                                     dataImport = {
                                         ticketId: creatTicket.id,
                                         userId: user.id,
@@ -136,6 +138,24 @@ router.post("/", async (req: Request, res: Response) => {
                 }
 
                 break;
+
+
+
+            case 'power':
+                const lastPowerRound = await LotteryModel.findOne({
+                    where: {
+                        type: "power"
+                    },
+                    order: [ [ 'id', 'DESC' ]],
+                });
+                console.log(lastPowerRound);
+                status = true, message = lastPowerRound;
+
+
+            break;
+
+
+
 
             default:
                 status = true, message = "error order type params game";
