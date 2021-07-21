@@ -19,6 +19,16 @@ class LotteryExchangesModel extends Model<LotteryExchangesInterface> implements 
     public bankNumber: string;
     public bankUserName: string;
     public status: string;
+    static readonly BANKCODE_ENUM = {
+        LOCAL: "LUCKY PLAYLOT",
+        MOMO: "MOMO",
+        ANGRYBANK: "ANGRYBANK"
+    };
+    static readonly STATUS_ENUM = {
+        DELAY: "delay",
+        SUCCESS: "success",
+        ERROR: "error"
+    };
 }
 
 const LotteryExchangesDefine = {
@@ -38,7 +48,6 @@ LotteryExchangesModel.init(LotteryExchangesDefine, {
     createdAt: "createdAt",
     sequelize,
 });
-
 
 export {
     LotteryExchangesInterface, 

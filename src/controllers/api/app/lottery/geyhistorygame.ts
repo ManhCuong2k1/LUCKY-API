@@ -146,7 +146,7 @@ router.get("/ticketDetail", async (req: Request, res: Response) => {
                     userId: user.id,
                     id: req.query.id
                 }
-            });
+            }); 
 
             const ticketImages = await LotteryImagesModel.findAll({
                 where: {
@@ -169,6 +169,7 @@ router.get("/ticketDetail", async (req: Request, res: Response) => {
             dataExport["order"] = [];
 
             ordersData.forEach((order: any) => {
+
                 const dataPush = {
                     id: order.id,
                     ticketId: order.ticketId,
@@ -200,7 +201,7 @@ router.get("/ticketDetail", async (req: Request, res: Response) => {
         console.log(error);
         res.json({
             status: false,
-            message: error
+            message: error.message
         });
     }
 

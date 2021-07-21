@@ -108,14 +108,30 @@ router.get("/get-keno-round", async (req: express.Request, res: Response) => {
 
 router.get("/results/:type", async (req: Request, res: Response) => {
     try {
-        if (typeof req.query.id !== "undefined") {
+
+        if (typeof req.query.round !== "undefined") {
             const resultsData = await LotteryModel.findOne({
                 where: {
-                    id: req.query.id,
-                    type: req.query.type
+                    round: req.query.round,
+                    type: req.params.type
                 }
             });
-            res.json(resultsData);
+            const dataExport: any = {};
+            dataExport["data"] = [];
+            const dataPush = {
+                id: resultsData.id,
+                type: resultsData.type,
+                date: resultsData.date,
+                next: resultsData.next,
+                round: resultsData.round,
+                result: JSON.parse(resultsData.result),
+                createdAt: resultsData.createdAt,
+                updatedAt: resultsData.updatedAt
+            };
+            dataExport["data"].push(dataPush);
+
+            res.json(dataExport);
+            
         } else {
             const resultsData = await LotteryModel.findAll({
                 where: {
@@ -151,7 +167,7 @@ router.get("/results/:type", async (req: Request, res: Response) => {
     } catch (error) {
         res.json({
             status: false,
-            message: error
+            message: error.message
         });
     }
 });

@@ -11,6 +11,7 @@ interface LotteryTicketInterface {
     orderStatus: string;
     resultDetail: string;
     moreDetail: string;
+    totalreward: number;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -25,6 +26,7 @@ class LotteryTicketModel extends Model<LotteryTicketInterface> implements Lotter
     public orderStatus: string;
     public resultDetail: string;
     public moreDetail: string;
+    public totalreward: number;
     public createdAt: Date;
     public updatedAt: Date;
     static readonly TICKET_ENUM = {
@@ -57,7 +59,8 @@ const LotteryTicketDefine = {
         type: DataTypes.INTEGER,
     },
     totalPrice: {
-        type: DataTypes.INTEGER()
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
     },
     orderDetail: {
         type: DataTypes.TEXT,
@@ -70,6 +73,10 @@ const LotteryTicketDefine = {
     },
     moreDetail: {
         type: DataTypes.STRING,
+    },
+    totalreward: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
     },
     createdAt: {
         type: DataTypes.DATE,

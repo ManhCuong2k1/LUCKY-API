@@ -32,7 +32,6 @@ class LotteryRechargeModel extends Model<LotteryRechargeInterface> implements Lo
         PAID: "paid",
         ERROR: "error"
     };
-    length: number;
 }
 
 
