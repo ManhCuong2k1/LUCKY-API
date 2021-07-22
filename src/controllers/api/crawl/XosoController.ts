@@ -125,7 +125,6 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                             currentRound++;
                             currentTimeRound = helper.addMinuteToTime(currentTimeRound, 2880); // + 2 ngày
                             const thisTime: any = new Date(currentTimeRound).getDay() + 1;
-                            console.log(new Date(currentTimeRound).getDay() + 1);
                             if (thisTime == 3 || thisTime == 5 || thisTime == 7) {
                             } else {
                                 currentTimeRound = helper.addMinuteToTime(currentTimeRound, 1440); // + 1 ngày
@@ -303,6 +302,9 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
 
             break;
 
+            default:
+                res.json({ status: false, message: "Error: error params!"});
+            break;
 
         }
     } catch (err) {
