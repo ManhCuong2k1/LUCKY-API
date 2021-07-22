@@ -34,7 +34,7 @@ const BannerDefine = {
 };
 
 Banner.init(BannerDefine, {
-    tableName: "banner",
+    tableName: "lottery_banners",
     updatedAt: "updatedAt",
     createdAt: "createdAt",
     sequelize: connection

@@ -49,7 +49,7 @@ const UserHistoryDefine = {
 
 LotteryNotifyModel.init(UserHistoryDefine, {
     paranoid: true,
-    tableName: "lottery_notify",
+    tableName: "lottery_notifys",
     updatedAt: "updatedAt",
     createdAt: "createdAt",
     sequelize,
