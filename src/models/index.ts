@@ -9,6 +9,8 @@ import { LotteryTicketModel } from "@models/LotteryTicket";
 import { LotteryOrdersModel } from "@models/LotteryOrder";
 import { LotteryImagesModel } from "@models/LotteryImages";
 import { LotteryRechargeModel } from "@models/LotteryRecharge";
+import { UserHistoryModel } from "@models/LotteryUserHistory";
+import { LotteryNotifyModel } from "@models/LotteryNotify";
 
 
 // LotteryModel.belongsTo(UserModel, { constraints: false});
@@ -18,6 +20,8 @@ LotteryTicketModel.belongsTo(UserModel, { as: "user", constraints: false });
 LotteryTicketModel.hasMany(LotteryOrdersModel, { as: "orders", constraints: false, foreignKey: "ticketId"});
 LotteryTicketModel.hasMany(LotteryImagesModel, { as: "image", constraints: false });
 LotteryRechargeModel.belongsTo(UserModel, { as: "user", constraints: false });
+UserModel.hasMany(UserHistoryModel, { as: "user_history", constraints: false, foreignKey: "userId" });
+UserModel.hasMany(LotteryNotifyModel, { as: "user_notify", constraints: false, foreignKey: "userId" });
 
 // LotteryImagesModel.belongsTo(LotteryTicketModel, { as: "image", constraints: false });
 
