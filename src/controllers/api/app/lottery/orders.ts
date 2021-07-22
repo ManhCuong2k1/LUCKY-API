@@ -130,7 +130,7 @@ router.post("/", async (req: Request, res: Response) => {
                         }
 
                     } else {
-                        status = false, message = "Bạn không đủ tiền. Số tiền hiện tại không đủ "+ helper.number_format(totalPrice)+ " đ";
+                        status = false, message = "Bạn không đủ tiền. Số tiền hiện tại không đủ "+ helper.numberformat(totalPrice)+ " đ";
                     }
 
                 } else {
@@ -141,7 +141,7 @@ router.post("/", async (req: Request, res: Response) => {
 
 
 
-            case 'power':
+            case "power":
                 let priceOneList: number = 0;
 
 
@@ -247,7 +247,7 @@ router.post("/", async (req: Request, res: Response) => {
                     status = true, message = "Đặt Vé Thành Công!";
 
                 } else {
-                    status = false, message = "Bạn không đủ tiền. Số tiền hiện tại không đủ "+ helper.number_format(totalPrice)+ " đ";
+                    status = false, message = "Bạn không đủ tiền. Số tiền hiện tại không đủ "+ helper.numberformat(totalPrice)+ " đ";
                 }
 
 
@@ -255,7 +255,7 @@ router.post("/", async (req: Request, res: Response) => {
 
 
 
-            case 'mega':
+            case "mega":
 
                 let priceOneListMega: number = 0;
 
@@ -359,14 +359,14 @@ router.post("/", async (req: Request, res: Response) => {
                     status = true, message = "Đặt Vé Thành Công!";
 
                 } else {
-                    status = false, message = "Bạn không đủ tiền. Số tiền hiện tại không đủ "+ helper.number_format(totalPriceMega);
+                    status = false, message = "Bạn không đủ tiền. Số tiền hiện tại không đủ "+ helper.numberformat(totalPriceMega);
                 }
 
 
             break;
 
 
-            case 'max3d':
+            case "max3d":
 
                 let totalPriceMax3d = 0;
                 let feeMax3d = 0;
@@ -428,14 +428,14 @@ router.post("/", async (req: Request, res: Response) => {
                     status = true, message = "Đặt Vé Thành Công!";
 
                 } else {
-                    status = false, message = "Bạn không đủ tiền. Số tiền hiện tại không đủ "+ helper.number_format(totalPriceMax3d)+ " đ";
+                    status = false, message = "Bạn không đủ tiền. Số tiền hiện tại không đủ "+ helper.numberformat(totalPriceMax3d)+ " đ";
                 }
 
             break;
 
 
 
-            case 'max3dplus':
+            case "max3dplus":
 
                 let totalPriceMax3dPlus = 0;
                 let feeMax3dPlus = 0;
@@ -497,13 +497,13 @@ router.post("/", async (req: Request, res: Response) => {
                     status = true, message = "Đặt Vé Thành Công!";
 
                 } else {
-                    status = false, message = "Bạn không đủ tiền. Số tiền hiện tại không đủ "+ helper.number_format(totalPriceMax3dPlus)+ " đ";
+                    status = false, message = "Bạn không đủ tiền. Số tiền hiện tại không đủ "+ helper.numberformat(totalPriceMax3dPlus)+ " đ";
                 }
 
             break;
 
 
-            case 'max4d':
+            case "max4d":
 
                 let totalPriceMax4d = 0;
                 let feeMax4d = 0;
@@ -565,7 +565,7 @@ router.post("/", async (req: Request, res: Response) => {
                     status = true, message = "Đặt Vé Thành Công!";
 
                 } else {
-                    status = false, message = "Bạn không đủ tiền. Số tiền hiện tại không đủ "+ helper.number_format(totalPriceMax4d)+ " đ";
+                    status = false, message = "Bạn không đủ tiền. Số tiền hiện tại không đủ "+ helper.numberformat(totalPriceMax4d)+ " đ";
                 }
 
             break;
