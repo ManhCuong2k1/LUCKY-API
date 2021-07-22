@@ -32,7 +32,7 @@ router.get("/", async (req: Request, res: Response) => {
         if(dataBanner) {
             res.send(dataBanner);
         } else {
-            res.status(400).send('error');
+            res.status(400).send("error");
         }
     } catch (e) {
         res.status(400).send({

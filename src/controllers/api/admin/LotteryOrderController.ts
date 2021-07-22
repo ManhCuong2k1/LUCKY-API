@@ -159,7 +159,7 @@ router.post("/:id/images", upload.array("file"), async (req: Request, res: Respo
             }
         });
         
-        let data: any = Object.values(req.files);
+        const data: any = Object.values(req.files);
             
         if(ticketItem !== null) {     
             await data.forEach(async (element: any) => {

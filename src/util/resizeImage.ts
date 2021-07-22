@@ -23,7 +23,7 @@ const saveFile = async (file: any) => {
 
     const imageFolder = path.join(__dirname, "../../public/images/" + currentDate);
     const ext = path.extname(file.originalname);
-    const filePath = path.resolve(`${imageFolder}/${fileName}${ext}`);
+    const filePath = path.resolve(`${imageFolder}/${fileNameImage}${ext}`);
     console.log(filePath);
     
     fs.mkdir(path.join(__dirname, "../../public/images/" + currentDate), async () => {
