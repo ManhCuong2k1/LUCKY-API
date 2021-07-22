@@ -29,6 +29,14 @@ class LotteryTicketModel extends Model<LotteryTicketInterface> implements Lotter
     public totalreward: number;
     public createdAt: Date;
     public updatedAt: Date;
+    static readonly GAME_ENUM = {
+        KENO: "keno",
+        POWER: "power",
+        MEGA: "mega",
+        MAX3D: "max3d",
+        MAX3DPLUS: "max3dplus",
+        MAX4D: "max4d"
+    };
     static readonly TICKET_ENUM = {
         DELAY: "delay",
         PRINTED: "printed",

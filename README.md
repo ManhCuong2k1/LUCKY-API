@@ -1,5 +1,9 @@
-### Run dev: 
-```yarn dev``` 
+### Install:
+```yarn``` 
+### connfig:
+- rename ```.env.example``` to ```.env```
+### Run debug or start: 
+```yarn debug``` 
 # Update:
 
-*Cập nhật API lấy kết quả sổ xố tại Vietlott.vn*
+*LUCKY LOTTE FAKE*

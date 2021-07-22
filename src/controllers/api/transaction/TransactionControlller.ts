@@ -97,8 +97,21 @@ router.post("/", auth, async (req: Request, res: Response) => {
                 momoService.amount = transaction.amount.toString();
                 momoService.requestId = process.env.MOMO_PREFIX_TRANSACTION + makeTransactionMomo.id.toString();
                 momoService.orderInfo = "Nạp Tiền Lucky PlayLot";
-                const postTransactionMomo = await momoService.makePayment();
-                res.send(postTransactionMomo);
+                const respMomo = await momoService.makePayment();
+
+                if(respMomo.errorCode == 0) {
+                    res.json({
+                        status: true,
+                        data: respMomo,
+                        message: "Sucess"
+                    });
+                }else {
+                    res.json({
+                        status: false,
+                        data: respMomo.message,
+                        message: "Error"
+                    });
+                }
                 break;
 
                 case "vnpay":

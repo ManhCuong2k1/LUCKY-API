@@ -23,6 +23,14 @@ class LotteryModel extends Model<LotteryInterface> implements LotteryInterface {
     public createdAt: Date;
     public updatedAt: Date;
     public deletedAt: Date;
+    static readonly GAME_ENUM = {
+        KENO: "keno",
+        POWER: "power",
+        MEGA: "mega",
+        MAX3D: "max3d",
+        MAX3DPLUS: "max3dplus",
+        MAX4D: "max4d"
+    };
 }
 
 const LotteryDefine = {

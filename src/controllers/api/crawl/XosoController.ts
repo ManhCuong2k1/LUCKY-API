@@ -27,19 +27,19 @@ router.get("/", (req: Request, res: Response) => {
  *     security:
  *      - Bearer: []
  */
- router.get("/sync/:type", async (req: Request, res: Response) => {
+router.get("/sync/:type", async (req: Request, res: Response) => {
     switch (req.params.type) {
         case "keno":
             try {
                 const crawling = await Crawl.XosoKenoData();
-                const updateData = updateTicket.updateResult("keno", crawling.data);
+                const updateData = updateTicket.updateResult(LotteryModel.GAME_ENUM.KENO, crawling.data);
                 return res.send(crawling);
             } catch (e) {
                 res.status(401).send({
                     code: e.message
                 });
             }
-        break;
+            break;
         case "power":
             try {
                 const crawling = await Crawl.XosoPowerData();
@@ -49,7 +49,7 @@ router.get("/", (req: Request, res: Response) => {
                     code: e.message
                 });
             }
-        break;
+            break;
         case "mega":
             try {
                 const crawling = await Crawl.XosoMegaData();
@@ -59,7 +59,7 @@ router.get("/", (req: Request, res: Response) => {
                     code: e.message
                 });
             }
-        break;
+            break;
         case "max4d":
             try {
                 const crawling = await Crawl.XosoMax4dData();
@@ -69,7 +69,7 @@ router.get("/", (req: Request, res: Response) => {
                     code: e.message
                 });
             }
-        break;
+            break;
         case "max3d":
             try {
                 const crawling = await Crawl.XosoMax3dData();
@@ -79,27 +79,90 @@ router.get("/", (req: Request, res: Response) => {
                     code: e.message
                 });
             }
-        break;
+            break;
         default:
             res.status(403).send("403");
-        break;
+            break;
     }
 });
 
 /* eslint-disable no-alert, no-console */
-router.get("/get-keno-round", async (req: express.Request, res: Response) => {
-    
-    const getKenoRoud: any = await Crawl.getKenoCurrentRound();
-    const datExport: any = {
-        status: true,
-        data: {
-            current_round: getKenoRoud.data.current_round, // eslint-disable-line
-            finish_time: Date.parse(getKenoRoud.data.finish_time) // eslint-disable-line
-        },
-        message: "success"
-    };
+router.get("/get-round/:type", async (req: express.Request, res: Response) => {
 
-    res.send(datExport);
+    try {
+        switch (req.params.type) {
+            case 'keno':
+                const getKenoRoud: any = await Crawl.getKenoCurrentRound();
+                const datExport: any = {
+                    status: true,
+                    data: {
+                        current_round: getKenoRoud.data.current_round, // eslint-disable-line
+                        finish_time: Date.parse(getKenoRoud.data.finish_time) // eslint-disable-line
+                    },
+                    message: "success"
+                };
+
+                res.send(datExport);
+                break;
+
+            case 'power':
+                const lastRecord = await LotteryModel.findOne({
+                    where: {
+                        type: LotteryModel.GAME_ENUM.POWER
+                    },
+                    order: [['id', 'DESC']],
+                });
+
+                if (lastRecord !== null) {
+                    let currentTimeRound: any = helper.addMinuteToTime(helper.getTimeData(lastRecord.next.toString()), 0);
+
+                    let dataExport: any = [];
+                    let currentRound = Number(lastRecord.round);
+                    let isFist = true;
+
+                    for (var i = 1; i <= 10; i++) {
+                        if (!isFist) {
+                            currentRound++;
+                            currentTimeRound = helper.addMinuteToTime(currentTimeRound, 2880); // + 2 ngày
+                            const thisTime: any = new Date(currentTimeRound).getDay() + 1;
+                            console.log(new Date(currentTimeRound).getDay() + 1);
+                            if (thisTime == 3 || thisTime == 5 || thisTime == 7) {
+                            } else {
+                                currentTimeRound = helper.addMinuteToTime(currentTimeRound, 1440); // + 1 ngày
+                            }
+                        }
+
+                        dataExport.push({
+                            round: "00" + currentRound,
+                            time: new Date(currentTimeRound).getTime()
+                        });
+
+                        isFist = false;
+                    }
+
+
+                    res.json({
+                        status: true,
+                        data: dataExport
+                    });
+
+                } else {
+                    res.json({
+                        status: false,
+                        message: "Error: not find last record"
+                    });
+                }
+
+                break;
+        }
+    } catch (err) {
+        res.json({
+            status: false,
+            message: err.message
+        })
+    }
+
+
 });
 /* eslint-enable no-alert, no-console */
 
@@ -131,7 +194,7 @@ router.get("/results/:type", async (req: Request, res: Response) => {
             dataExport["data"].push(dataPush);
 
             res.json(dataExport);
-            
+
         } else {
             const resultsData = await LotteryModel.findAll({
                 where: {
