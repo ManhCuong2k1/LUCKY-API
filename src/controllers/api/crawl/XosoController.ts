@@ -90,6 +90,7 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
 router.get("/get-round/:type", async (req: express.Request, res: Response) => {
 
     try {
+
         switch (req.params.type) {
             case "keno":
                 const getKenoRoud: any = await Crawl.getKenoCurrentRound();
@@ -103,7 +104,7 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                 };
 
                 res.send(datExport);
-                break;
+            break;
 
             case "power":
                 const lastRecord = await LotteryModel.findOne({
@@ -117,6 +118,7 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                     let currentTimeRound: any = helper.addMinuteToTime(helper.getTimeData(lastRecord.next.toString()), 0);
 
                     const dataExport: any = [];
+                    console.log(dataExport["jackpot"])
                     let currentRound = Number(lastRecord.round);
                     let isFist = true;
 
@@ -142,7 +144,8 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
 
                     res.json({
                         status: true,
-                        data: dataExport
+                        data: dataExport,
+                        jackpot: await Crawl.XosoGetJackPot("power")
                     });
 
                 } else {
@@ -192,7 +195,8 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
 
                     res.json({
                         status: true,
-                        data: dataExport
+                        data: dataExport,
+                        jackpot: await Crawl.XosoGetJackPot("mega")
                     });
 
                 } else {

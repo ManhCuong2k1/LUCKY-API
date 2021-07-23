@@ -18,7 +18,8 @@ const updateResult = async (game: string, data: any) => {
                         type: game, 
                         roundId: data.round, 
                         orderStatus: LotteryOrdersModel.ORDERSTATUS_ENUM.PRINTED
-                    } });
+                        }
+                    });
 
                 OrderItem.forEach(async (orderData: any) => {
                     const orderDetail = JSON.parse(orderData.orderDetail);
@@ -177,6 +178,34 @@ const updateResult = async (game: string, data: any) => {
             }
 
             break;
+
+            case "power": 
+                try {
+
+                const OrderItem = await LotteryOrdersModel.findAll({ 
+                    where: { 
+                        type: game, 
+                        roundId: data.round, 
+                        orderStatus: LotteryOrdersModel.ORDERSTATUS_ENUM.PRINTED
+                        }
+                    });
+
+                OrderItem.forEach(async (orderData: any) => {
+                    const orderDetail = JSON.parse(orderData.orderDetail);
+
+
+                    
+
+
+                });
+
+                }catch(error) {
+                    status = false, message = error;
+                }
+            break;
+
+
+
 
         default:
             status = false, message = "error game params";

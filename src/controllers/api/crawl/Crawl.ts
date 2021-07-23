@@ -6,14 +6,13 @@ import { LotteryModel, LotteryCheck } from "@models/Lottery";
 
 const XosoGetNextTime = async (type: string) => {
   try {
-    // config header để vào trang kết quả keno
     const options = {
       "method": "GET",
       "rejectUnauthorized": false,
       "url": "https://vietlott.vn",
       "headers": {}
     };
-    // lấy nội dung trang kết quả Kano
+
     const dataResp = await request(options);
 
     let timeNext;
@@ -52,6 +51,60 @@ const XosoGetNextTime = async (type: string) => {
     };
   }
 };
+
+const XosoGetJackPot = async (type: string) => {
+  try {
+
+    let jackpot:any, jackpot1:any, jackpot2:any, cutjack1: any, cutjack2: any;
+
+    switch (type) {
+      case "keno":
+        jackpot = 2000000000;
+        return {
+          jackpot: jackpot,
+        }
+        break;
+      case "power":
+        const options = {
+          "method": "GET",
+          "rejectUnauthorized": false,
+          "url": "https://vietlott.vn/vi/trung-thuong/ket-qua-trung-thuong/655.html",
+          "headers": {}
+        };
+
+        const dataResp = await request(options);
+        cutjack1 = helper.cutstring(dataResp, '<td>Jackpot 1</td>', "</tr>");
+        jackpot1 = helper.cutstring(cutjack1, '<td class="color_red text-right"><b>', "</b></td>");
+        cutjack2 = helper.cutstring(dataResp, '<td>Jackpot 2</td>', "</tr>");
+        jackpot2 = helper.cutstring(cutjack2, '<td class="color_red text-right"><b>', "</b></td>");
+        return {
+          jackpot1: jackpot1,
+          jackpot2: jackpot2,
+        }
+        break;
+      case "mega":
+        const optionsmega = {
+          "method": "GET",
+          "rejectUnauthorized": false,
+          "url": "https://vietlott.vn/vi/trung-thuong/ket-qua-trung-thuong/645.html",
+          "headers": {}
+        };
+        const dataRespmega = await request(optionsmega);
+        jackpot = helper.cutstring(dataRespmega, '<td class="color_red text-right"><b>', "</b></td>");
+        return {
+          jackpot: jackpot
+        }
+        break;
+    }
+  } catch (e) {
+    console.log(e);
+    return {
+      status: false,
+      msg: e.message
+    };
+  }
+}
+
 
 
 const XosoKenoData = async () => {
@@ -92,7 +145,7 @@ const XosoKenoData = async () => {
     let le = 0;
     let lon = 0;
     let nho = 0;
- 
+
     // loop các số và set lại giá trị cho các biến trên
     for (const i in arrNumber) {
       if (Number(arrNumber[i]) % 2 == 0) chan++; else le++;
@@ -596,16 +649,16 @@ const getKenoCurrentRound = async () => {
     const options = {
       "method": "GET",
       "rejectUnauthorized": false,
-      "url": "https://www.minhchinh.com/livekqxs/xstt/KN.php?_="+ helper.randomString(13),
+      "url": "https://www.minhchinh.com/livekqxs/xstt/KN.php?_=" + helper.randomString(13),
       "headers": {}
     };
 
     // lấy nội dung kỳ quay số  kết quả Kano
     const dataResp = await request(options);
     let objData: any = helper.cutstring(dataResp, "xsdt[8]=", "; key=");
-        objData = JSON.parse(objData);
+    objData = JSON.parse(objData);
     const dataExport: any = {};
-    dataExport["current_round"] = "00"+ objData.next_ky;
+    dataExport["current_round"] = "00" + objData.next_ky;
     dataExport["finish_time"] = objData.next_date;
     return {
       status: true,
@@ -626,6 +679,7 @@ const getKenoCurrentRound = async () => {
 
 
 export default {
+  XosoGetJackPot,
   XosoKenoData,
   XosoPowerData,
   XosoMegaData,
