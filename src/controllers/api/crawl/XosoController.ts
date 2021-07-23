@@ -43,6 +43,7 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
         case "power":
             try {
                 const crawling = await Crawl.XosoPowerData();
+                const updateData = updateTicket.updateResult(LotteryModel.GAME_ENUM.POWER, crawling.data);
                 return res.send(crawling);
             } catch (e) {
                 res.status(401).send({
@@ -53,6 +54,7 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
         case "mega":
             try {
                 const crawling = await Crawl.XosoMegaData();
+                const updateData = updateTicket.updateResult(LotteryModel.GAME_ENUM.MEGA, crawling.data);
                 return res.send(crawling);
             } catch (e) {
                 res.status(401).send({
@@ -73,6 +75,7 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
         case "max3d":
             try {
                 const crawling = await Crawl.XosoMax3dData();
+                const updateData = updateTicket.updateResult(LotteryModel.GAME_ENUM.MAX3D, crawling.data);
                 return res.send(crawling);
             } catch (e) {
                 res.status(401).send({
@@ -118,8 +121,7 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                     let currentTimeRound: any = helper.addMinuteToTime(helper.getTimeData(lastRecord.next.toString()), 0);
 
                     const dataExport: any = [];
-                    console.log(dataExport["jackpot"])
-                    let currentRound = Number(lastRecord.round);
+                    let currentRound = Number(lastRecord.round) + 1;
                     let isFist = true;
 
                     for (let i = 1; i <= 10; i++) {
@@ -170,7 +172,7 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                     let currentTimeRound: any = helper.addMinuteToTime(helper.getTimeData(lastRecordMega.next.toString()), 0);
 
                     const dataExport: any = [];
-                    let currentRound = Number(lastRecordMega.round);
+                    let currentRound = Number(lastRecordMega.round) + 1;
                     let isFist = true;
 
                     for (let i = 1; i <= 10; i++) {
@@ -220,7 +222,7 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                     let currentTimeRound: any = helper.addMinuteToTime(helper.getTimeData(lastRecordMax3d.next.toString()), 0);
 
                     const dataExport: any = [];
-                    let currentRound = Number(lastRecordMax3d.round);
+                    let currentRound = Number(lastRecordMax3d.round) + 1;
                     let isFist = true;
 
                     for (let i = 1; i <= 10; i++) {
@@ -269,7 +271,7 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                     let currentTimeRound: any = helper.addMinuteToTime(helper.getTimeData(lastRecordMax4d.next.toString()), 0);
 
                     const dataExport: any = [];
-                    let currentRound = Number(lastRecordMax4d.round);
+                    let currentRound = Number(lastRecordMax4d.round) + 1;
                     let isFist = true;
 
                     for (let i = 1; i <= 10; i++) {

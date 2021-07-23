@@ -1,4 +1,4 @@
-import { DataTypes, Model, ModelScopeOptions, Op } from "sequelize";
+import { DataTypes, Model} from "sequelize";
 import sequelize from "@database/connection";
 
 interface UserHistoryInterface {
@@ -19,10 +19,17 @@ class UserHistoryModel extends Model<UserHistoryInterface> implements UserHistor
     public detail: string;
     public createdAt: Date;
     public updatedAt: Date;
-    static readonly ACTION_ENUM = {
+
+    static readonly ACTION_SLUG_ENUM = {
+        RECHARGE: "rechage",
+        BUY_TICKET: "buy_ticket",
+        EXCHANGE_REWARD: "exchange_reward"
+    }
+
+    static readonly ACTION_NAME_ENUM = {
         BUY_TICKET: "Mua vé",
         RECHARGE: "Nạp tiền",
-        REDEEM_REWARD: "Đổi thưởng",
+        EXCHANGE_REWARD: "Đổi thưởng",
     };
 }
 
@@ -36,13 +43,13 @@ const UserHistoryDefine = {
         type: DataTypes.INTEGER,
     },
     actionSlug: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(300),
     },
     actionName: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(300),
     },
     detail: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
     },
     createdAt: {
         type: DataTypes.DATE,

@@ -1,9 +1,8 @@
 import { Request, Response, Router } from "express";
 import helper from "@controllers/api/helper/helper";
 import Crawl from "../../crawl/Crawl";
-import { LotteryTicketInterface, LotteryTicketModel } from "@models/LotteryTicket";
-import { LotteryOrdersInterface, LotteryOrdersModel } from "@models/LotteryOrder";
-import { LotteryInterface, LotteryModel } from "@models/Lottery";
+import { LotteryTicketModel } from "@models/LotteryTicket";
+import { LotteryOrdersModel } from "@models/LotteryOrder";
 import { UserModel } from "@models/User";
 const router = Router();
 

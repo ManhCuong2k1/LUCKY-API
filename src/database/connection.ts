@@ -14,7 +14,7 @@ const connection = new Sequelize(DB_NAME, DB_USERNAME, DB_PASSWORD, {
           requestTimeout: 60000
         }
     },
-    timezone: '+07:00', 
+    timezone: "+07:00", 
     logging: true,
     define: {
         charset: "utf8",

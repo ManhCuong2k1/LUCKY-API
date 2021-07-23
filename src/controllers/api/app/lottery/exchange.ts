@@ -1,10 +1,6 @@
 import { Request, Response, Router } from "express";
-import helper from "@controllers/api/helper/helper";
-import { UserInterface, UserModel } from "@models/User";
-import { LotteryExchangesInterface, LotteryExchangesModel } from "@models/LotteryExchange";
-import sequelize, { Sequelize } from "sequelize";
-import { GridInterface } from "@models/Transformers/Grid";
-import { min } from "underscore";
+import { UserModel } from "@models/User";
+import { LotteryExchangesModel } from "@models/LotteryExchange";
 
 const router = Router();
 
@@ -74,7 +70,7 @@ router.post("/", async (req: Request, res: Response) => {
 
             case "wallet":
                 try {
-                    if (transaction.amount >= minLocal) {
+                    if (transaction.amount >= minwallet) {
                         if (user.totalReward >= Number(transaction.amount)) {
 
                             const User = await UserModel.findByPk(user.id);
@@ -119,7 +115,7 @@ router.post("/", async (req: Request, res: Response) => {
 
             case "bank":
                 try {
-                    if (transaction.amount >= minLocal) {
+                    if (transaction.amount >= minBank) {
                         if (user.totalReward >= Number(transaction.amount)) {
 
                             const User = await UserModel.findByPk(user.id);

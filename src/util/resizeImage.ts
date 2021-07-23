@@ -1,8 +1,6 @@
-import sharp from "sharp";
 import path from "path";
 import moment from "moment-timezone";
 import fs from "fs";
-import slugify from "slugify";
 
 const getFileName = () => {
     return new Date().getTime().toString();
@@ -17,7 +15,6 @@ const saveFile = async (file: any) => {
     const currentDate = moment().format("DD-MM-YYYY");
     const orifinalName = file.originalname.split(".");
     const editName = orifinalName.slice(0, orifinalName.length - 1)[0] + "-" + new Date().getTime();
-    const fileName = slugify(editName, { strict: true });
 
     const fileNameImage: string = getFileName();
 

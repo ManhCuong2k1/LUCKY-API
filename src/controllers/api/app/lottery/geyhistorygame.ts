@@ -1,11 +1,8 @@
 import { Request, Response, Router } from "express";
-import helper from "@controllers/api/helper/helper";
-import Crawl from "../../crawl/Crawl";
-import { LotteryInterface, LotteryModel } from "@models/Lottery";
-import { LotteryOrdersInterface, LotteryOrdersModel } from "@models/LotteryOrder";
-import { LotteryTicketInterface, LotteryTicketModel } from "@models/LotteryTicket";
-import sequelize, { Sequelize } from "sequelize";
-import { LotteryImagesInterface, LotteryImagesModel } from "@models/LotteryImages";
+import { LotteryOrdersModel } from "@models/LotteryOrder";
+import { LotteryTicketModel } from "@models/LotteryTicket";
+import { Sequelize } from "sequelize";
+import { LotteryImagesModel } from "@models/LotteryImages";
 import { GridInterface } from "@models/Transformers/Grid";
 
 const router = Router();

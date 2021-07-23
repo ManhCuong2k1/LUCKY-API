@@ -55,14 +55,14 @@ const XosoGetNextTime = async (type: string) => {
 const XosoGetJackPot = async (type: string) => {
   try {
 
-    let jackpot:any, jackpot1:any, jackpot2:any, cutjack1: any, cutjack2: any;
+    let jackpot: any, jackpot1: any, jackpot2: any, cutjack1: any, cutjack2: any;
 
     switch (type) {
       case "keno":
         jackpot = 2000000000;
         return {
           jackpot: jackpot,
-        }
+        };
         break;
       case "power":
         const options = {
@@ -73,14 +73,14 @@ const XosoGetJackPot = async (type: string) => {
         };
 
         const dataResp = await request(options);
-        cutjack1 = helper.cutstring(dataResp, '<td>Jackpot 1</td>', "</tr>");
-        jackpot1 = helper.cutstring(cutjack1, '<td class="color_red text-right"><b>', "</b></td>");
-        cutjack2 = helper.cutstring(dataResp, '<td>Jackpot 2</td>', "</tr>");
-        jackpot2 = helper.cutstring(cutjack2, '<td class="color_red text-right"><b>', "</b></td>");
+        cutjack1 = helper.cutstring(dataResp, "<td>Jackpot 1</td>", "</tr>");
+        jackpot1 = helper.cutstring(cutjack1, "<td class=\"color_red text-right\"><b>", "</b></td>");
+        cutjack2 = helper.cutstring(dataResp, "<td>Jackpot 2</td>", "</tr>");
+        jackpot2 = helper.cutstring(cutjack2, "<td class=\"color_red text-right\"><b>", "</b></td>");
         return {
           jackpot1: jackpot1,
           jackpot2: jackpot2,
-        }
+        };
         break;
       case "mega":
         const optionsmega = {
@@ -90,10 +90,10 @@ const XosoGetJackPot = async (type: string) => {
           "headers": {}
         };
         const dataRespmega = await request(optionsmega);
-        jackpot = helper.cutstring(dataRespmega, '<td class="color_red text-right"><b>', "</b></td>");
+        jackpot = helper.cutstring(dataRespmega, "<td class=\"color_red text-right\"><b>", "</b></td>");
         return {
           jackpot: jackpot
-        }
+        };
         break;
     }
   } catch (e) {
@@ -103,7 +103,7 @@ const XosoGetJackPot = async (type: string) => {
       msg: e.message
     };
   }
-}
+};
 
 
 
@@ -489,129 +489,129 @@ const XosoMax3dData = async () => {
     const dataXoso: any = {};
 
     // lấy nội dung giải nhất trong bảng
-    dataXoso["giainhat"] = {};
+    dataXoso["giainhat"] = [];
     html = helper.cutstring(tableResult, "<h5>Giải Nhất</h5>", "<div class=\"clearfix visible-lg\">");
     html = html.split("<div class=\"col-xs-6 padding_2\">");
 
     // bóc dãy 1
     list = helper.cutstring(html[1], "<div class=\"day_so_ket_qua_v2\">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giainhat"]["list1"] = arrNumber;
+    dataXoso["giainhat"].push(arrNumber);
 
     // bóc dãy 2
     list = helper.cutstring(html[2], "<div class=\"day_so_ket_qua_v2\">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giainhat"]["list2"] = arrNumber;
+    dataXoso["giainhat"].push(arrNumber);
 
 
     // lấy nội dung giải nhì trong bảng
-    dataXoso["giainhi"] = {};
+    dataXoso["giainhi"] = [];
     html = helper.cutstring(tableResult, "<h5>Giải Nhì</h5>", "<div class=\"clearfix visible-lg\">");
     html = html.split("<div class=\"col-xs-3 padding_2\">");
 
     // bóc dãy 1
     list = helper.cutstring(html[1], "<div class=\"day_so_ket_qua_v2 \">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giainhi"]["list1"] = arrNumber;
+    dataXoso["giainhi"].push(arrNumber);
 
 
     list = helper.cutstring(html[2], "<div class=\"day_so_ket_qua_v2\" >", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giainhi"]["list2"] = arrNumber;
+    dataXoso["giainhi"].push(arrNumber);
 
     // bóc dãy 3
     list = helper.cutstring(html[3], "<div class=\"day_so_ket_qua_v2 \"\">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giainhi"]["list3"] = arrNumber;
+    dataXoso["giainhi"].push(arrNumber);
 
     // bóc dãy 4
     list = helper.cutstring(html[4], "<div class=\"day_so_ket_qua_v2\" >", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giainhi"]["list4"] = arrNumber;
+    dataXoso["giainhi"].push(arrNumber);
 
 
     // lấy nội dung giải ba trong bảng
-    dataXoso["giaiba"] = {};
+    dataXoso["giaiba"] = [];
     html = helper.cutstring(tableResult, "<h5>Giải Ba</h5>", "<div class=\"clearfix visible-lg\">");
     html = html.split("<div class=\"col-xs-4 padding_2\">");
 
     // bóc dãy 1
     list = helper.cutstring(html[1], "<div class=\"day_so_ket_qua_v2 \" style=\"padding-right:10px\">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giaiba"]["list1"] = arrNumber;
+    dataXoso["giaiba"].push(arrNumber);
 
     // bóc dãy 2
     list = helper.cutstring(html[2], "<div class=\"day_so_ket_qua_v2 align_left_up_768\" style=\"padding-left:10px\">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giaiba"]["list2"] = arrNumber;
+    dataXoso["giaiba"].push(arrNumber);
 
     // bóc dãy 3
     list = helper.cutstring(html[3], "<div class=\"day_so_ket_qua_v2\">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giaiba"]["list3"] = arrNumber;
+    dataXoso["giaiba"].push(arrNumber);
 
     // bóc dãy 4
     list = helper.cutstring(html[4], "<div class=\"day_so_ket_qua_v2 \" style=\"padding-right:10px\">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giaiba"]["list4"] = arrNumber;
+    dataXoso["giaiba"].push(arrNumber);
 
     // bóc dãy 5
     list = helper.cutstring(html[5], "<div class=\"day_so_ket_qua_v2 align_left_up_768\" style=\"padding-left:10px\">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giaiba"]["list5"] = arrNumber;
+    dataXoso["giaiba"].push(arrNumber);
 
     // bóc dãy 6
     list = helper.cutstring(html[6], "<div class=\"day_so_ket_qua_v2\">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giaiba"]["list6"] = arrNumber;
+    dataXoso["giaiba"].push(arrNumber);
 
 
     // lấy nội dung giải khuyến khích trong bảng
-    dataXoso["giaikhuyenkhich"] = {};
+    dataXoso["giaikhuyenkhich"] = [];
     html = helper.cutstring(tableResult, "<h5>Giải khuyến khích</h5>", "<div class=\"btn_chuyendulieu\">");
     html = html.split("<div class=\"col-xs-3 padding_2\">");
 
     // bóc dãy 1
     list = helper.cutstring(html[1], "<div class=\"day_so_ket_qua_v2 \">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giaikhuyenkhich"]["list1"] = arrNumber;
+    dataXoso["giaikhuyenkhich"].push(arrNumber);
 
     // bóc dãy 2
     list = helper.cutstring(html[2], "<div class=\"day_so_ket_qua_v2\">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giaikhuyenkhich"]["list2"] = arrNumber;
+    dataXoso["giaikhuyenkhich"].push(arrNumber);
 
     // bóc dãy 3
     list = helper.cutstring(html[3], "<div class=\"day_so_ket_qua_v2\">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giaikhuyenkhich"]["list3"] = arrNumber;
+    dataXoso["giaikhuyenkhich"].push(arrNumber);
 
     // bóc dãy 4
     list = helper.cutstring(html[4], "<div class=\"day_so_ket_qua_v2 \">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giaikhuyenkhich"]["list4"] = arrNumber;
+    dataXoso["giaikhuyenkhich"].push(arrNumber);
 
     // bóc dãy 5
     list = helper.cutstring(html[5], "<div class=\"day_so_ket_qua_v2\">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giaikhuyenkhich"]["list5"] = arrNumber;
+    dataXoso["giaikhuyenkhich"].push(arrNumber);
 
     // bóc dãy 6
     list = helper.cutstring(html[6], "<div class=\"day_so_ket_qua_v2\">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giaikhuyenkhich"]["list6"] = arrNumber;
+    dataXoso["giaikhuyenkhich"].push(arrNumber);
 
     // bóc dãy 7
     list = helper.cutstring(html[7], "<div class=\"day_so_ket_qua_v2\">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giaikhuyenkhich"]["list7"] = arrNumber;
+    dataXoso["giaikhuyenkhich"].push(arrNumber);
 
     // bóc dãy 8
     list = helper.cutstring(html[8], "<div class=\"day_so_ket_qua_v2\">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giaikhuyenkhich"]["list8"] = arrNumber;
+    dataXoso["giaikhuyenkhich"].push(arrNumber);
 
-    const getNextTime = await XosoGetNextTime("max4d");
+    const getNextTime = await XosoGetNextTime("max3d");
 
     const dataExport: any = {};
     dataExport["date"] = helper.cutstring(data, "ngày <b>", "</b>");
