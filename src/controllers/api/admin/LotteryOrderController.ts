@@ -159,10 +159,10 @@ router.post("/:id/images", upload.array("file"), async (req: Request, res: Respo
             }
         });
         
-        const data = Object.values(req.files);
+        const data: any = Object.values(req.files);
             
         if(ticketItem !== null) {     
-            await data.forEach(async (element: any) => {            
+            await data.forEach(async (element: any) => {
                 const fileName = await saveFile(element);
                 const objectData: any = {
                     imageslist: fileName,
@@ -186,6 +186,28 @@ router.post("/:id/images", upload.array("file"), async (req: Request, res: Respo
                 message: "can\'t upload image with ID: "+ req.params.id
             });    
         }
+    } catch (e) {
+        console.log(e.message);
+        res.status(400).send({
+            error: e.message
+        });
+    }
+});
+
+router.post("/banner", upload.array("file"), async (req: Request, res: Response) => {
+    try {
+
+        if (!req.files) throw new Error("No file to upload");
+        const data = Object.values(req.files);
+            
+        await data.forEach(async (element: any) => {            
+            const fileName = await saveFile(element);
+            const objectData: any = {
+                imageslist: fileName,
+            };
+            await LotteryImagesModel.create(objectData);
+        });
+        res.send({status: true});  
     } catch (e) {
         console.log(e.message);
         res.status(400).send({
