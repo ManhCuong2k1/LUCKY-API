@@ -6,7 +6,7 @@ const timeConverter = (timestamp: number) => {
     const a = new Date(timestamp * 1000);
     const months = ["01", "02", "03", "04", "05", "06", "07", "07", "08", "09", "10", "12"];
     const year = a.getFullYear();
-    const month = months[a.getMonth()];
+    const month = months[a.getMonth() + 1];
     const date = a.getDate();
     const hour = a.getHours();
     const min = a.getMinutes();
@@ -22,6 +22,7 @@ const getTime = (timeStamp: any) => {
 
 const addMinuteToTime = (time: any, minutes: number) => {
     const parseTime = new Date(time);
+
     let timeStamp = parseTime.setTime(parseTime.getTime() + (minutes * 60 * 1000));
         timeStamp = timeStamp / 1000;
     return timeConverter(timeStamp);

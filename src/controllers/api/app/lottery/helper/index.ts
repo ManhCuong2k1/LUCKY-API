@@ -2,6 +2,19 @@ const arrayStringToNumber = (obj: any) => {
     return obj.map((i: any) => Number(i));
 };  
 
+const sortRounds = (arr: any) => {
+        const length = arr.length;
+        for (let j = 0; j < length - 1; j++) {
+            if (Number(arr[j]["round"]) > Number(arr[j + 1]["round"])) {
+                const temp = arr[j]["round"];
+                arr[j]["round"] = arr[j + 1]["round"];
+                arr[j + 1]["round"] = temp;
+                j = -1;
+            }
+        }
+        return arr;
+};
+
 const checkSame = (arrBet: any, arrResult: any) => {
     const arrExport = [];
     for (const i of arrBet) {
@@ -85,6 +98,7 @@ const getRewardMega = (level: number, same: number) => {
 
 export default {
     arrayStringToNumber,
+    sortRounds,
     checkSame,
     getRewardKeno,
     getRewardPower,

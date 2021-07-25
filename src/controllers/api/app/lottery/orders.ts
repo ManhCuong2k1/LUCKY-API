@@ -1,5 +1,6 @@
 import { Request, Response, Router } from "express";
 import helper from "@controllers/api/helper/helper";
+import LotteryHelper from "./helper";
 import Crawl from "../../crawl/Crawl";
 import { LotteryTicketModel } from "@models/LotteryTicket";
 import { LotteryOrdersModel } from "@models/LotteryOrder";
@@ -220,8 +221,9 @@ router.post("/", async (req: Request, res: Response) => {
                     };
                     const creatTicket = await LotteryTicketModel.create(dataTicket);
 
+                    const roundValidate = LotteryHelper.sortRounds(body.preriod);
 
-                    body.preriod.forEach(async (preriod: any) => {
+                    roundValidate.forEach(async (preriod: any) => {
 
                         dataImport = {
                             ticketId: creatTicket.id,
@@ -255,7 +257,6 @@ router.post("/", async (req: Request, res: Response) => {
 
 
             case "mega":
-
                 let priceOneListMega: number = 0;
 
                 switch (body.level) {
@@ -332,8 +333,9 @@ router.post("/", async (req: Request, res: Response) => {
                     };
                     const creatTicket = await LotteryTicketModel.create(dataTicket);
 
+                    const roundValidate = LotteryHelper.sortRounds(body.preriod);
 
-                    body.preriod.forEach(async (preriod: any) => {
+                    roundValidate.forEach(async (preriod: any) => {
 
                         dataImport = {
                             ticketId: creatTicket.id,
@@ -401,8 +403,9 @@ router.post("/", async (req: Request, res: Response) => {
                     };
                     const creatTicket = await LotteryTicketModel.create(dataTicket);
 
+                    const roundValidate = LotteryHelper.sortRounds(body.preriod);
 
-                    body.preriod.forEach(async (preriod: any) => {
+                    roundValidate.forEach(async (preriod: any) => {
 
                         dataImport = {
                             ticketId: creatTicket.id,

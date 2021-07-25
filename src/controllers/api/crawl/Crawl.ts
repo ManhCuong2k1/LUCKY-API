@@ -496,12 +496,11 @@ const XosoMax3dData = async () => {
     // bóc dãy 1
     list = helper.cutstring(html[1], "<div class=\"day_so_ket_qua_v2\">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giainhat"].push(arrNumber);
-
+    dataXoso["giainhat"].push(arrNumber.join(""));
     // bóc dãy 2
     list = helper.cutstring(html[2], "<div class=\"day_so_ket_qua_v2\">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giainhat"].push(arrNumber);
+    dataXoso["giainhat"].push(arrNumber.join(""));
 
 
     // lấy nội dung giải nhì trong bảng
@@ -512,22 +511,22 @@ const XosoMax3dData = async () => {
     // bóc dãy 1
     list = helper.cutstring(html[1], "<div class=\"day_so_ket_qua_v2 \">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giainhi"].push(arrNumber);
+    dataXoso["giainhi"].push(arrNumber.join(""));
 
 
     list = helper.cutstring(html[2], "<div class=\"day_so_ket_qua_v2\" >", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giainhi"].push(arrNumber);
+    dataXoso["giainhi"].push(arrNumber.join(""));
 
     // bóc dãy 3
     list = helper.cutstring(html[3], "<div class=\"day_so_ket_qua_v2 \"\">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giainhi"].push(arrNumber);
+    dataXoso["giainhi"].push(arrNumber.join(""));
 
     // bóc dãy 4
     list = helper.cutstring(html[4], "<div class=\"day_so_ket_qua_v2\" >", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giainhi"].push(arrNumber);
+    dataXoso["giainhi"].push(arrNumber.join(""));
 
 
     // lấy nội dung giải ba trong bảng
@@ -538,32 +537,32 @@ const XosoMax3dData = async () => {
     // bóc dãy 1
     list = helper.cutstring(html[1], "<div class=\"day_so_ket_qua_v2 \" style=\"padding-right:10px\">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giaiba"].push(arrNumber);
+    dataXoso["giaiba"].push(arrNumber.join(""));
 
     // bóc dãy 2
     list = helper.cutstring(html[2], "<div class=\"day_so_ket_qua_v2 align_left_up_768\" style=\"padding-left:10px\">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giaiba"].push(arrNumber);
+    dataXoso["giaiba"].push(arrNumber.join(""));
 
     // bóc dãy 3
     list = helper.cutstring(html[3], "<div class=\"day_so_ket_qua_v2\">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giaiba"].push(arrNumber);
+    dataXoso["giaiba"].push(arrNumber.join(""));
 
     // bóc dãy 4
     list = helper.cutstring(html[4], "<div class=\"day_so_ket_qua_v2 \" style=\"padding-right:10px\">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giaiba"].push(arrNumber);
+    dataXoso["giaiba"].push(arrNumber.join(""));
 
     // bóc dãy 5
     list = helper.cutstring(html[5], "<div class=\"day_so_ket_qua_v2 align_left_up_768\" style=\"padding-left:10px\">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giaiba"].push(arrNumber);
+    dataXoso["giaiba"].push(arrNumber.join(""));
 
     // bóc dãy 6
     list = helper.cutstring(html[6], "<div class=\"day_so_ket_qua_v2\">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giaiba"].push(arrNumber);
+    dataXoso["giaiba"].push(arrNumber.join(""));
 
 
     // lấy nội dung giải khuyến khích trong bảng
@@ -574,42 +573,41 @@ const XosoMax3dData = async () => {
     // bóc dãy 1
     list = helper.cutstring(html[1], "<div class=\"day_so_ket_qua_v2 \">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giaikhuyenkhich"].push(arrNumber);
-
+    dataXoso["giaikhuyenkhich"].push(arrNumber.join(""));
     // bóc dãy 2
     list = helper.cutstring(html[2], "<div class=\"day_so_ket_qua_v2\">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giaikhuyenkhich"].push(arrNumber);
+    dataXoso["giaikhuyenkhich"].push(arrNumber.join(""));
 
     // bóc dãy 3
     list = helper.cutstring(html[3], "<div class=\"day_so_ket_qua_v2\">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giaikhuyenkhich"].push(arrNumber);
+    dataXoso["giaikhuyenkhich"].push(arrNumber.join(""));
 
     // bóc dãy 4
     list = helper.cutstring(html[4], "<div class=\"day_so_ket_qua_v2 \">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giaikhuyenkhich"].push(arrNumber);
+    dataXoso["giaikhuyenkhich"].push(arrNumber.join(""));
 
     // bóc dãy 5
     list = helper.cutstring(html[5], "<div class=\"day_so_ket_qua_v2\">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giaikhuyenkhich"].push(arrNumber);
+    dataXoso["giaikhuyenkhich"].push(arrNumber.join(""));
 
     // bóc dãy 6
     list = helper.cutstring(html[6], "<div class=\"day_so_ket_qua_v2\">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giaikhuyenkhich"].push(arrNumber);
+    dataXoso["giaikhuyenkhich"].push(arrNumber.join(""));
 
     // bóc dãy 7
     list = helper.cutstring(html[7], "<div class=\"day_so_ket_qua_v2\">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giaikhuyenkhich"].push(arrNumber);
+    dataXoso["giaikhuyenkhich"].push(arrNumber.join(""));
 
     // bóc dãy 8
     list = helper.cutstring(html[8], "<div class=\"day_so_ket_qua_v2\">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giaikhuyenkhich"].push(arrNumber);
+    dataXoso["giaikhuyenkhich"].push(arrNumber.join(""));
 
     const getNextTime = await XosoGetNextTime("max3d");
 
@@ -633,7 +631,11 @@ const XosoMax3dData = async () => {
       LotteryModel.create(dataImport);
     }
 
-    return dataExport;
+    return {
+      status: true,
+      data: dataExport,
+      message: "success"
+    };
 
   } catch (e) {
     console.log(e);

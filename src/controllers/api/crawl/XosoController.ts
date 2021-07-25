@@ -62,16 +62,6 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
                 });
             }
             break;
-        case "max4d":
-            try {
-                const crawling = await Crawl.XosoMax4dData();
-                return res.send(crawling);
-            } catch (e) {
-                res.status(401).send({
-                    code: e.message
-                });
-            }
-            break;
         case "max3d":
             try {
                 const crawling = await Crawl.XosoMax3dData();
@@ -83,6 +73,30 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
                 });
             }
             break;
+
+            case "max3dplus":
+                try {
+                    const crawling = await Crawl.XosoMax3dData();
+                    const updateData = updateTicket.updateResult(LotteryModel.GAME_ENUM.MAX3DPLUS, crawling.data);
+                    return res.send(crawling);
+                } catch (e) {
+                    res.status(401).send({
+                        code: e.message
+                    });
+                }
+                break;
+
+        case "max4d":
+            try {
+                const crawling = await Crawl.XosoMax4dData();
+                return res.send(crawling);
+            } catch (e) {
+                res.status(401).send({
+                    code: e.message
+                });
+            }
+            break;
+
         default:
             res.status(403).send("403");
             break;
@@ -128,6 +142,7 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                         if (!isFist) {
                             currentRound++;
                             currentTimeRound = helper.addMinuteToTime(currentTimeRound, 2880); // + 2 ngày
+                            
                             const thisTime: any = new Date(currentTimeRound).getDay() + 1;
                             if (thisTime == 3 || thisTime == 5 || thisTime == 7) {
                             } else {

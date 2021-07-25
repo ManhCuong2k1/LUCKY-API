@@ -242,7 +242,7 @@ const updateResult = async (game: string, data: any) => {
             } catch (error) {
                 status = false, message = error;
             }
-        break;
+            break;
 
         case "mega":
             try {
@@ -309,12 +309,349 @@ const updateResult = async (game: string, data: any) => {
             } catch (error) {
                 status = false, message = error;
             }
-        break;
+            break;
 
+        case "max3d":
+            try {
+
+                const OrderItem = await LotteryOrdersModel.findAll({
+                    where: {
+                        type: game,
+                        roundId: data.round,
+                        orderStatus: LotteryOrdersModel.ORDERSTATUS_ENUM.PRINTED
+                    }
+                });
+
+                OrderItem.forEach(async (orderData: any) => {
+                    const orderDetail = JSON.parse(orderData.orderDetail);
+                        dataUpdate = {},
+                        dataUpdate.data = {},
+                        dataUpdate.data.giainhat = [],
+                        dataUpdate.data.giainhi = [],
+                        dataUpdate.data.giaiba = [],
+                        dataUpdate.data.giaikhuyenkhich = [],
+                        dataUpdate.result = {};
+                    let isWin: boolean = false, updateReward: number = 0;
+
+
+                    for (const i of orderDetail.data) {
+
+
+                        const arrBet = LotteryHelper.arrayStringToNumber(i.number);
+
+
+                        // GIAI NHAT
+                        const arrResultGiaiNhat = LotteryHelper.arrayStringToNumber(data.result.giainhat);
+                        const checkSameGiaiNhat = LotteryHelper.checkSame(arrBet, arrResultGiaiNhat);
+                        const rewardReciveGiaiNhat = checkSameGiaiNhat.length * 1000000; // các số trùng x 1.000.000
+                        let rewardGiaiNhat = rewardReciveGiaiNhat;
+                        rewardGiaiNhat = rewardGiaiNhat * (i.price / 10000);
+
+                        dataUpdate["data"]["giainhat"].push({
+                            number: checkSameGiaiNhat,
+                            reward: rewardGiaiNhat
+                        });
+
+                        if (rewardGiaiNhat > 0) {
+                            isWin = true;
+                            updateReward = updateReward + rewardGiaiNhat;
+
+                            const ticketData = await LotteryTicketModel.findByPk(orderData.ticketId);
+                            if (!ticketData) throw new Error("Not found Ticket");
+                            ticketData.totalreward = ticketData.totalreward + updateReward;
+                            await ticketData.save();
+                            await ticketData.reload();
+
+                            const UserData = await UserModel.findOne({ where: { id: orderData.userId } });
+                            if (!UserData) throw new Error("Not found user");
+                            UserData.totalReward = UserData.totalReward + updateReward;
+                            await UserData.save();
+                            await UserData.reload();
+                        }
+
+
+                        // GIAI NHI
+                        const arrResultGiaiNhi = LotteryHelper.arrayStringToNumber(data.result.giainhi);
+                        const checkSameGiaiNhi = LotteryHelper.checkSame(arrBet, arrResultGiaiNhi);
+                        const rewardReciveGiaiNhi = checkSameGiaiNhi.length * 1000000; // các số trùng x 1.000.000
+                        let rewardGiaiNhi = rewardReciveGiaiNhi;
+                        rewardGiaiNhi = rewardGiaiNhi * (i.price / 10000);
+
+                        dataUpdate["data"]["giainhi"].push({
+                            number: checkSameGiaiNhi,
+                            reward: rewardGiaiNhi
+                        });
+
+                        if (rewardGiaiNhi > 0) {
+                            isWin = true;
+                            updateReward = updateReward + rewardGiaiNhi;
+
+                            const ticketData = await LotteryTicketModel.findByPk(orderData.ticketId);
+                            if (!ticketData) throw new Error("Not found Ticket");
+                            ticketData.totalreward = ticketData.totalreward + updateReward;
+                            await ticketData.save();
+                            await ticketData.reload();
+
+                            const UserData = await UserModel.findOne({ where: { id: orderData.userId } });
+                            if (!UserData) throw new Error("Not found user");
+                            UserData.totalReward = UserData.totalReward + updateReward;
+                            await UserData.save();
+                            await UserData.reload();
+                        }
+
+                        // GIAI BA 
+                        const arrResultGiaiBa = LotteryHelper.arrayStringToNumber(data.result.giaiba);
+                        const checkSameGiaiBa = LotteryHelper.checkSame(arrBet, arrResultGiaiBa);
+                        const rewardReciveGiaiBa = checkSameGiaiBa.length * 1000000; // các số trùng x 1.000.000
+                        let rewardGiaiBa = rewardReciveGiaiBa;
+                        rewardGiaiBa = rewardGiaiBa * (i.price / 10000);
+
+                        dataUpdate["data"]["giaiba"].push({
+                            number: checkSameGiaiBa,
+                            reward: rewardGiaiBa
+                        });
+
+                        if (rewardGiaiBa > 0) {
+                            isWin = true;
+                            updateReward = updateReward + rewardGiaiBa;
+
+                            const ticketData = await LotteryTicketModel.findByPk(orderData.ticketId);
+                            if (!ticketData) throw new Error("Not found Ticket");
+                            ticketData.totalreward = ticketData.totalreward + updateReward;
+                            await ticketData.save();
+                            await ticketData.reload();
+
+                            const UserData = await UserModel.findOne({ where: { id: orderData.userId } });
+                            if (!UserData) throw new Error("Not found user");
+                            UserData.totalReward = UserData.totalReward + updateReward;
+                            await UserData.save();
+                            await UserData.reload();
+                        }
+
+
+                       // GIAI KHUYEN KHICH
+                       const arrResultGiaiKhuyenKhich = LotteryHelper.arrayStringToNumber(data.result.giaikhuyenkhich);
+                       const checkSameGiaiKhuyenKhich = LotteryHelper.checkSame(arrBet, arrResultGiaiKhuyenKhich);
+                       const rewardReciveGiaiKhuyenKhich = checkSameGiaiKhuyenKhich.length * 1000000; // các số trùng x 1.000.000
+                       let rewardGiaiKhuyenKhich = rewardReciveGiaiKhuyenKhich;
+                       rewardGiaiKhuyenKhich = rewardGiaiKhuyenKhich * (i.price / 10000);
+
+                       dataUpdate["data"]["giaikhuyenkhich"].push({
+                           number: checkSameGiaiKhuyenKhich,
+                           reward: rewardGiaiKhuyenKhich
+                       });
+
+                       if (rewardGiaiKhuyenKhich > 0) {
+                           isWin = true;
+                           updateReward = updateReward + rewardGiaiKhuyenKhich;
+
+                           const ticketData = await LotteryTicketModel.findByPk(orderData.ticketId);
+                           if (!ticketData) throw new Error("Not found Ticket");
+                           ticketData.totalreward = ticketData.totalreward + updateReward;
+                           await ticketData.save();
+                           await ticketData.reload();
+
+                           const UserData = await UserModel.findOne({ where: { id: orderData.userId } });
+                           if (!UserData) throw new Error("Not found user");
+                           UserData.totalReward = UserData.totalReward + updateReward;
+                           await UserData.save();
+                           await UserData.reload();
+                       }
+
+                    };
+
+                    console.log(dataUpdate);
+
+
+                    dataUpdate.result.iswin = isWin, dataUpdate.result.totalreward = updateReward;
+
+                    const orderUpdate = await LotteryOrdersModel.findOne({ where: { id: orderData.id } });
+                    orderUpdate.orderStatus = LotteryOrdersModel.ORDERSTATUS_ENUM.DRAWNED;
+                    orderUpdate.resultDetail = JSON.stringify(dataUpdate);
+                    orderUpdate.resultStatus = (isWin) ? LotteryOrdersModel.RESULTSTATUS_ENUM.WINNED : LotteryOrdersModel.RESULTSTATUS_ENUM.DRAWNED;
+                    await orderUpdate.save();
+                    await orderUpdate.reload();
+
+                });
+
+            } catch (error) {
+                status = false, message = error;
+            }
+            break;
+
+
+            case "max3dplus":
+                try {
+    
+                    const OrderItem = await LotteryOrdersModel.findAll({
+                        where: {
+                            type: game,
+                            roundId: data.round,
+                            orderStatus: LotteryOrdersModel.ORDERSTATUS_ENUM.PRINTED
+                        }
+                    });
+    
+                    OrderItem.forEach(async (orderData: any) => {
+                        const orderDetail = JSON.parse(orderData.orderDetail);
+                            dataUpdate = {},
+                            dataUpdate.data = {},
+                            dataUpdate.data.giainhat = [],
+                            dataUpdate.data.giainhi = [],
+                            dataUpdate.data.giaiba = [],
+                            dataUpdate.data.giaikhuyenkhich = [],
+                            dataUpdate.result = {};
+                        let isWin: boolean = false, updateReward: number = 0;
+    
+    
+                        for (const i of orderDetail.data) {
+    
+    
+                            const arrBet = LotteryHelper.arrayStringToNumber(i.number);
+    
+    
+                            // GIAI NHAT
+                            const arrResultGiaiNhat = LotteryHelper.arrayStringToNumber(data.result.giainhat);
+                            const checkSameGiaiNhat = LotteryHelper.checkSame(arrBet, arrResultGiaiNhat);
+                            const rewardReciveGiaiNhat = checkSameGiaiNhat.length * 1000000; // các số trùng x 1.000.000
+                            let rewardGiaiNhat = rewardReciveGiaiNhat;
+                            rewardGiaiNhat = rewardGiaiNhat * (i.price / 10000);
+    
+                            dataUpdate["data"]["giainhat"].push({
+                                number: checkSameGiaiNhat,
+                                reward: rewardGiaiNhat
+                            });
+    
+                            if (rewardGiaiNhat > 0) {
+                                isWin = true;
+                                updateReward = updateReward + rewardGiaiNhat;
+    
+                                const ticketData = await LotteryTicketModel.findByPk(orderData.ticketId);
+                                if (!ticketData) throw new Error("Not found Ticket");
+                                ticketData.totalreward = ticketData.totalreward + updateReward;
+                                await ticketData.save();
+                                await ticketData.reload();
+    
+                                const UserData = await UserModel.findOne({ where: { id: orderData.userId } });
+                                if (!UserData) throw new Error("Not found user");
+                                UserData.totalReward = UserData.totalReward + updateReward;
+                                await UserData.save();
+                                await UserData.reload();
+                            }
+    
+    
+                            // GIAI NHI
+                            const arrResultGiaiNhi = LotteryHelper.arrayStringToNumber(data.result.giainhi);
+                            const checkSameGiaiNhi = LotteryHelper.checkSame(arrBet, arrResultGiaiNhi);
+                            const rewardReciveGiaiNhi = checkSameGiaiNhi.length * 1000000; // các số trùng x 1.000.000
+                            let rewardGiaiNhi = rewardReciveGiaiNhi;
+                            rewardGiaiNhi = rewardGiaiNhi * (i.price / 10000);
+    
+                            dataUpdate["data"]["giainhi"].push({
+                                number: checkSameGiaiNhi,
+                                reward: rewardGiaiNhi
+                            });
+    
+                            if (rewardGiaiNhi > 0) {
+                                isWin = true;
+                                updateReward = updateReward + rewardGiaiNhi;
+    
+                                const ticketData = await LotteryTicketModel.findByPk(orderData.ticketId);
+                                if (!ticketData) throw new Error("Not found Ticket");
+                                ticketData.totalreward = ticketData.totalreward + updateReward;
+                                await ticketData.save();
+                                await ticketData.reload();
+    
+                                const UserData = await UserModel.findOne({ where: { id: orderData.userId } });
+                                if (!UserData) throw new Error("Not found user");
+                                UserData.totalReward = UserData.totalReward + updateReward;
+                                await UserData.save();
+                                await UserData.reload();
+                            }
+    
+                            // GIAI BA 
+                            const arrResultGiaiBa = LotteryHelper.arrayStringToNumber(data.result.giaiba);
+                            const checkSameGiaiBa = LotteryHelper.checkSame(arrBet, arrResultGiaiBa);
+                            const rewardReciveGiaiBa = checkSameGiaiBa.length * 1000000; // các số trùng x 1.000.000
+                            let rewardGiaiBa = rewardReciveGiaiBa;
+                            rewardGiaiBa = rewardGiaiBa * (i.price / 10000);
+    
+                            dataUpdate["data"]["giaiba"].push({
+                                number: checkSameGiaiBa,
+                                reward: rewardGiaiBa
+                            });
+    
+                            if (rewardGiaiBa > 0) {
+                                isWin = true;
+                                updateReward = updateReward + rewardGiaiBa;
+    
+                                const ticketData = await LotteryTicketModel.findByPk(orderData.ticketId);
+                                if (!ticketData) throw new Error("Not found Ticket");
+                                ticketData.totalreward = ticketData.totalreward + updateReward;
+                                await ticketData.save();
+                                await ticketData.reload();
+    
+                                const UserData = await UserModel.findOne({ where: { id: orderData.userId } });
+                                if (!UserData) throw new Error("Not found user");
+                                UserData.totalReward = UserData.totalReward + updateReward;
+                                await UserData.save();
+                                await UserData.reload();
+                            }
+    
+    
+                           // GIAI KHUYEN KHICH
+                           const arrResultGiaiKhuyenKhich = LotteryHelper.arrayStringToNumber(data.result.giaikhuyenkhich);
+                           const checkSameGiaiKhuyenKhich = LotteryHelper.checkSame(arrBet, arrResultGiaiKhuyenKhich);
+                           const rewardReciveGiaiKhuyenKhich = checkSameGiaiKhuyenKhich.length * 1000000; // các số trùng x 1.000.000
+                           let rewardGiaiKhuyenKhich = rewardReciveGiaiKhuyenKhich;
+                           rewardGiaiKhuyenKhich = rewardGiaiKhuyenKhich * (i.price / 10000);
+    
+                           dataUpdate["data"]["giaikhuyenkhich"].push({
+                               number: checkSameGiaiKhuyenKhich,
+                               reward: rewardGiaiKhuyenKhich
+                           });
+    
+                           if (rewardGiaiKhuyenKhich > 0) {
+                               isWin = true;
+                               updateReward = updateReward + rewardGiaiKhuyenKhich;
+    
+                               const ticketData = await LotteryTicketModel.findByPk(orderData.ticketId);
+                               if (!ticketData) throw new Error("Not found Ticket");
+                               ticketData.totalreward = ticketData.totalreward + updateReward;
+                               await ticketData.save();
+                               await ticketData.reload();
+    
+                               const UserData = await UserModel.findOne({ where: { id: orderData.userId } });
+                               if (!UserData) throw new Error("Not found user");
+                               UserData.totalReward = UserData.totalReward + updateReward;
+                               await UserData.save();
+                               await UserData.reload();
+                           }
+    
+                        };
+    
+                        console.log(dataUpdate);
+    
+    
+                        dataUpdate.result.iswin = isWin, dataUpdate.result.totalreward = updateReward;
+    
+                        const orderUpdate = await LotteryOrdersModel.findOne({ where: { id: orderData.id } });
+                        orderUpdate.orderStatus = LotteryOrdersModel.ORDERSTATUS_ENUM.DRAWNED;
+                        orderUpdate.resultDetail = JSON.stringify(dataUpdate);
+                        orderUpdate.resultStatus = (isWin) ? LotteryOrdersModel.RESULTSTATUS_ENUM.WINNED : LotteryOrdersModel.RESULTSTATUS_ENUM.DRAWNED;
+                        await orderUpdate.save();
+                        await orderUpdate.reload();
+    
+                    });
+    
+                } catch (error) {
+                    status = false, message = error;
+                }
+                break;
+    
 
         default:
             status = false, message = "error game params";
-        break;
+            break;
 
 
     }
