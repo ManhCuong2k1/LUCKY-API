@@ -647,6 +647,12 @@ const updateResult = async (game: string, data: any) => {
                     status = false, message = error;
                 }
                 break;
+
+
+            case "max4d": 
+                console.log(data);
+            break; 
+
     
 
         default:

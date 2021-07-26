@@ -355,117 +355,6 @@ const XosoMegaData = async () => {
 };
 
 
-
-const XosoMax4dData = async () => {
-
-  try {
-    const options = {
-      "method": "GET",
-      "rejectUnauthorized": false,
-      "url": "https://vietlott.vn/vi/trung-thuong/ket-qua-trung-thuong/max-4d.html",
-      "headers": {}
-    };
-
-    // lấy nội dung trang kết quả Kano
-    const data = await request(options);
-
-    // lấy nội dung bảng kết quả
-    const tableResult = helper.cutstring(data, "<div class=\"tong_day_so_ket_qua text-center\">", "<div class=\"btn_chuyendulieu\">");
-
-    let html;
-    let expNumber;
-    let arrNumber;
-    let list;
-    const dataXoso: any = {};
-
-    // lấy nội dung giải nhất trong bảng
-    html = helper.cutstring(tableResult, "<h5>Giải Nhất</h5>", "<div class=\"clearfix visible-lg\">");
-    html = helper.cutstring(html, "<div class=\"day_so_ket_qua_v2\">", "</div>");
-    arrNumber = helper.shortReplaceSpan(html);
-    dataXoso["giainhat"] = arrNumber;
-
-    // lấy nội dung giải nhì trong bảng
-    dataXoso["giainhi"] = {};
-    html = helper.cutstring(tableResult, "<h5>Giải Nhì</h5>", "<div class=\"clearfix visible-lg\">");
-    list = helper.cutstring(html, "<div class=\"day_so_ket_qua_v2 \" style=\"padding-right:10px\">", "</div>");
-    arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giainhi"]["list1"] = arrNumber;
-
-    list = helper.cutstring(html, "<div class=\"day_so_ket_qua_v2 align_left_up_768\" style=\"padding-left:10px\">", "</div>");
-    arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giainhi"]["list2"] = arrNumber;
-
-    // lấy nội dung giải ba trong bảng
-    dataXoso["giaiba"] = {};
-    html = helper.cutstring(tableResult, "<h5>Giải Ba</h5>", "<div class=\"clearfix visible-lg\">");
-    html = html.split("<!-- /day_so_ket_qua_v2 -->");
-
-    // bóc dãy 1
-    list = helper.cutstring(html[0], "<div class=\"day_so_ket_qua_v2 \" style=\"padding-right:10px\">", "</div>");
-    arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giaiba"]["list1"] = arrNumber;
-
-    // bóc dãy 2
-    list = helper.cutstring(html[1], "<div class=\"day_so_ket_qua_v2 align_left_up_768\" style=\"padding-left:10px\">", "</div>");
-    arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giaiba"]["list2"] = arrNumber;
-
-    // bóc dãy 3
-    list = helper.cutstring(html[2], "<div class=\"day_so_ket_qua_v2\">", "</div>");
-    arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giaiba"]["list3"] = arrNumber;
-
-
-    // lấy nội dung giải khuyến khích 1 trong bảng
-    html = helper.cutstring(tableResult, "<h5>Giải Khuyến Khích 1</h5>", "<!-- /day_so_ket_qua_v2 -->");
-    html = helper.cutstring(html, "<div class=\"day_so_ket_qua_v2\">", "</div>");
-    arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giaikhuyenkhich1"] = arrNumber;
-
-    // lấy nội dung giải khuyến khích 2 trong bảng
-    html = helper.cutstring(tableResult, "<h5>Giải Khuyến Khích 2</h5>", "<!-- /day_so_ket_qua_v2 -->");
-    html = helper.cutstring(html, "<div class=\"day_so_ket_qua_v2\">", "</div>");
-    arrNumber = helper.shortReplaceSpan(list);
-    dataXoso["giaikhuyenkhich2"] = arrNumber;
-
-    const getNextTime = await XosoGetNextTime("max4d");
-
-    const dataExport: any = {};
-    dataExport["date"] = helper.cutstring(data, "ngày <b>", "</b>");
-    dataExport["round"] = helper.cutstring(data, "<h5>Kỳ quay thưởng <b>#", "</b>");
-    dataExport["result"] = dataXoso;
-    dataExport["next"] = getNextTime.next;
-
-    const LotteryCheckExits = await LotteryCheck("max4d", dataExport["round"]);
-
-    if (!LotteryCheckExits) {
-      const dataImport: any = {
-        type: "max4d",
-        date: dataExport["date"],
-        next: dataExport["next"],
-        round: dataExport["round"],
-        result: JSON.stringify(dataExport["result"])
-      };
-
-      LotteryModel.create(dataImport);
-    }
-
-
-    return dataExport;
-
-  } catch (e) {
-    console.log(e);
-    return {
-      status: false,
-      msg: e.message
-    };
-  }
-};
-
-
-
-
-
 const XosoMax3dData = async () => {
 
   try {
@@ -587,6 +476,7 @@ const XosoMax3dData = async () => {
     // bóc dãy 4
     list = helper.cutstring(html[4], "<div class=\"day_so_ket_qua_v2 \">", "</div>");
     arrNumber = helper.shortReplaceSpan(list);
+
     dataXoso["giaikhuyenkhich"].push(arrNumber.join(""));
 
     // bóc dãy 5
@@ -645,6 +535,126 @@ const XosoMax3dData = async () => {
     };
   }
 };
+
+
+
+const XosoMax4dData = async () => {
+
+  try {
+    const options = {
+      "method": "GET",
+      "rejectUnauthorized": false,
+      "url": "https://vietlott.vn/vi/trung-thuong/ket-qua-trung-thuong/max-4d.html",
+      "headers": {}
+    };
+
+    // lấy nội dung trang kết quả Kano
+    const data = await request(options);
+
+    // lấy nội dung bảng kết quả
+    const tableResult = helper.cutstring(data, "<div class=\"tong_day_so_ket_qua text-center\">", "<div class=\"btn_chuyendulieu\">");
+
+    let html;
+    let expNumber;
+    let arrNumber;
+    let list;
+    const dataXoso: any = {};
+    dataXoso["giainhat"] = [];
+    dataXoso["giainhi"] = [];
+    dataXoso["giaiba"] = [];
+    dataXoso["giaikhuyenkhich1"] = [];
+    dataXoso["giaikhuyenkhich2"] = [];
+
+    // lấy nội dung giải nhất trong bảng
+    html = helper.cutstring(tableResult, "<h5>Giải Nhất</h5>", "<div class=\"clearfix visible-lg\">");
+    html = helper.cutstring(html, "<div class=\"day_so_ket_qua_v2\">", "</div>");
+    arrNumber = helper.shortReplaceSpan(html);
+
+    dataXoso["giainhat"].push(arrNumber.join(""));
+
+    // lấy nội dung giải nhì trong bảng
+    html = helper.cutstring(tableResult, "<h5>Giải Nhì</h5>", "<div class=\"clearfix visible-lg\">");
+    list = helper.cutstring(html, "<div class=\"day_so_ket_qua_v2 \" style=\"padding-right:10px\">", "</div>");
+    arrNumber = helper.shortReplaceSpan(list);
+    dataXoso["giainhi"].push(arrNumber.join(""));
+
+    list = helper.cutstring(html, "<div class=\"day_so_ket_qua_v2 align_left_up_768\" style=\"padding-left:10px\">", "</div>");
+    arrNumber = helper.shortReplaceSpan(list);
+    dataXoso["giainhi"].push(arrNumber.join(""));
+
+    // lấy nội dung giải ba trong bảng
+    html = helper.cutstring(tableResult, "<h5>Giải Ba</h5>", "<div class=\"clearfix visible-lg\">");
+    html = html.split("<!-- /day_so_ket_qua_v2 -->");
+
+    // bóc dãy 1
+    list = helper.cutstring(html[0], "<div class=\"day_so_ket_qua_v2 \" style=\"padding-right:10px\">", "</div>");
+    arrNumber = helper.shortReplaceSpan(list);
+    dataXoso["giaiba"].push(arrNumber.join(""));
+
+    // bóc dãy 2
+    list = helper.cutstring(html[1], "<div class=\"day_so_ket_qua_v2 align_left_up_768\" style=\"padding-left:10px\">", "</div>");
+    arrNumber = helper.shortReplaceSpan(list);
+    dataXoso["giaiba"].push(arrNumber.join(""));
+
+    // bóc dãy 3
+    list = helper.cutstring(html[2], "<div class=\"day_so_ket_qua_v2\">", "</div>");
+    arrNumber = helper.shortReplaceSpan(list);
+    dataXoso["giaiba"].push(arrNumber.join(""));
+
+
+    // lấy nội dung giải khuyến khích 1 trong bảng
+    html = helper.cutstring(tableResult, "<h5>Giải Khuyến Khích 1</h5>", "<!-- /day_so_ket_qua_v2 -->");
+    html = helper.cutstring(html, "<div class=\"day_so_ket_qua_v2\">", "</div>");
+    arrNumber = helper.shortReplaceSpan(html);
+    dataXoso["giaikhuyenkhich1"].push(arrNumber.join(""));
+
+    // lấy nội dung giải khuyến khích 2 trong bảng
+    html = helper.cutstring(tableResult, "<h5>Giải Khuyến Khích 2</h5>", "<!-- /day_so_ket_qua_v2 -->");
+    html = helper.cutstring(html, "<div class=\"day_so_ket_qua_v2\">", "</div>");
+    arrNumber = helper.shortReplaceSpan(html);
+    dataXoso["giaikhuyenkhich2"].push(arrNumber.join(""));
+
+    const getNextTime = await XosoGetNextTime("max4d");
+
+    const dataExport: any = {};
+    dataExport["date"] = helper.cutstring(data, "ngày <b>", "</b>");
+    dataExport["round"] = helper.cutstring(data, "<h5>Kỳ quay thưởng <b>#", "</b>");
+    dataExport["result"] = dataXoso;
+    dataExport["next"] = getNextTime.next;
+
+    const LotteryCheckExits = await LotteryCheck("max4d", dataExport["round"]);
+
+    if (!LotteryCheckExits) {
+      const dataImport: any = {
+        type: "max4d",
+        date: dataExport["date"],
+        next: dataExport["next"],
+        round: dataExport["round"],
+        result: JSON.stringify(dataExport["result"])
+      };
+
+      LotteryModel.create(dataImport);
+    }
+
+
+    return {
+      status: true,
+      data: dataExport,
+      message: "Success"
+    };
+    
+  } catch (e) {
+    console.log(e);
+    return {
+      status: false,
+      msg: e.message
+    };
+  }
+};
+
+
+
+
 
 const getKenoCurrentRound = async () => {
   try {

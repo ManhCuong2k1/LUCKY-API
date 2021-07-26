@@ -74,17 +74,29 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
             }
             break;
 
-            case "max3dplus":
-                try {
-                    const crawling = await Crawl.XosoMax3dData();
-                    const updateData = updateTicket.updateResult(LotteryModel.GAME_ENUM.MAX3DPLUS, crawling.data);
-                    return res.send(crawling);
-                } catch (e) {
-                    res.status(401).send({
-                        code: e.message
-                    });
-                }
-                break;
+        case "max3dplus":
+            try {
+                const crawling = await Crawl.XosoMax3dData();
+                const updateData = updateTicket.updateResult(LotteryModel.GAME_ENUM.MAX3DPLUS, crawling.data);
+                return res.send(crawling);
+            } catch (e) {
+                res.status(401).send({
+                    code: e.message
+                });
+            }
+            break;
+
+        case "max4d":
+            try {
+                const crawling = await Crawl.XosoMax4dData();
+                const updateData = updateTicket.updateResult(LotteryModel.GAME_ENUM.MAX4D, crawling.data);
+                return res.send(crawling);
+            } catch (e) {
+                res.status(401).send({
+                    code: e.message
+                });
+            }
+            break;
 
         case "max4d":
             try {
@@ -121,7 +133,7 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                 };
 
                 res.send(datExport);
-            break;
+                break;
 
             case "power":
                 const lastRecord = await LotteryModel.findOne({
@@ -142,7 +154,7 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                         if (!isFist) {
                             currentRound++;
                             currentTimeRound = helper.addMinuteToTime(currentTimeRound, 2880); // + 2 ngày
-                            
+
                             const thisTime: any = new Date(currentTimeRound).getDay() + 1;
                             if (thisTime == 3 || thisTime == 5 || thisTime == 7) {
                             } else {
@@ -172,7 +184,7 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                     });
                 }
 
-            break;
+                break;
 
 
             case "mega":
@@ -223,7 +235,7 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                     });
                 }
 
-            break;
+                break;
 
             case "max3d":
                 const lastRecordMax3d = await LotteryModel.findOne({
@@ -272,7 +284,7 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                     });
                 }
 
-            break;
+                break;
 
             case "max4d":
                 const lastRecordMax4d = await LotteryModel.findOne({
@@ -321,11 +333,11 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                     });
                 }
 
-            break;
+                break;
 
             default:
-                res.json({ status: false, message: "Error: error params!"});
-            break;
+                res.json({ status: false, message: "Error: error params!" });
+                break;
 
         }
     } catch (err) {
