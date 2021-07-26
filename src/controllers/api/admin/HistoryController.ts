@@ -7,8 +7,6 @@ import { Op } from "sequelize";
 
 const router = express.Router();
 
-//
-
 router.get("/", async (req: Request, res: Response) => {
     try {
         const page: number = parseInt(req.query.page ? req.query.page.toString() : "1");
