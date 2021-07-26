@@ -1,7 +1,7 @@
 ### Install:
 - install redis service
 - run ```yarn``` 
-### connfig:
+### Config:
 - rename ```.env.example``` to ```.env```
 - config database connect in ```.env```
 - config redis connect in ```.env```
