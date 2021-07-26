@@ -14,14 +14,19 @@ router.get("/", async (req: Request, res: Response) => {
     );
     const offset: number = (page - 1) * limit;
 
-    const { rows, count } = await UserModel.scope([
-      "withTotalFeed",
-      { method: ["bySearch", query.searchKey] },
-      { method: ["byDateRange", query.startDate, query.endDate] },
-    ]).findAndCountAll({
+    const { rows, count } = await UserModel.findAndCountAll({
       limit,
       offset,
     });
+
+    // const { rows, count } = await UserModel.scope([
+    //   "withTotalFeed",
+    //   { method: ["bySearch", query.searchKey] },
+    //   { method: ["byDateRange", query.startDate, query.endDate] },
+    // ]).findAndCountAll({
+    //   limit,
+    //   offset,
+    // });
 
     const userResponse = excludeFields(rows, ["password"]);
     const responseData: GridInterface<UserInterface> = {
