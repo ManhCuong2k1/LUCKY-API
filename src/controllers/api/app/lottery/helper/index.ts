@@ -2,6 +2,10 @@ const arrayStringToNumber = (obj: any) => {
     return obj.map((i: any) => Number(i));
 };  
 
+const arrNumberToString = (obj: any) => {
+    return obj.map((i: any) => i.toString());
+};
+
 const sortRounds = (arr: any) => {
         const length = arr.length;
         for (let j = 0; j < length - 1; j++) {
@@ -24,6 +28,15 @@ const checkSame = (arrBet: any, arrResult: any) => {
                 break;
             }
         }
+    }
+    return arrExport;
+};
+
+const removeFirstChar = (arr: any, length: number) => {
+    const arrExport = [];
+    for (const i of arr) {
+        const str = i.substring(length);
+        arrExport.push(str);
     }
     return arrExport;
 };
@@ -98,8 +111,10 @@ const getRewardMega = (level: number, same: number) => {
 
 export default {
     arrayStringToNumber,
+    arrNumberToString,
     sortRounds,
     checkSame,
+    removeFirstChar,
     getRewardKeno,
     getRewardPower,
     getRewardMega
