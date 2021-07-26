@@ -20,7 +20,8 @@ LotteryTicketModel.belongsTo(UserModel, { as: "user", constraints: false });
 LotteryTicketModel.hasMany(LotteryOrdersModel, { as: "orders", constraints: false, foreignKey: "ticketId"});
 LotteryTicketModel.hasMany(LotteryImagesModel, { as: "image", constraints: false });
 LotteryRechargeModel.belongsTo(UserModel, { as: "user", constraints: false });
-UserModel.hasMany(UserHistoryModel, { as: "user_history", constraints: false, foreignKey: "userId" });
+UserHistoryModel.belongsTo(UserModel, { as: "user", constraints: false, foreignKey: "userId"  });
+// UserModel.hasMany(UserHistoryModel, { as: "history", constraints: false, foreignKey: "userId" });
 UserModel.hasMany(LotteryNotifyModel, { as: "user_notify", constraints: false, foreignKey: "userId" });
 
 // LotteryImagesModel.belongsTo(LotteryTicketModel, { as: "image", constraints: false });

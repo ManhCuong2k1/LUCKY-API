@@ -7,17 +7,10 @@ import { GridInterface } from "@models/Transformers/Grid";
 import { Op } from "sequelize";
 import upload from "@middleware/upload";
 import { saveFile } from "@util/resizeImage";
+import moment from "moment-timezone";
 const router = Router();
 
-const getdata = async (typeGame: any) => {
-    const data = await LotteryOrdersModel.findAll({
-        where: {
-            type: typeGame
-        }
-    });
-    
-    return data;
-};
+// Lấy danh sách vé 
 
 router.get("/", async (req: Request, res: Response) => {
     try {
@@ -25,22 +18,28 @@ router.get("/", async (req: Request, res: Response) => {
         const pageSize: number = parseInt(req.query.pageSize ? req.query.pageSize.toString() : "20");
         const cursor: number = (page - 1) * pageSize;
 
-        const searchKey: any = req.query.searchKey ? req.query.searchKey : null;
-        let phone = null;
+        const searchKey: string = req.query.searchKey ? req.query.searchKey.toString() : null;
+        const type: string = req.query.type ? req.query.type.toString() : null;
+        const orderStatus: string = req.query.orderStatus ? req.query.orderStatus.toString() : null;
+        const fromDate: any = req.query.fromDate || null;
+        const toDate: any = req.query.toDate || null;
 
-        if (searchKey) {
-            phone = { [Op.like]: `%${searchKey}%` };
-        }
 
-        const where = Object.assign({},
-            phone === null ? null : { phone },
+        const where: any = Object.assign({},
+            type === null ? null : { type },
+            orderStatus === null ? null : { orderStatus },
+            fromDate && toDate ? { createdAt: { [Op.between]: [moment(fromDate).startOf("day"), moment(toDate).endOf("day")] } } : null
+        );
+        const whereUser: any = Object.assign({},
+            searchKey === null ? null : { phone: { [Op.like]: `%${searchKey.trim()}%` } },
         );
 
         const { rows, count } = await LotteryTicketModel.findAndCountAll({
+            where,
             include: [{
                 model: UserModel,
                 as: "user",
-                where,
+                where: whereUser,
             },
             {
                 model: LotteryImagesModel,
@@ -72,6 +71,8 @@ router.get("/", async (req: Request, res: Response) => {
     }
 });
 
+// Lấy vé theo id
+
 router.get("/detail/:id", async (req: Request, res: Response) => {
     try {
         const idTicket = req.params.id;
@@ -101,43 +102,7 @@ router.get("/detail/:id", async (req: Request, res: Response) => {
     }
 });
 
-router.get("/:type", async (req: Request, res: Response) => {
-    try {
-        const typeGame = req.params.type;
-        let listGameType: any = [];
-        
-        switch(typeGame) {
-            case "keno":
-                listGameType = await getdata(typeGame);
-                break;
-            case "power":
-                listGameType = await getdata(typeGame);
-                break;
-            case "mega":
-                listGameType = await getdata(typeGame);
-                break;
-            case "plus3d":
-                listGameType = await getdata(typeGame);
-                break;
-            case "3d":
-                listGameType = await getdata(typeGame);
-                break;
-            case "4d":
-                listGameType = await getdata(typeGame);
-                break;
-            default:
-                res.json({
-                    status: false,
-                    message: "error"
-                });
-        }
-        res.send({ data: listGameType });
-    } catch (e) {
-        res.status(400).send({
-            error: e.message,
-        });
-    }
-});
+// post ảnh theo id vé
 
 router.post("/:id/images", upload.array("file"), async (req: Request, res: Response) => {
     try {
@@ -194,6 +159,8 @@ router.post("/:id/images", upload.array("file"), async (req: Request, res: Respo
     }
 });
 
+// post banner
+
 router.post("/banner", upload.array("file"), async (req: Request, res: Response) => {
     try {
 
@@ -216,6 +183,7 @@ router.post("/banner", upload.array("file"), async (req: Request, res: Response)
     }
 });
 
+// update images
 router.put("/updateImage/:id", async (req: Request, res: Response) => {
     try {
         const idTicket = req.params.id;
