@@ -17,8 +17,6 @@ const {
     SESSION_SECRET,
     JWT_KEY,
     JWT_EXPIRES_IN,
-    REDIS_HOST,
-    REDIS_PORT
 } = process.env;
 
 assert( PORT, "PORT configuration is required." );
@@ -29,8 +27,6 @@ assert( DB_PASSWORD, "DB_PASSWORD configuration is required." );
 assert( DB_PORT, "DB_PORT configuration is required." );
 assert( SESSION_SECRET, "SESSION_SECRET configuration is required." );
 assert( JWT_KEY, "JWT_KEY configuration is required." );
-assert( REDIS_HOST, "REDIS HOST configuration is required." );
-assert( REDIS_PORT, "REDIS PORT configuration is required." );
 
 export default {
     ENV,
@@ -45,6 +41,4 @@ export default {
     SESSION_SECRET,
     JWT_KEY,
     JWT_EXPIRES_IN,
-    REDIS_HOST,
-    REDIS_PORT: parseInt(REDIS_PORT)
 };
