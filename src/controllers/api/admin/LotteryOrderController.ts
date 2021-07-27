@@ -190,7 +190,7 @@ router.put("/updateImage/:id", async (req: Request, res: Response) => {
         const idImage1 = req.body.imageId1;
         const idImage2 = req.body.imageId2;
 
-        const ticketItem = await LotteryTicketModel.findOne({ 
+        const ticketItem = await LotteryTicketModel.findOne({
             where: { 
                 id: idTicket,
                 [Op.or]: [

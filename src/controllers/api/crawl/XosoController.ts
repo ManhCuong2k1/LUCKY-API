@@ -1,3 +1,4 @@
+import path from "path";
 import express, { Response, Request } from "express";
 import Crawl from "./Crawl";
 import helper from "@controllers/api/helper/helper";
@@ -420,6 +421,14 @@ router.get("/results/:type", async (req: Request, res: Response) => {
     }
 });
 
+
+router.get("/guild/:type", (req, res) => {
+    try {
+        res.sendFile(path.resolve("public/views/guild/"+req.params.type+".html"));
+    }catch(error) {
+        res.send("ERROR");
+    }
+});
 
 
 export default router;
