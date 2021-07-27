@@ -23,7 +23,7 @@ deploy_develop:
   stage: deploy
   script:
     - echo image_tag $IMAGE_TAG ci_commit $CI_COMMIT_SHORT_SHA
-    - sshpass -p $SERVER_PASS_7 ssh $SERVER_USER_7@$SERVER_HOST_7 "docker-compose pull $APP_NAME && docker-compose up --force-recreate -d $APP_NAME"
+    - sshpass -p $SERVER_PASS_7 ssh $SERVER_USER_7@$SERVER_HOST_7 "/home/ubuntu/DOCKER_DEV/docker_project deploy $SERVICE_NAME"
   environment:
     name: develop
   only:
