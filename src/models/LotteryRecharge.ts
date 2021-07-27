@@ -32,6 +32,11 @@ class LotteryRechargeModel extends Model<LotteryRechargeInterface> implements Lo
         PAID: "paid",
         ERROR: "error"
     };
+    static readonly DETAIL_ENUM = {
+        SUCCESS: "Đã Thanh Toán",
+        ERROR: "Lỗi",
+        DELAY: "Chờ Xử Lý"
+    }
 }
 
 

@@ -1,4 +1,3 @@
-import { LotteryOrdersModel } from "@models/LotteryOrder";
 import { LotteryRechargeModel } from "@models/LotteryRecharge";
 import express, { Response, Request, Router } from "express";
 import { auth } from "@middleware/auth";
@@ -11,13 +10,8 @@ dotenv.config();
 const router = Router();
 
 
-router.get("/endpoint/:type", async (req: Request, res: Response) => {
-    res.json({ status: true, message: "Payment Success!" });
-});
-
 router.post("/endpoint/:type", async (req: Request, res: Response) => {
     try {
-
         const transaction: any = req.body;
 
         switch (req.params.type) {
@@ -44,7 +38,7 @@ router.post("/endpoint/:type", async (req: Request, res: Response) => {
                             await UserData.reload();
 
                             dbTransaction.status = LotteryRechargeModel.STATUS_ENUM.PAID;
-                            dbTransaction.detail = transaction.message;
+                            dbTransaction.detail = LotteryRechargeModel.DETAIL_ENUM.SUCCESS;
                             await dbTransaction.save();
                             await dbTransaction.reload();
                             res.json(dbTransaction);
@@ -55,7 +49,7 @@ router.post("/endpoint/:type", async (req: Request, res: Response) => {
                         }
                     } else {
                         dbTransaction.status = LotteryRechargeModel.STATUS_ENUM.ERROR;
-                        dbTransaction.detail = transaction.message;
+                        dbTransaction.detail = LotteryRechargeModel.DETAIL_ENUM.ERROR;
                         await dbTransaction.save();
                         await dbTransaction.reload();
                     }
@@ -65,14 +59,96 @@ router.post("/endpoint/:type", async (req: Request, res: Response) => {
                         status: false, message: "error request!"
                     });
                 }
-            break;
-                
+                break;
+
+            default:
+                res.json({
+                    status: false,
+                    message: "error params method"
+                });
+                break;
+
+
         }
 
     } catch (error) {
         sendError(res, 400, error.message, error);
     }
 });
+
+
+router.get("/endpoint/:type", async (req: Request, res: Response) => {
+    try {
+        const transaction: any = req.query;
+
+        switch (req.params.type) {
+
+            case "vnpay":
+
+                if (typeof transaction.vnp_TxnRef !== "undefined" && typeof transaction.vnp_TransactionNo !== "undefined") {
+
+                    const idRecharge = transaction.vnp_TxnRef.split(process.env.MOMO_PREFIX_TRANSACTION)[1];
+
+                    const dbTransaction = await LotteryRechargeModel.findOne({
+                        where: {
+                            id: idRecharge,
+                            status: LotteryRechargeModel.STATUS_ENUM.UNPAID,
+                            method: LotteryRechargeModel.METHOD_ENUM.VNPAY
+                        }
+                    });
+
+                    if (dbTransaction !== null) {
+                        if (transaction.vnp_ResponseCode == "00") {
+                                const UserData = await UserModel.findOne({ where: { id: dbTransaction.userId } });
+                                if (!UserData) throw new Error("Not found user");
+                                const realCoin = Number(transaction.vnp_Amount) / 100;
+                                UserData.totalCoin = UserData.totalCoin + realCoin;
+                                await UserData.save();
+                                await UserData.reload();
+
+                                dbTransaction.status = LotteryRechargeModel.STATUS_ENUM.PAID;
+                                dbTransaction.detail = LotteryRechargeModel.DETAIL_ENUM.SUCCESS;
+                                await dbTransaction.save();
+                                await dbTransaction.reload();
+                                res.json(dbTransaction);
+                        } else {
+                            dbTransaction.status = LotteryRechargeModel.STATUS_ENUM.ERROR;
+                            dbTransaction.detail = LotteryRechargeModel.DETAIL_ENUM.ERROR;
+                            await dbTransaction.save();
+                            await dbTransaction.reload();
+                            res.json({
+                                status: false, message: "Payment Error!"
+                            });
+                        }
+
+                    } else {
+                        res.json({
+                            status: false, message: "This transaction has been processed before!"
+                        });
+                    }
+
+                } else {
+                    res.json({
+                        status: false, message: "error request!"
+                    });
+                }
+
+                break;
+
+            default:
+                res.json({
+                    status: false,
+                    message: "error params method"
+                });
+                break;
+        }
+
+    } catch (error) {
+        sendError(res, 400, error.message, error);
+    }
+});
+
+
 
 router.post("/", auth, async (req: Request, res: Response) => {
 
@@ -82,13 +158,13 @@ router.post("/", auth, async (req: Request, res: Response) => {
 
         switch (transaction.method) {
             case "momo":
-                
+
                 const dataTransactionMomo: any = {
                     userId: user.id,
                     amount: Number(transaction.amount),
                     method: LotteryRechargeModel.METHOD_ENUM.MOMO,
                     status: LotteryRechargeModel.STATUS_ENUM.UNPAID,
-                    detail: "Chờ Xử Lý"
+                    detail: LotteryRechargeModel.DETAIL_ENUM.DELAY
                 };
                 const makeTransactionMomo = await LotteryRechargeModel.create(dataTransactionMomo);
                 console.log("SEND REQUEST TO MOMO...");
@@ -99,13 +175,13 @@ router.post("/", auth, async (req: Request, res: Response) => {
                 momoService.orderInfo = "Nạp Tiền Lucky PlayLot";
                 const respMomo = await momoService.makePayment();
 
-                if(respMomo.errorCode == 0) {
+                if (respMomo.errorCode == 0) {
                     res.json({
                         status: true,
                         data: respMomo,
                         message: "Sucess"
                     });
-                }else {
+                } else {
                     res.json({
                         status: false,
                         data: respMomo.message,
@@ -114,28 +190,27 @@ router.post("/", auth, async (req: Request, res: Response) => {
                 }
                 break;
 
-                case "vnpay":
-                
-                    const dataTransactionVnpay: any = {
-                        userId: user.id,
-                        amount: Number(transaction.amount),
-                        method: LotteryRechargeModel.METHOD_ENUM.VNPAY,
-                        status: LotteryRechargeModel.STATUS_ENUM.UNPAID,
-                        detail: "Chờ Xử Lý"
-                    };
-                    const makeTransactionVnpay = await LotteryRechargeModel.create(dataTransactionVnpay);
-                    console.log("SEND REQUEST TO VNPAY...");
-                    const vnpayService = new vnpay();
-                    vnpayService.amount = Number(transaction.amount.toString());
-                    vnpayService.ipAccess = "118.71.10.19";
-                    vnpayService.bankCode = req.body.bankcode;
-                    vnpayService.orderId = process.env.MOMO_PREFIX_TRANSACTION + makeTransactionVnpay.id.toString();
-                    vnpayService.orderType = "topup"; // giữ nguyên
-                    vnpayService.orderInfo = "Nạp Tiền Lucky PlayLot";
-                    vnpayService.orderDescription = "Nạp Tiền Lucky PlayLot";
-                    const postTransactionVnpay = await vnpayService.makePayment();
-                
-                    res.json({ status: true, url: postTransactionVnpay});
+            case "vnpay":
+
+                const dataTransactionVnpay: any = {
+                    userId: user.id,
+                    amount: Number(transaction.amount),
+                    method: LotteryRechargeModel.METHOD_ENUM.VNPAY,
+                    status: LotteryRechargeModel.STATUS_ENUM.UNPAID,
+                    detail: LotteryRechargeModel.DETAIL_ENUM.DELAY
+                };
+                const makeTransactionVnpay = await LotteryRechargeModel.create(dataTransactionVnpay);
+                console.log("SEND REQUEST TO VNPAY...");
+                const vnpayService = new vnpay();
+                vnpayService.amount = Number(transaction.amount.toString());
+                vnpayService.ipAccess = "118.71.10.19";
+                vnpayService.bankCode = req.body.bankcode;
+                vnpayService.orderId = process.env.MOMO_PREFIX_TRANSACTION + makeTransactionVnpay.id.toString();
+                vnpayService.orderType = "topup"; // giữ nguyên
+                vnpayService.orderInfo = "naptien";
+                const postTransactionVnpay = await vnpayService.makePayment();
+
+                res.json({ status: true, url: postTransactionVnpay });
                 break;
 
             default:

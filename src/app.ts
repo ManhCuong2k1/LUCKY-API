@@ -21,9 +21,9 @@ models.then(() => {
     console.log("Connect Database Error", err);
 });
 
-redisClient.on("error", (error: any) => {
-   logger.error("Redis connect error", error);
-});
+// redisClient.on("error", (error: any) => {
+//    logger.error("Redis connect error", error);
+// });
 
 const app = express();
 app.use(compression());
