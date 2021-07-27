@@ -6,6 +6,7 @@ import AppController from "./app/AppController";
 import { auth, authorAdmin } from "../../middleware/auth";
 
 import XosoController from "./crawl/XosoController";
+import EmployeController from "./employe";
 import TransactionController from "./transaction/TransactionControlller";
 
 
@@ -18,6 +19,6 @@ router.use("/upload", UploadController);
 router.use("/transaction", TransactionController);
 // API XoSo
 router.use("/xoso", XosoController);
-
+router.use("/employe", EmployeController);
 
 export default router;
