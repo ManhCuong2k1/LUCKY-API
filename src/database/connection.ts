@@ -17,8 +17,9 @@ const connection = new Sequelize(DB_NAME, DB_USERNAME, DB_PASSWORD, {
         },
         typeCast: function (field: any, next: any) { // for reading from database
             if (field.type === "DATETIME") {
+                const yourTimezone = 7; // vietnam
                 const timeDB = new Date(field.string());
-                timeDB.setTime( timeDB.getTime() + 7 * 60 * 60 * 1000 );
+                // timeDB.setTime( timeDB.getTime() + 7 * 60 * 60 * 1000 );
                 return timeDB;
             }
             return next();
