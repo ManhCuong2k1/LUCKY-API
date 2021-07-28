@@ -74,6 +74,82 @@ const checkItemExist = (array1: any, array2: any) => {
 };
 
 
+const employeStringToSignalCode = (arrString: any) => {
+
+    let arrConvert:any = {
+        "0":    "0",
+        "1":    "1",
+        "2":    "2",
+        "3":    "3",
+        "4":    "4",
+        "5":    "5",
+        "6":    "6",
+        "7":    "7",
+        "8":    "8",
+        "9":    "9",
+        "a":    "A",
+        "b":    "B",
+        "c":    "C",
+        "d":    "D",
+        "e":    "E",
+        "f":    "F",
+        "1ky":  "Y",
+        "2ky":  "O",
+        "3ky":  "o",
+        "4ky":  "U",
+        "5ky":  "P",
+        "6ky":  "{",
+        "bao5": "G",
+        "bao7": "H",
+        "bao8": "J",
+        "bao9": "K",
+        "baokhac": "L",
+        "10k":  "!",
+        "20k":  "@",
+        "50k":  "#",
+        "100k": "$",
+        "200k": "%",
+        "500k": "^",
+        "1000k":"&",
+        "lock": "1",
+        "exit": "S",
+        "func": "s",
+        "recall": "c",
+        "cancel": "v",
+        "help":   "h",
+        "report": "b",
+        "print":  "r",
+        "sales":  "n",
+        "pay":    "V",
+        "6tren45": "l",
+        "6tren55": "k",
+        "keno":    "d",
+        "3d":      "N",
+        "3dplus":  "q",
+        "4d":      "y",
+        "4dtohop": "u",
+        "4dcuon1": "M",
+        "4dbao":   "m",
+        "4dcuon4": "<",
+        "khac":     "*",
+        "tuchon":   "I",
+        "arrowdown":"[",
+        "arrowup":  "]",
+        "arrowleft":"không rõ",
+        "clear":    "xxx",
+        "dot":      ".",
+        "send":     "x",
+        "total":    "t"
+    };
+    let signalArray:any = [];
+
+    arrString.forEach((string: any) => {
+        signalArray.push(arrConvert[string]);
+    });
+    
+    return signalArray;
+}
+
 export default {
     timeStamp,
     getTime,
@@ -81,5 +157,6 @@ export default {
     addMinuteToTime,
     getTimeData,
     numberformat,
-    checkItemExist
+    checkItemExist,
+    employeStringToSignalCode
 };

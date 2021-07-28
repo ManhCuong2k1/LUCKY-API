@@ -463,7 +463,7 @@ router.post("/", async (req: Request, res: Response) => {
 
                     const dataTicket: any = {
                         userId: user.id,
-                        type: LotteryTicketModel.GAME_ENUM.MAX3D,
+                        type: LotteryTicketModel.GAME_ENUM.MAX3DPLUS,
                         preriod: body.preriod.length,
                         totalPrice: totalPriceMax3dPlus,
                         orderDetail: "Mua Vé Số Max3D",

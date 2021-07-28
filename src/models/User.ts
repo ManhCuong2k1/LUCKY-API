@@ -250,8 +250,6 @@ const findPhone = async (phone: string) => {
   }
 };
 
-
-
 export {
   UserModel,
   UserInterface,
