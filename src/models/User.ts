@@ -199,7 +199,6 @@ UserModel.init(UserDefine, {
   sequelize,
 });
 
-// Func
 const findCredentials = async (username: string, password: string) => {
   const user = await UserModel.findOne({
     where: { phone: username, status: UserModel.STATUS_ENUM.WORKING },
@@ -213,6 +212,7 @@ const findCredentials = async (username: string, password: string) => {
   if (!passwordMatch) throw new Error(ERROR_CODES.InvalidLoginCredentials);
   return user;
 };
+
 
 const generateAuthToken = async (user: UserInterface | UserModel) => {
   const token = jwt.sign({ id: user.id }, config.JWT_KEY, {

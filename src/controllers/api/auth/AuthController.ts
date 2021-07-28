@@ -2,7 +2,7 @@ import { ValidationError, ValidationErrorItem } from "sequelize";
 import express, { Response, Request } from "express";
 import { generateAuthToken, findCredentials, UserModel, findPhone, UserInterface } from "@models/User";
 import { sendSuccess, sendError } from "@util/response";
-import { auth } from "@middleware/auth";
+import { auth, authAdmin, authEmploye } from "@middleware/auth";
 import { encryptPassword } from "@util/md5password";
 
 const router = express.Router();
@@ -241,4 +241,3 @@ router.put("/me", auth, async (req, res) => {
 });
 
 export default router;
- 

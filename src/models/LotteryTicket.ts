@@ -53,7 +53,8 @@ class LotteryTicketModel extends Model<LotteryTicketInterface> implements Lotter
     };
     static readonly EMPLOYESTATUS_ENUM = {
         RECEIVED: "received",
-        NOT_RECEIVED: "not_received"
+        NOT_RECEIVED: "not_received",
+        RECEIVING: "receiving",
     }
 }
 

@@ -9,7 +9,7 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
         const token = req.header("Authorization").replace("Bearer ", "");
         const payload: any = jwt.verify(token, config.JWT_KEY);
         const user: UserInterface = await UserModel.findOne({
-            where: { id: payload.id }
+            where: { id: payload.id, role: UserModel.ROLE_ENUM.USER },
         });
         if (user == null) {
             return res.status(401).send({ code: ERROR_CODES.InvalidOrExpiredToken });
@@ -24,15 +24,44 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
-export const authorAdmin = async (req: Request, res: Response, next: NextFunction) => {
+
+export const authAdmin = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const user: any = req.user;
-        if (!user.isAdmin) throw new Error("");
+        const token = req.header("Authorization").replace("Bearer ", "");
+        const payload: any = jwt.verify(token, config.JWT_KEY);
+        const user: UserInterface = await UserModel.findOne({
+            where: { id: payload.id, role: UserModel.ROLE_ENUM.ADMIN }
+        });
+        if (user == null) {
+            return res.status(401).send({ code: "ERROR: PERMISSTION DENIED!" });
+        }
+        req.user = user;
         next();
-    } catch (e) {
-        res.status(403).send({
-            error: "Forbidden",
-            code: ERROR_CODES.NoPermissionToAccessThisResource
+    } catch (error) {
+        res.status(401).send({
+            error: "Not authorized to access this resource",
+            code: ERROR_CODES.SomeErrorsOccurredPleaseTryAgain
+        });
+    }
+};
+
+
+export const authEmploye = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const token = req.header("Authorization").replace("Bearer ", "");
+        const payload: any = jwt.verify(token, config.JWT_KEY);
+        const user: UserInterface = await UserModel.findOne({
+            where: { id: payload.id, role: UserModel.ROLE_ENUM.EMPLOYE }
+        });
+        if (user == null) {
+            return res.status(401).send({ code: "ERROR: PERMISSTION DENIED!" });
+        }
+        req.user = user;
+        next();
+    } catch (error) {
+        res.status(401).send({
+            error: "Not authorized to access this resource",
+            code: ERROR_CODES.SomeErrorsOccurredPleaseTryAgain
         });
     }
 };
