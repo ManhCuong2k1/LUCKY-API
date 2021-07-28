@@ -3,19 +3,13 @@ import jwt from "jsonwebtoken";
 import { ERROR_CODES } from "@util/constants";
 import config from "../config";
 import {  UserModel, UserInterface } from "@models/User";
-import {RoleModel} from "@models/Role";
 
 export const auth = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const token = req.header("Authorization").replace("Bearer ", "");
         const payload: any = jwt.verify(token, config.JWT_KEY);
         const user: UserInterface = await UserModel.findOne({
-            where: { id: payload.id },
-            include: {
-                model: RoleModel,
-                as: "role",
-                attributes: ["slug"]
-            }
+            where: { id: payload.id }
         });
         if (user == null) {
             return res.status(401).send({ code: ERROR_CODES.InvalidOrExpiredToken });

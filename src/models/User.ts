@@ -33,7 +33,7 @@ interface UserInterface {
   totalFeed?: number;
   totalCoin: number;
   totalReward: number;
-  roleId: number;
+  role: string;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date;
@@ -58,10 +58,16 @@ class UserModel extends Model<UserInterface> implements UserInterface {
   public totalFeed?: number;
   public totalCoin: number;
   public totalReward: number;
-  public roleId: number;
+  public role: string;
   public createdAt: Date;
   public updatedAt: Date;
   public deletedAt: Date;
+
+  static ROLE_ENUM = {
+    ADMIN: "admin",
+    EMPLOYE: "employe",
+    USER: "user"
+  };
   static readonly GENDER_ENUM = {
     MALE: "male",
     FEMALE: "female",
@@ -97,7 +103,6 @@ class UserModel extends Model<UserInterface> implements UserInterface {
           },
         };
       }
-
       return {
         where: {},
       };
@@ -142,7 +147,7 @@ class UserModel extends Model<UserInterface> implements UserInterface {
 const UserDefine = {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   referrerId: { type: DataTypes.INTEGER, allowNull: true },
-  roleId: { type: DataTypes.INTEGER },
+  role: { type: DataTypes.STRING, defaultValue: UserModel.ROLE_ENUM.USER },
   name: { type: DataTypes.STRING },
   username: {
     type: DataTypes.STRING,
@@ -232,7 +237,7 @@ const findPhone = async (phone: string) => {
         name: user.name,
         username: user.username,
         nickname: user.nickname,
-        roleId: user.roleId,
+        role: user.role,
         avatar: user.avatar,
         phone: user.phone,
         status: user.status,

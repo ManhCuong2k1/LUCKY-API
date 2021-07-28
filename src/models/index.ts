@@ -1,6 +1,5 @@
 import sequelize from "@database/connection";
 import { UserModel } from "./User";
-import { RoleModel } from "./Role";
 import { LotteryTicketModel } from "@models/LotteryTicket";
 import { LotteryOrdersModel } from "@models/LotteryOrder";
 import { LotteryImagesModel } from "@models/LotteryImages";
@@ -16,8 +15,6 @@ LotteryTicketModel.hasMany(LotteryImagesModel, { as: "image", constraints: false
 LotteryRechargeModel.belongsTo(UserModel, { as: "user", constraints: false });
 UserHistoryModel.belongsTo(UserModel, { as: "user", constraints: false, foreignKey: "userId"  });
 UserModel.hasMany(LotteryNotifyModel, { as: "user_notify", constraints: false, foreignKey: "userId" });
-
-UserModel.belongsTo(RoleModel, { as: "role", constraints: false });
 
 const models = sequelize.sync({ alter: true, logging: false });
 
