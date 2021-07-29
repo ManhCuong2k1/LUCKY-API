@@ -1,6 +1,6 @@
 import express, { Response, Request } from "express";
 import { UserInterface, UserModel } from "@models/User";
-import { encryptPassword } from "@util/crypto";
+import { encryptPassword } from "@util/md5password";
 import { excludeFields } from "@util/convert";
 import { GridInterface } from "@models/Transformers/Grid";
 const router = express.Router();

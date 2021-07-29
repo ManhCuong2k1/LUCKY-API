@@ -120,6 +120,19 @@ router.get("/me", auth, async (req, res) => {
   }
 });
 
+router.get("/meAdmin", authAdmin, async (req, res) => {
+  try {
+    const user: any = req.user;
+    const userJSON: any = user.toJSON();
+    delete userJSON.password;
+    res.send({ user: userJSON });
+  } catch (e) {
+    res.status(400).send({
+      error: e.message,
+    });
+  }
+});
+
 
  router.post("/checkphone", async (req: Request, res: Response) => {
   try {
