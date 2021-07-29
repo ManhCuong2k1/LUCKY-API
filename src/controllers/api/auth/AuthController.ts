@@ -1,6 +1,6 @@
 import { ValidationError, ValidationErrorItem } from "sequelize";
 import express, { Response, Request } from "express";
-import { generateAuthToken, findCredentials, UserModel, findPhone, UserInterface } from "@models/User";
+import { generateAuthToken, findCredentials, findCredentialAdmin, UserModel, findPhone, UserInterface } from "@models/User";
 import { sendSuccess, sendError } from "@util/response";
 import { auth, authAdmin, authEmploye } from "@middleware/auth";
 import { encryptPassword } from "@util/md5password";
@@ -40,6 +40,21 @@ router.post("/login", async (req: Request, res: Response) => {
   try {
     const { username, password } = req.body;
     const user = await findCredentials(username, password);
+    const token: string = await generateAuthToken(user);
+    const userJSON: any = user.toJSON();
+    delete userJSON.password;
+    res.send({ user: userJSON, token });
+  } catch (e) {
+    res.status(401).send({
+      code: e.message,
+    });
+  }
+});
+
+router.post("/loginAdmin", async (req: Request, res: Response) => {
+  try {
+    const { username, password } = req.body;
+    const user = await findCredentialAdmin(username, password);
     const token: string = await generateAuthToken(user);
     const userJSON: any = user.toJSON();
     delete userJSON.password;

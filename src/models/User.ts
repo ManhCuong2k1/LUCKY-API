@@ -213,6 +213,22 @@ const findCredentials = async (username: string, password: string) => {
   return user;
 };
 
+const findCredentialAdmin = async (username: string, password: string) => {
+  const user = await UserModel.findOne({
+    where: { username: username, status: UserModel.STATUS_ENUM.WORKING },
+  });
+  console.log(username);
+  
+  if (user == null) {
+    throw new Error(ERROR_CODES.InvalidLoginCredentials);
+  }
+  const passwordHash = encryptPassword(password);
+  const passwordMatch = passwordHash == user.password;
+
+  if (!passwordMatch) throw new Error(ERROR_CODES.InvalidLoginCredentials);
+  return user;
+};
+
 
 const generateAuthToken = async (user: UserInterface | UserModel) => {
   const token = jwt.sign({ id: user.id }, config.JWT_KEY, {
@@ -255,5 +271,6 @@ export {
   UserInterface,
   generateAuthToken,
   findCredentials,
+  findCredentialAdmin,
   findPhone
 };
