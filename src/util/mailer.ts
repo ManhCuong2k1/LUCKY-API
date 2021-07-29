@@ -23,13 +23,13 @@ const sendMail = (to: string, subject: string, htmlContent: string) => {
         return {
             status: true,
             message: "Success!"
-        }  
+        };  
     }catch(error) {
         console.log(error.message);
         return {
             status: false,
             message: error.message
-        }
+        };
     }
 
 };

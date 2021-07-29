@@ -1,8 +1,6 @@
 import {
   DataTypes,
   Model,
-  BelongsToManyAddAssociationsMixin,
-  BelongsToManyRemoveAssociationsMixin,
   ModelScopeOptions,
   Op,
   Sequelize,
