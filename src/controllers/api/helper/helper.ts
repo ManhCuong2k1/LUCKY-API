@@ -76,7 +76,7 @@ const checkItemExist = (array1: any, array2: any) => {
 
 const employeStringToSignalCode = (arrString: any) => {
 
-    let arrConvert:any = {
+    const arrConvert: any = {
         "0":    "0",
         "1":    "1",
         "2":    "2",
@@ -141,14 +141,14 @@ const employeStringToSignalCode = (arrString: any) => {
         "send":     "x",
         "total":    "t"
     };
-    let signalArray:any = [];
+    const signalArray: any = [];
 
     arrString.forEach((string: any) => {
         signalArray.push(arrConvert[string]);
     });
     
     return signalArray;
-}
+};
 
 export default {
     timeStamp,

@@ -106,7 +106,7 @@ router.post("/error/:ticketId", async (req: Request, res: Response) => {
 
             if (Ticket !== null) {
 
-                Ticket.employeStatus = LotteryTicketModel.EMPLOYESTATUS_ENUM.NOT_RECEIVED
+                Ticket.employeStatus = LotteryTicketModel.EMPLOYESTATUS_ENUM.NOT_RECEIVED;
                 await Ticket.save();
                 await Ticket.reload();
 
