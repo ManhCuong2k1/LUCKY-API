@@ -13,7 +13,7 @@ import TransactionController from "./transaction/TransactionControlller";
 const router = express.Router();
 
 router.use("/auth", AuthController);
-router.use("/admin", authAdmin, AdminController);
+router.use("/admin", AdminController);
 router.use("/app", auth, AppController);
 router.use("/upload", UploadController);
 router.use("/transaction", TransactionController);
