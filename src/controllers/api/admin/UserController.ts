@@ -3,7 +3,7 @@ import { UserInterface, UserModel } from "@models/User";
 import { encryptPassword } from "@util/md5password";
 import { excludeFields } from "@util/convert";
 import { GridInterface } from "@models/Transformers/Grid";
-import { authAdmin, authEmploye } from "~/middleware/auth";
+import { authAdmin, authEmploye } from "../../../middleware/auth";
 import { Op } from "sequelize";
 const router = express.Router();
 
