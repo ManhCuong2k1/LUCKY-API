@@ -1,8 +1,10 @@
 import express, { Response, Request } from "express";
 import { UserInterface, UserModel } from "@models/User";
-import { encryptPassword } from "@util/crypto";
+import { encryptPassword } from "@util/md5password";
 import { excludeFields } from "@util/convert";
 import { GridInterface } from "@models/Transformers/Grid";
+import { authAdmin, authEmploye } from "~/middleware/auth";
+import { Op } from "sequelize";
 const router = express.Router();
 
 router.get("/", async (req: Request, res: Response) => {
@@ -36,7 +38,14 @@ router.get("/", async (req: Request, res: Response) => {
 
 router.get("/:id", async (req: Request, res: Response) => {
   try {
-    const user = await UserModel.findByPk(req.params.id);
+    const user = await UserModel.findOne({
+      where: {
+        [Op.or]: [
+          { id: req.params.id }, 
+          { username: req.params.id }
+      ],
+      }
+    });
     const jsonUser: any = user.toJSON();
     delete jsonUser.password;
     res.send({ data: jsonUser });
@@ -69,23 +78,44 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-router.put("/:id", async (req: Request, res: Response) => {
+router.put("/:id", authAdmin, async (req: Request, res: Response) => {
   try {
     const updateUser: UserInterface = req.body;
     const user = await UserModel.findByPk(req.params.id);
 
     user.name = updateUser.name;
     user.phone = updateUser.phone;
-    user.nickname = updateUser.nickname;
     user.email = updateUser.email;
     user.gender = updateUser.gender;
     user.dateOfBirth = updateUser.dateOfBirth;
     user.status = updateUser.status;
-    user.isEnableReceiveEmail = updateUser.isEnableReceiveEmail;
-    user.avatar = updateUser.avatar;
+    user.role = updateUser.role;
     if (updateUser.password) {
       user.password = encryptPassword(updateUser.password);
     }
+
+    await user.save();
+
+    const jsonUser: any = user.toJSON();
+    delete jsonUser.password;
+    res.send({ data: jsonUser });
+  } catch (e) {
+    res.status(400).send({
+      error: e.message,
+    });
+  }
+});
+
+router.put("/:id/detail", authEmploye, async (req: Request, res: Response) => {
+  try {
+    const updateUser: UserInterface = req.body;
+    const user = await UserModel.findByPk(req.params.id);
+
+    user.name = updateUser.name;
+    user.phone = updateUser.phone;
+    user.email = updateUser.email;
+    user.gender = updateUser.gender;
+    user.dateOfBirth = updateUser.dateOfBirth;
 
     await user.save();
 

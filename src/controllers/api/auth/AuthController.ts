@@ -1,9 +1,10 @@
 import { ValidationError, ValidationErrorItem } from "sequelize";
 import express, { Response, Request } from "express";
-import { generateAuthToken, findCredentials, UserModel, findPhone, UserInterface } from "@models/User";
+import { generateAuthToken, findCredentials, findCredentialAdmin, UserModel, findPhone, UserInterface } from "@models/User";
 import { sendSuccess, sendError } from "@util/response";
 import { auth, authAdmin, authEmploye } from "@middleware/auth";
 import { encryptPassword } from "@util/md5password";
+import sendMail from "@util/mailer";
 
 const router = express.Router();
 
@@ -40,6 +41,21 @@ router.post("/login", async (req: Request, res: Response) => {
   try {
     const { username, password } = req.body;
     const user = await findCredentials(username, password);
+    const token: string = await generateAuthToken(user);
+    const userJSON: any = user.toJSON();
+    delete userJSON.password;
+    res.send({ user: userJSON, token });
+  } catch (e) {
+    res.status(401).send({
+      code: e.message,
+    });
+  }
+});
+
+router.post("/loginAdmin", async (req: Request, res: Response) => {
+  try {
+    const { username, password } = req.body;
+    const user = await findCredentialAdmin(username, password);
     const token: string = await generateAuthToken(user);
     const userJSON: any = user.toJSON();
     delete userJSON.password;
@@ -120,6 +136,19 @@ router.get("/me", auth, async (req, res) => {
   }
 });
 
+router.get("/meAdmin", authEmploye, async (req, res) => {
+  try {
+    const user: any = req.user;
+    const userJSON: any = user.toJSON();
+    delete userJSON.password;
+    res.send({ user: userJSON });
+  } catch (e) {
+    res.status(400).send({
+      error: e.message,
+    });
+  }
+});
+
 
  router.post("/checkphone", async (req: Request, res: Response) => {
   try {
@@ -179,6 +208,29 @@ router.post("/register", async (req: Request, res: Response) => {
     const token: string = await generateAuthToken(user);
     const userJSON: any = userSaved.toJSON();
     delete userJSON.password;
+    sendSuccess(res, { user: userJSON, token  });
+
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      return sendError(res, 422, error.errors.map((err: ValidationErrorItem) => err.message), error);
+    }
+    sendError(res, 400, error.message, error);
+  }
+});
+
+router.post("/registerAdmin", async (req: Request, res: Response) => {
+  try {
+    const user: UserInterface = req.body;
+    if (user.username == null || user.password == null || user.username == "" || user.password == "") throw new Error("Username or password invalid");
+    const passwordHash = encryptPassword(user.password);
+    user.password = passwordHash;
+    const userSaved = await UserModel.create(user);
+    await userSaved.reload();
+    
+    const token: string = await generateAuthToken(user);
+    const userJSON: any = userSaved.toJSON();
+    delete userJSON.password;
+    await sendMail("lucvd@flextech.vn", "Xét duyệt nhân viên", `<p>Xét duyệt cho tài khoản có username là ${userJSON.username}</p>`);
     sendSuccess(res, { user: userJSON, token  });
 
   } catch (error) {

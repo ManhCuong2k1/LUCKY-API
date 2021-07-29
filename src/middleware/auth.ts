@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import { ERROR_CODES } from "@util/constants";
 import config from "../config";
 import {  UserModel, UserInterface } from "@models/User";
+import { Op } from "sequelize";
 
 export const auth = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -51,7 +52,13 @@ export const authEmploye = async (req: Request, res: Response, next: NextFunctio
         const token = req.header("Authorization").replace("Bearer ", "");
         const payload: any = jwt.verify(token, config.JWT_KEY);
         const user: UserInterface = await UserModel.findOne({
-            where: { id: payload.id, role: UserModel.ROLE_ENUM.EMPLOYE }
+            where: {
+                id: payload.id,
+                [Op.or]: [
+                    { role: UserModel.ROLE_ENUM.EMPLOYE }, 
+                    { role: UserModel.ROLE_ENUM.ADMIN }
+                ],
+            }
         });
         if (user == null) {
             return res.status(401).send({ code: "ERROR: PERMISSTION DENIED!" });
