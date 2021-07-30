@@ -242,7 +242,7 @@ router.post("/registerAdmin", async (req: Request, res: Response) => {
 });
 
 
-router.post("/forgot-password", async (req: Request, res: Response) => {
+router.post("/send-otp", async (req: Request, res: Response) => {
   try {
     const { phone } = req.body;
     const user = await findPhone(phone);
