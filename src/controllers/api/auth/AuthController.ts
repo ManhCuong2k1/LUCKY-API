@@ -4,7 +4,6 @@ import { generateAuthToken, findCredentials, findCredentialAdmin, UserModel, fin
 import { sendSuccess, sendError } from "@util/response";
 import { auth, authAdmin, authEmploye } from "@middleware/auth";
 import { encryptPassword } from "@util/md5password";
-import sendMail from "@util/mailer";
 
 const router = express.Router();
 
@@ -217,30 +216,6 @@ router.post("/register", async (req: Request, res: Response) => {
     sendError(res, 400, error.message, error);
   }
 });
-
-router.post("/registerAdmin", async (req: Request, res: Response) => {
-  try {
-    const user: UserInterface = req.body;
-    if (user.username == null || user.password == null || user.username == "" || user.password == "") throw new Error("Username or password invalid");
-    const passwordHash = encryptPassword(user.password);
-    user.password = passwordHash;
-    const userSaved = await UserModel.create(user);
-    await userSaved.reload();
-    
-    const token: string = await generateAuthToken(user);
-    const userJSON: any = userSaved.toJSON();
-    delete userJSON.password;
-    await sendMail("lucvd@flextech.vn", "Xét duyệt nhân viên", `<p>Xét duyệt cho tài khoản có username là ${userJSON.username}</p>`);
-    sendSuccess(res, { user: userJSON, token  });
-
-  } catch (error) {
-    if (error instanceof ValidationError) {
-      return sendError(res, 422, error.errors.map((err: ValidationErrorItem) => err.message), error);
-    }
-    sendError(res, 400, error.message, error);
-  }
-});
-
 
 router.post("/otp", async (req: Request, res: Response) => {
   res.send("sended otp code!");

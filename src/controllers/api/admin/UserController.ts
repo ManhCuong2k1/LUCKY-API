@@ -4,6 +4,7 @@ import { encryptPassword } from "@util/md5password";
 import { excludeFields } from "@util/convert";
 import { GridInterface } from "@models/Transformers/Grid";
 import { authAdmin, authEmploye } from "../../../middleware/auth";
+import moment from "moment-timezone";
 import { Op } from "sequelize";
 const router = express.Router();
 
@@ -16,7 +17,15 @@ router.get("/", async (req: Request, res: Response) => {
     );
     const offset: number = (page - 1) * limit;
 
+    const searchKey: string = req.query.searchKey ? req.query.searchKey.toString() : null;
+
+    const where: any = Object.assign({},
+      searchKey === null ? null : { phone: { [Op.like]: `%${searchKey.trim()}%` } },
+      {role : "user"},
+    );
+
     const { rows, count } = await UserModel.findAndCountAll({
+      where,
       limit,
       offset,
     });
@@ -36,7 +45,50 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/:id", async (req: Request, res: Response) => {
+router.get("/staff", async (req: Request, res: Response) => {
+  try {
+    const page: number = parseInt(req.query.page ? req.query.page.toString() : "1");
+    const pageSize: number = parseInt(req.query.pageSize ? req.query.pageSize.toString() : "20");
+    const cursor: number = (page - 1) * pageSize;
+
+    const searchKey: string = req.query.searchKey ? req.query.searchKey.toString() : null;
+    const status: string = req.query.status ? req.query.status.toString() : null;
+    const fromDate: any = req.query.fromDate || null;
+    const toDate: any = req.query.toDate || null;
+
+    const where: any = Object.assign({},
+      status === null ? null : { status },
+      searchKey === null ? null : { name: { [Op.like]: `%${searchKey.trim()}%` } },
+      fromDate && toDate ? { createdAt: { [Op.between]: [moment(fromDate).startOf("day"), moment(toDate).endOf("day")] } } : null,
+      {role : {[Op.or] : ["employe","admin"]}},
+    );
+
+    const { rows, count } = await UserModel.findAndCountAll({
+      where,
+      distinct: true,
+      limit: pageSize,
+      offset: cursor,
+      order: [
+          ["createdAt", "DESC"],
+      ],
+    });
+
+    const userResponse = excludeFields(rows, ["password"]);
+    const responseData: GridInterface<UserInterface> = {
+      data: userResponse,
+      page: page,
+      pageSize: pageSize,
+      total: count
+    };
+    res.send(responseData);
+  } catch (e) {
+    res.status(400).send({
+      error: e.message,
+    });
+  }
+});
+
+router.get("/detail/:id", async (req: Request, res: Response) => {
   try {
     const user = await UserModel.findOne({
       where: {

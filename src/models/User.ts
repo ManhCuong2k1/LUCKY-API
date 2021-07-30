@@ -74,6 +74,7 @@ class UserModel extends Model<UserInterface> implements UserInterface {
   static readonly STATUS_ENUM = {
     BLOCKED: "blocked",
     WORKING: "working",
+    PENDING: "pending",
   };
   static readonly CREATEABLE_PARAMETERS = ["name", "username", "nickname", "email", "referrerCode",
     "avatar", "password", "gender", "dateOfBirth", "phone", "identify"]
