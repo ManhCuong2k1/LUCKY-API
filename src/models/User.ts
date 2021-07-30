@@ -21,7 +21,7 @@ interface UserInterface {
   nickname: string;
   email: string;
   referralCode: string;
-  otpCode: number;
+  otpCode: string;
   avatar: string;
   password: string;
   gender: string;
@@ -50,7 +50,7 @@ class UserModel extends Model<UserInterface> implements UserInterface {
   public nickname: string;
   public email: string;
   public referralCode: string;
-  public otpCode: number;
+  public otpCode: string;
   public avatar: string;
   public password: string;
   public gender: string;
@@ -163,12 +163,12 @@ const forgotPassword = async (userId: number) => {
       let code = "";
       const characters = "0123456789";
       for (let i = 6; i > 0; --i) code += characters[Math.floor(Math.random() * characters.length)];
-      existedUser.otpCode = Number(code);
+      existedUser.otpCode = code;
       await existedUser.save();
       await existedUser.reload();
       const message = `${code} là mã xác minh của bạn`;
       await sendSmsOtp(existedUser.phone, message);
-      return Number(code);
+      return code;
     } else {
       return false;
     }
