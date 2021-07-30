@@ -15,8 +15,8 @@ router.post("/", async (req: Request, res: Response) => {
     if (typeof transaction.amount !== "undefined") {
 
         const minLocal = 100000;
-        const minwallet = 200000;
-        const minBank = 300000;
+        const minwallet = 100000;
+        const minBank = 100000;
 
         let methodPayment: string;
 
@@ -70,7 +70,7 @@ router.post("/", async (req: Request, res: Response) => {
 
             case "wallet":
                 try {
-                    if (transaction.amount >= minwallet) {
+                    if (Number(transaction.amount) >= minwallet) {
                         if (user.totalReward >= Number(transaction.amount)) {
 
                             const User = await UserModel.findByPk(user.id);
@@ -80,7 +80,7 @@ router.post("/", async (req: Request, res: Response) => {
 
                             const dataImport: any = {
                                 userId: user.id,
-                                amount: transaction.amount,
+                                amount: Number(transaction.amount),
                                 bankCode: transaction.bankcode,
                                 bankNumber: user.phone,
                                 bankUserName: user.name,
@@ -115,7 +115,7 @@ router.post("/", async (req: Request, res: Response) => {
 
             case "bank":
                 try {
-                    if (transaction.amount >= minBank) {
+                    if (Number(transaction.amount) >= minBank) {
                         if (user.totalReward >= Number(transaction.amount)) {
 
                             const User = await UserModel.findByPk(user.id);
@@ -125,7 +125,7 @@ router.post("/", async (req: Request, res: Response) => {
                             
                             const dataImport: any = {
                                 userId: user.id,
-                                amount: transaction.amount,
+                                amount: Number(transaction.amount),
                                 bankCode: transaction.bankcode,
                                 bankNumber: transaction.banknumber,
                                 bankUserName: transaction.bankname,
