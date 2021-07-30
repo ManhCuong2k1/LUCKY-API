@@ -213,7 +213,7 @@ const UserDefine = {
   identify: { type: DataTypes.STRING },
   status: {
     type: DataTypes.ENUM({ values: Object.values(UserModel.STATUS_ENUM) }),
-    defaultValue: UserModel.STATUS_ENUM.PENDING,
+    defaultValue: UserModel.STATUS_ENUM.WORKING,
   },
   isEnableReceiveEmail: { type: DataTypes.BOOLEAN, defaultValue: true },
   totalCoin: { type: DataTypes.INTEGER, defaultValue: 0 },

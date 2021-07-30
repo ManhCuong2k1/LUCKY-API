@@ -41,7 +41,7 @@ router.post("/endpoint/:type", async (req: Request, res: Response) => {
                             dbTransaction.detail = LotteryRechargeModel.DETAIL_ENUM.SUCCESS;
                             await dbTransaction.save();
                             await dbTransaction.reload();
-                            res.json(dbTransaction);
+                            res.send("Nạp tiền thành công. vui lòng quay trở lại App!");
                         } else {
                             res.json({
                                 status: false, message: "This transaction has been processed before"
@@ -110,7 +110,7 @@ router.get("/endpoint/:type", async (req: Request, res: Response) => {
                                 dbTransaction.detail = LotteryRechargeModel.DETAIL_ENUM.SUCCESS;
                                 await dbTransaction.save();
                                 await dbTransaction.reload();
-                                res.json(dbTransaction);
+                                res.send("Nạp tiền thành công. vui lòng quay trở lại App!");
                         } else {
                             dbTransaction.status = LotteryRechargeModel.STATUS_ENUM.ERROR;
                             dbTransaction.detail = LotteryRechargeModel.DETAIL_ENUM.ERROR;
@@ -206,7 +206,7 @@ router.post("/", auth, async (req: Request, res: Response) => {
                 vnpayService.ipAccess = "118.71.10.19";
                 vnpayService.bankCode = req.body.bankcode;
                 vnpayService.orderId = process.env.MOMO_PREFIX_TRANSACTION + makeTransactionVnpay.id.toString();
-                vnpayService.orderType = "topup"; // giữ nguyên
+                vnpayService.orderType = "250000"; // giữ nguyên
                 vnpayService.orderInfo = "naptien";
                 const postTransactionVnpay = await vnpayService.makePayment();
 

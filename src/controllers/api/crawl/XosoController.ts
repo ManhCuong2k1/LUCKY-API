@@ -4,23 +4,12 @@ import Crawl from "./Crawl";
 import helper from "@controllers/api/helper/helper";
 import updateTicket from "../app/lottery/updateresult";
 import { LotteryInterface, LotteryModel } from "@models/Lottery";
-import sendMail from "@util/mailer";
 
 const router = express.Router();
 
 
 router.get("/", (req: Request, res: Response) => {
     res.status(403).send("403");
-});
-
-router.get("/mail", async (req: Request, res: Response) => {
-    try {
-        await sendMail("lucvd@flextech.vn", "tieu đề emil", "noi dung viết bằng html");
-        res.send("ok");
-    } catch (e) {
-        console.log(e);
-    }
-
 });
 
 
