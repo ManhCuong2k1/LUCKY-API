@@ -11,6 +11,7 @@ import { encryptPassword } from "@util/md5password";
 import config from "../config";
 import jwt from "jsonwebtoken";
 import { ModelHooks } from "sequelize/types/lib/hooks";
+import sendSmsOtp from "@util/sms";
 
 interface UserInterface {
   id: number;
@@ -20,6 +21,7 @@ interface UserInterface {
   nickname: string;
   email: string;
   referralCode: string;
+  otpCode: string;
   avatar: string;
   password: string;
   gender: string;
@@ -38,6 +40,9 @@ interface UserInterface {
 }
 
 class UserModel extends Model<UserInterface> implements UserInterface {
+  static generateOtpCode() {
+    throw new Error("Method not implemented.");
+  }
   public id: number;
   public referrerId?: number;
   public name: string;
@@ -45,6 +50,7 @@ class UserModel extends Model<UserInterface> implements UserInterface {
   public nickname: string;
   public email: string;
   public referralCode: string;
+  public otpCode: string;
   public avatar: string;
   public password: string;
   public gender: string;
@@ -141,7 +147,37 @@ class UserModel extends Model<UserInterface> implements UserInterface {
     if (existedUser) code = await this.generateReferralCode();
     return code;
   }
+
 }
+
+const generateOtpCode = () => {
+  let code = "";
+  const characters = "0123456789";
+  for (let i = 6; i > 0; --i) code += characters[Math.floor(Math.random() * characters.length)];
+  return code;
+};
+
+const forgotPassword = async (userId: number) => {
+  try {
+    const existedUser = await UserModel.findOne({ where: { id: userId } });
+    if (existedUser !== null) {
+      let code = "";
+      const characters = "0123456789";
+      for (let i = 6; i > 0; --i) code += characters[Math.floor(Math.random() * characters.length)];
+      existedUser.otpCode = code;
+      await existedUser.save();
+      await existedUser.reload();
+      const message = `${code} là mã xác minh của bạn`;
+      await sendSmsOtp(existedUser.phone, message);
+      return code;
+    } else {
+      return false;
+    }
+  } catch (e) {
+    console.log(e.message);
+    return false;
+  }
+};
 
 const UserDefine = {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
@@ -159,6 +195,7 @@ const UserDefine = {
   nickname: { type: DataTypes.STRING },
   email: { type: DataTypes.STRING },
   referralCode: { type: DataTypes.STRING, allowNull: true },
+  otpCode: { type: DataTypes.STRING(300), defaultValue: generateOtpCode() },
   avatar: { type: DataTypes.STRING },
   password: {
     type: DataTypes.STRING,
@@ -217,7 +254,7 @@ const findCredentialAdmin = async (username: string, password: string) => {
     where: { username: username, status: UserModel.STATUS_ENUM.WORKING },
   });
   console.log(username);
-  
+
   if (user == null) {
     throw new Error(ERROR_CODES.InvalidLoginCredentials);
   }
@@ -249,6 +286,7 @@ const findPhone = async (phone: string) => {
     return {
       status: true,
       data: {
+        id: user.id,
         name: user.name,
         username: user.username,
         nickname: user.nickname,
@@ -269,6 +307,8 @@ export {
   UserModel,
   UserInterface,
   generateAuthToken,
+  generateOtpCode,
+  forgotPassword,
   findCredentials,
   findCredentialAdmin,
   findPhone
