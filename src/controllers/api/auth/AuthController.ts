@@ -251,12 +251,12 @@ router.post("/forgot-password", async (req: Request, res: Response) => {
       res.json({
         status: true,
         message: "Đã gửi mã OTP!"
-      })
+      });
     } else {
       res.json({
         status: false,
         message: "User Not Found!"
-      })
+      });
     }
 
   } catch (e) {

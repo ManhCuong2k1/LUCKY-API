@@ -154,7 +154,7 @@ const generateOtpCode = () => {
   const characters = "0123456789";
   for (let i = 6; i > 0; --i) code += characters[Math.floor(Math.random() * characters.length)];
   return code;
-}
+};
 
 const forgotPassword = async (userId: number) => {
   try {
@@ -176,7 +176,7 @@ const forgotPassword = async (userId: number) => {
     console.log(e.message);
     return false;
   }
-}
+};
 
 const UserDefine = {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
@@ -194,7 +194,7 @@ const UserDefine = {
   nickname: { type: DataTypes.STRING },
   email: { type: DataTypes.STRING },
   referralCode: { type: DataTypes.STRING, allowNull: true },
-  otpCode: { type: DataTypes.INTEGER, defaultValue: generateOtpCode() },
+  otpCode: { type: DataTypes.STRING(300), defaultValue: generateOtpCode() },
   avatar: { type: DataTypes.STRING },
   password: {
     type: DataTypes.STRING,
