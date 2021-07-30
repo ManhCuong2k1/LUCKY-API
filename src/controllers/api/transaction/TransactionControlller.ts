@@ -83,6 +83,24 @@ router.get("/endpoint/:type", async (req: Request, res: Response) => {
 
         switch (req.params.type) {
 
+
+            case "momo":
+
+                if (typeof transaction.transId !== "undefined") {
+                    if (transaction.errorCode == 0) {
+                        res.send("Nạp tiền thành công. vui lòng quay trở lại App!");
+                    } else {
+                        res.send("Nạp tiền thất bại. vui lòng quay trở lại App và thử lại!");
+                    }
+                } else {
+                    res.json({
+                        status: false, message: "error request!"
+                    });
+                }
+
+            break;
+
+
             case "vnpay":
 
                 if (typeof transaction.vnp_TxnRef !== "undefined" && typeof transaction.vnp_TransactionNo !== "undefined") {
