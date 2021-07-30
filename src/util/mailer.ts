@@ -1,6 +1,6 @@
 import nodeMailer from "nodemailer";
-const mailHost = "smtp.gmail.com";
-const mailPort = 587;
+const mailHost = "mail.flextech.vn";
+const mailPort = 25;
 
 const sendMail = (to: string, subject: string, htmlContent: string) => {
     try {
@@ -11,6 +11,9 @@ const sendMail = (to: string, subject: string, htmlContent: string) => {
             auth: {
                 user: process.env.MAILER_EMAIL,
                 pass: process.env.MAILER_PASSWORD
+            },
+            tls: {
+                rejectUnauthorized: false
             }
         });
         const options = {
@@ -19,7 +22,13 @@ const sendMail = (to: string, subject: string, htmlContent: string) => {
             subject: subject, // Tiêu đề của mail
             html: htmlContent // Phần nội dung mail mình sẽ dùng html thay vì thuần văn bản thông thường.
         };
-        const send = transporter.sendMail(options);
+        const send = transporter.sendMail(options, function(error, info) {
+            if(error){
+                   return console.log(error);
+            } else {
+                   console.log("Message sent: " + info.response);
+            }
+        });
         return {
             status: true,
             message: "Success!"
@@ -35,3 +44,7 @@ const sendMail = (to: string, subject: string, htmlContent: string) => {
 };
 
 export default sendMail;
+
+function done() {
+    throw new Error("Function not implemented.");
+}
