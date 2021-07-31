@@ -8,7 +8,7 @@ import moment from "moment-timezone";
 import { Op } from "sequelize";
 const router = express.Router();
 
-router.get("/", async (req: Request, res: Response) => {
+router.get("/", authAdmin, async (req: Request, res: Response) => {
   try {
     const query = req.query;
     const page: number = parseInt(!!query.page ? query.page.toString() : "1");
@@ -45,7 +45,7 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/staff", async (req: Request, res: Response) => {
+router.get("/staff", authAdmin, async (req: Request, res: Response) => {
   try {
     const page: number = parseInt(req.query.page ? req.query.page.toString() : "1");
     const pageSize: number = parseInt(req.query.pageSize ? req.query.pageSize.toString() : "20");
@@ -127,6 +127,24 @@ router.post("/", async (req: Request, res: Response) => {
     res.status(400).send({
       error: e.message,
     });
+  }
+});
+
+router.put("/recharge/:id", authAdmin, async (req: Request, res: Response) => {
+  try {
+    const user = await UserModel.findByPk(req.params.id);
+
+    const recharge = req.body.recharge;
+    if(user) {
+      const number: any =  user.totalCoin + parseInt(recharge);
+      user.totalCoin = number;
+      await user.save();
+      res.send({ data: user });
+    } else {
+      res.status(400).send("Cant not find user");
+    }
+  } catch (e) {
+    res.status(400).send("err");
   }
 });
 
