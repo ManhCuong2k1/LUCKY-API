@@ -204,7 +204,7 @@ router.post("/register", async (req: Request, res: Response) => {
     const userSaved = await UserModel.create(user);
     await userSaved.reload();
 
-    const token: string = await generateAuthToken(user);
+    const token: string = await generateAuthToken(userSaved);
     const userJSON: any = userSaved.toJSON();
     delete userJSON.password;
     sendSuccess(res, { user: userJSON, token });

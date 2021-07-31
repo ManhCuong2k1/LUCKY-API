@@ -6,6 +6,10 @@ import {  UserModel, UserInterface } from "@models/User";
 import { Op } from "sequelize";
 
 export const auth = async (req: Request, res: Response, next: NextFunction) => {
+    const token = req.header("Authorization").replace("Bearer ", "");
+    const payload: any = jwt.verify(token, config.JWT_KEY);
+    console.log(payload.id);
+
     try {
         const token = req.header("Authorization").replace("Bearer ", "");
         const payload: any = jwt.verify(token, config.JWT_KEY);
