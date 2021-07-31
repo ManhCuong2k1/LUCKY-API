@@ -1,10 +1,12 @@
 import { Request, Response, Router } from "express";
 import upload from "@middleware/upload";
 import { saveFile } from "@util/resizeImage";
+import FormData from "form-data";
 import { Op } from "sequelize";
 import { LotteryTicketModel } from "@models/LotteryTicket";
 import { LotteryOrdersModel } from "@models/LotteryOrder";
 import { LotteryImagesModel } from "@models/LotteryImages";
+import axios from "axios";
 
 
 
@@ -45,33 +47,47 @@ router.post("/upload/:id", upload.array("image"), async (req, res, next) => {
 
                 const images: any[] = [];
 
+
                 await Promise.all(
                     files.map(async file => {
-                        
-                        const fileName = await saveFile(file);
+
+                        const data = new FormData();
+                        data.append("file", file.buffer);
+
+                        const postImg = await axios({
+                            method: "post",
+                            url: process.env.HOST_IMAGES_URL + "/images?category=content",
+                            headers: {
+                                ...data.getHeaders()
+                            },
+                            data: data
+                        });
+
+                        const dataResp = postImg.data;
+
+                        const fileName = dataResp.data.url.src;
                         images.push({ url: fileName });
 
                         const objectData: any = {
                             imageslist: fileName,
-                            LotteryTicketModelId: req.params.id
-                        };
-                        await LotteryImagesModel.create(objectData);
+                             LotteryTicketModelId: req.params.id
+                         };
+                         await LotteryImagesModel.create(objectData);
 
-                        orderItem.forEach( async (element) => {
-                            element.orderStatus = await LotteryOrdersModel.ORDERSTATUS_ENUM.PRINTED;
-                            await element.save();
-                        });
-                        ticketItem.orderStatus = await LotteryTicketModel.TICKET_ENUM.PRINTED;
-                        ticketItem.resultDetail = await LotteryTicketModel.RESULTSTATUS_ENUM.DRAWNED;
-                        
-                        await ticketItem.save();
+                         orderItem.forEach(async (element) => {
+                             element.orderStatus = await LotteryOrdersModel.ORDERSTATUS_ENUM.PRINTED;
+                             await element.save();
+                         });
+                         ticketItem.orderStatus = await LotteryTicketModel.TICKET_ENUM.PRINTED;
+                         ticketItem.resultDetail = await LotteryTicketModel.RESULTSTATUS_ENUM.DRAWNED;
 
+                         await ticketItem.save();
                     })
                 );
 
-                ticketItem.employeStatus = LotteryTicketModel.EMPLOYESTATUS_ENUM.RECEIVED;
-                await ticketItem.save();
-                await ticketItem.reload();
+                 ticketItem.employeStatus = LotteryTicketModel.EMPLOYESTATUS_ENUM.RECEIVED;
+                 await ticketItem.save();
+                 await ticketItem.reload();
 
                 return res.json({
                     status: true,
@@ -87,6 +103,7 @@ router.post("/upload/:id", upload.array("image"), async (req, res, next) => {
         }
 
     } catch (e) {
+        console.log(e.message);
         res.status(400).send({
             error: e.message
         });
