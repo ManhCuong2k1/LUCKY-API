@@ -7,7 +7,6 @@ const router = Router();
 
 /**
  * @openapi
- * /iriowep/asdas
  *   post:
  *     tags:
  *      - "[Transaction] Payment & Recharge"

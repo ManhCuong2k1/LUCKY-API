@@ -157,6 +157,7 @@ router.post("/refresh", auth, async (req: Request, res: Response) => {
 router.get("/me", auth, async (req, res) => {
   try {
     const user: any = req.user;
+    console.log(user);
     const userJSON: any = user.toJSON();
     delete userJSON.password;
     res.send({ user: userJSON });
@@ -228,7 +229,7 @@ router.post("/checkphone", async (req: Request, res: Response) => {
       userInterf.password = generateString(8);
       userInterf.password = encryptPassword(userInterf.password);
       const userSaved = await UserModel.create(userInterf);
-      //const newOTP = await PostUserOtp(userSaved.id);
+      const newOTP = await PostUserOtp(userSaved.id);
       await userSaved.reload();
       const token: string = await generateAuthToken(userSaved);
       const userJSON: any = userSaved.toJSON();
@@ -396,8 +397,13 @@ router.put("/set-password", auth, async (req: Request, res: Response) => {
       if (userLogin !== null) {
         userLogin.password = encryptPassword(password);
         await userLogin.save();
-        delete userLogin.password;
-        res.send({ status: true, user: userLogin });
+        await userLogin.reload();
+        const token: string = await generateAuthToken(userLogin);
+        const userJSON: any = userLogin.toJSON();
+        delete userJSON.otpCode;
+        delete userJSON.password;
+
+        res.send({ status: true, user: userJSON, token });
       } else {
         res.json({ status: false, message: "Auth Error" });
       }
