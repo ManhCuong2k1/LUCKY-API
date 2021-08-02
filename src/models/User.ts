@@ -147,8 +147,35 @@ class UserModel extends Model<UserInterface> implements UserInterface {
     if (existedUser) code = await this.generateReferralCode();
     return code;
   }
-
 }
+
+const generateUsername = async (length: number) => {
+  let username = "";
+  const characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+  while (true) {
+    for (let i = length; i > 0; --i) {
+      username += characters[Math.floor(Math.random() * characters.length)];
+    }
+    const checkExitsUser = await UserModel.findOne({
+      where: {
+        username
+      }
+    });
+
+    if (checkExitsUser == null) break;
+  }
+  return username;
+};
+
+const generateString = (length: number) => {
+  let string = "";
+  const characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  for (let i = length; i > 0; --i) {
+    string += characters[Math.floor(Math.random() * characters.length)];
+  }
+return string;
+};
 
 const generateOtpCode = () => {
   let code = "";
@@ -157,7 +184,7 @@ const generateOtpCode = () => {
   return code;
 };
 
-const forgotPassword = async (userId: number) => {
+const PostUserOtp = async (userId: number) => {
   try {
     const existedUser = await UserModel.findOne({ where: { id: userId } });
     if (existedUser !== null) {
@@ -213,7 +240,7 @@ const UserDefine = {
   identify: { type: DataTypes.STRING },
   status: {
     type: DataTypes.ENUM({ values: Object.values(UserModel.STATUS_ENUM) }),
-    defaultValue: UserModel.STATUS_ENUM.WORKING,
+    defaultValue: UserModel.STATUS_ENUM.PENDING,
   },
   isEnableReceiveEmail: { type: DataTypes.BOOLEAN, defaultValue: true },
   totalCoin: { type: DataTypes.INTEGER, defaultValue: 0 },
@@ -275,7 +302,7 @@ const generateAuthToken = async (user: UserInterface | UserModel) => {
 
 const findPhone = async (phone: string) => {
   const user = await UserModel.findOne({
-    where: { phone, status: UserModel.STATUS_ENUM.WORKING },
+    where: { phone },
   });
   if (user == null) {
     return {
@@ -306,9 +333,11 @@ const findPhone = async (phone: string) => {
 export {
   UserModel,
   UserInterface,
+  generateString,
+  generateUsername,
   generateAuthToken,
   generateOtpCode,
-  forgotPassword,
+  PostUserOtp,
   findCredentials,
   findCredentialAdmin,
   findPhone

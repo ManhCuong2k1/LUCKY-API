@@ -5,7 +5,7 @@ const swaggerDefinition = {
     info: {
         title: "API Piggi App Client",
         version: "1.0.0",
-        description: "This is the REST API for project Piggi App"
+        description: "This is the REST API for project Lucky Lotte App"
     },
     host: config.HOST,
     basePath: "/api",
@@ -23,12 +23,12 @@ const swaggerDefinition = {
             description: "API lấy thông tin user"
         },
         {
-            name: "[App] group-chats",
-            description: "API lấy data group chat"
+            name: "[Transaction] Payment & Recharge",
+            description: "API Thanh toán và Nạp tiền"
         },
         {
-            name: "[App] feeds",
-            description: "API danh sách feeds"
+            name: "[Employe] Employe",
+            description: "API cho nhân viên"
         }
     ],
     securityDefinitions: {

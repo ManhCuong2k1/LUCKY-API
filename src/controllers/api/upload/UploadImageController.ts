@@ -98,6 +98,25 @@ router.post("/multi-upload",upload.array("image"), async (req, res, next) => {
     }
 });
 
+/**
+ * @openapi
+ * /upload/images:
+ *   get:
+ *     tags:
+ *      - "[App] uploads"
+ *     summary: Lấy list ảnh đã uploads
+ *     parameters:
+ *      - in: "query"
+ *        name: "page & pageSize"
+ *        description: "page và pageSize"
+ *        require: true
+ *     responses:
+ *       200:
+ *         description: Return data.
+ *       400:
+ *         description: Error can't get data.
+ */
+
 router.get("/images", async (req, res) => {
     try {
         // const user: any = req.user;
@@ -128,6 +147,25 @@ router.get("/images", async (req, res) => {
     }
 });
 
+
+/**
+ * @openapi
+ * /upload/images/:id:
+ *   get:
+ *     tags:
+ *      - "[App] uploads"
+ *     summary: Lấy thông tin ảnh đã uploads
+ *     parameters:
+ *      - in: "query"
+ *        name: "Images ID"
+ *        description: "id của hình ảnh"
+ *        require: true
+ *     responses:
+ *       200:
+ *         description: Return data.
+ *       400:
+ *         description: Error can't get data.
+ */
 router.get("/images/:id", async (req, res) => {
     try {
         const id = req.params.id;
@@ -143,8 +181,6 @@ router.get("/images/:id", async (req, res) => {
         });
     }
 });
-
-
 
 
 export default router;

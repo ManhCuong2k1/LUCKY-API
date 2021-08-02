@@ -5,12 +5,48 @@ import { LotteryExchangesModel } from "@models/LotteryExchange";
 const router = Router();
 
 
+/**
+ * @openapi
+ * /iriowep/asdas
+ *   post:
+ *     tags:
+ *      - "[Transaction] Payment & Recharge"
+ *     summary:  API tạo giao dịch nạp tiền
+ *     security:
+ *      - Bearer: []
+ *     parameters:
+ *      - in: "body"
+ *        name: "body"
+ *        description: "thông tin người dùng gửi lên"
+ *        require: true
+ *        schema:
+ *          type: "object"
+ *          properties:
+ *            method:
+ *              type: "string"
+ *            nickname:
+ *              type: "string"
+ *            avatar:
+ *              type: "string"
+ *            gender:
+ *              type: "string"
+ *            identify:
+ *              type: "string"
+ *            dateOfbirth:
+ *              type: "string"
+ *     responses:
+ *       200:
+ *         description: Return data.
+ *       400:
+ *         description: Error can't get data.
+ */
+
+
+
 router.post("/", async (req: Request, res: Response) => {
 
     const user: any = req.user;
     const transaction: any = req.body;
-
-
 
     if (typeof transaction.amount !== "undefined") {
 

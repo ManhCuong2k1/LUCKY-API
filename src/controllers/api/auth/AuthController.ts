@@ -1,6 +1,6 @@
 import { ValidationError, ValidationErrorItem } from "sequelize";
 import express, { Response, Request } from "express";
-import { generateAuthToken, findCredentials, findCredentialAdmin, UserModel, findPhone, UserInterface, generateOtpCode, forgotPassword } from "@models/User";
+import { generateAuthToken, findCredentials, findCredentialAdmin, UserModel, findPhone, UserInterface, generateOtpCode, generateString, PostUserOtp, generateUsername } from "@models/User";
 import { sendSuccess, sendError } from "@util/response";
 import { auth, authAdmin, authEmploye } from "@middleware/auth";
 import { encryptPassword } from "@util/md5password";
@@ -21,7 +21,7 @@ const router = express.Router();
  *     parameters:
  *      - in: "body"
  *        name: "body"
- *        description: "Tài khoản đăng nhập"
+ *        description: "Tài khoản đăng nhập (tài khoản là số điện thoại)"
  *        require: true
  *        schema:
  *          type: "object"
@@ -51,6 +51,36 @@ router.post("/login", async (req: Request, res: Response) => {
   }
 });
 
+
+/**
+ * @openapi
+ * /auth/loginAdmin:
+ *   post:
+ *     tags:
+ *      - "[App] auth"
+ *     summary: API đăng nhập tài khoản ADMIN
+ *     consumes:
+ *      - "application/json"
+ *     produces:
+ *      - "application/json"
+ *     parameters:
+ *      - in: "body"
+ *        name: "body"
+ *        description: "Tài khoản đăng nhập (tài khoản là tên người dùng)"
+ *        require: true
+ *        schema:
+ *          type: "object"
+ *          properties:
+ *            username:
+ *              type: "string"
+ *            password:
+ *              type: "string"
+ *     responses:
+ *       200:
+ *         description: Return user data & accessToken.
+ *       401:
+ *         description: Get credentials failed.
+ */
 router.post("/loginAdmin", async (req: Request, res: Response) => {
   try {
     const { username, password } = req.body;
@@ -77,6 +107,8 @@ router.post("/loginAdmin", async (req: Request, res: Response) => {
  *      - "application/json"
  *     produces:
  *      - "application/json"
+ *     security:
+ *      - Bearer: []
  *     parameters:
  *      - in: "body"
  *        name: "body"
@@ -113,7 +145,7 @@ router.post("/refresh", auth, async (req: Request, res: Response) => {
  *   get:
  *     tags:
  *      - "[App] auth"
- *     summary: Lấy thông tin tài khoản user
+ *     summary: Lấy thông tin tài khoản
  *     responses:
  *       200:
  *         description: Return data.
@@ -135,6 +167,21 @@ router.get("/me", auth, async (req, res) => {
   }
 });
 
+/**
+ * @openapi
+ * /auth/meAdmin:
+ *   get:
+ *     tags:
+ *      - "[App] auth"
+ *     summary: Lấy thông tin tài khoản ADMIN
+ *     responses:
+ *       200:
+ *         description: Return data.
+ *       400:
+ *         description: Error can't get data.
+ *     security:
+ *      - Bearer: []
+ */
 router.get("/meAdmin", authEmploye, async (req, res) => {
   try {
     const user: any = req.user;
@@ -148,12 +195,55 @@ router.get("/meAdmin", authEmploye, async (req, res) => {
   }
 });
 
-
+/**
+ * @openapi
+ * /auth/checkphone:
+ *   post:
+ *     tags:
+ *      - "[App] auth"
+ *     summary: Kiểm tra tài khoản với số điện thoại có tồn tại không, nếu có thì trả lại thông tin tài khoản, còn không thì tự động taoj tài khoản với sđt này(mật khẩu ngẫu nhiên)
+ *     parameters:
+ *      - in: "body"
+ *        name: "body"
+ *        description: "Số điện thoại"
+ *        require: true
+ *        schema:
+ *          type: "object"
+ *          properties:
+ *            phone:
+ *              type: "string"
+*     responses:
+ *       200:
+ *         description: Return data.
+ *       400:
+ *         description: Error can't get data.
+ */
 router.post("/checkphone", async (req: Request, res: Response) => {
   try {
-    const phone = req.body.phone;
-    const user = await findPhone(phone);
-    res.json(user);
+    const { phone }: any = req.body;
+    const user: any = await findPhone(phone);
+    if (user.status == false) {
+      const userInterf: any = req.body;
+      userInterf.username = await generateUsername(6);
+      userInterf.password = generateString(8);
+      userInterf.password = encryptPassword(userInterf.password);
+      const userSaved = await UserModel.create(userInterf);
+      //const newOTP = await PostUserOtp(userSaved.id);
+      await userSaved.reload();
+      const token: string = await generateAuthToken(userSaved);
+      const userJSON: any = userSaved.toJSON();
+      delete userJSON.password;
+      res.json({
+        status: true,
+        isnew: true,
+        data: userJSON,
+        token
+      });
+
+    } else {
+      user.isnew = false;
+      res.json(user);
+    }
   } catch (e) {
     res.status(401).send({
       code: e.message,
@@ -164,65 +254,34 @@ router.post("/checkphone", async (req: Request, res: Response) => {
 
 /**
  * @openapi
- * /auth/register:
+ * /auth/send-otp:
  *   post:
  *     tags:
  *      - "[App] auth"
- *     summary: API đăng ký mới tài khoản user
- *     consumes:
- *      - "application/json"
- *     produces:
- *      - "application/json"
+ *     summary: Gửi OTP đến số điện thoại có trong hệ thống
  *     parameters:
  *      - in: "body"
  *        name: "body"
- *        description: "Thông tin tài khoản"
+ *        description: "Số điện thoại trên hệ thống"
  *        require: true
  *        schema:
  *          type: "object"
  *          properties:
- *            username:
+ *            phone:
  *              type: "string"
- *            password:
- *              type: "string"
- *            email:
- *              type: "string"
- *            nickname:
- *              type: "string"
- *     responses:
+*     responses:
  *       200:
- *         description: Return user data & accessToken.
- *       401:
- *         description: Create new use failed.
+ *         description: Return data.
+ *       400:
+ *         description: Error can't get data.
  */
-router.post("/register", async (req: Request, res: Response) => {
-  try {
-    const user: UserInterface = req.body;
-    if (user.username == null || user.password == null || user.username == "" || user.password == "") throw new Error("Username or password invalid");
-    const passwordHash = encryptPassword(user.password);
-    user.password = passwordHash;
-    const userSaved = await UserModel.create(user);
-    await userSaved.reload();
-
-    const token: string = await generateAuthToken(userSaved);
-    const userJSON: any = userSaved.toJSON();
-    delete userJSON.password;
-    sendSuccess(res, { user: userJSON, token });
-
-  } catch (error) {
-    if (error instanceof ValidationError) {
-      return sendError(res, 422, error.errors.map((err: ValidationErrorItem) => err.message), error);
-    }
-    sendError(res, 400, error.message, error);
-  }
-});
 
 router.post("/send-otp", async (req: Request, res: Response) => {
   try {
     const { phone } = req.body;
     const user = await findPhone(phone);
     if (user.status == true) {
-      const newOtpCode = await forgotPassword(user.data.id);
+      const newOtpCode = await PostUserOtp(user.data.id);
       res.json({
         status: true,
         message: "Đã gửi mã OTP!"
@@ -240,6 +299,31 @@ router.post("/send-otp", async (req: Request, res: Response) => {
 
 });
 
+/**
+ * @openapi
+ * /auth/check-otp:
+ *   post:
+ *     tags:
+ *      - "[App] auth"
+ *     summary: Xác thực mã OTP
+ *     parameters:
+ *      - in: "body"
+ *        name: "body"
+ *        description: "Số điện thoại trên hệ thống và mã OTP đã nhận"
+ *        require: true
+ *        schema:
+ *          type: "object"
+ *          properties:
+ *            phone:
+ *              type: "string"
+ *            otpcode:
+ *              type: "string"
+ *     responses:
+ *       200:
+ *         description: Return data.
+ *       400:
+ *         description: Error can't get data.
+ */
 router.post("/check-otp", async (req: Request, res: Response) => {
   try {
     const { phone, otpcode } = req.body;
@@ -253,6 +337,11 @@ router.post("/check-otp", async (req: Request, res: Response) => {
         }
       });
       if (verifiedUser !== null) {
+        if (verifiedUser.status == UserModel.STATUS_ENUM.PENDING) {
+          verifiedUser.status = UserModel.STATUS_ENUM.WORKING;
+          await verifiedUser.save();
+          await verifiedUser.reload();
+        }
         const token: string = await generateAuthToken(verifiedUser);
         const userJSON: any = verifiedUser.toJSON();
         delete userJSON.otpCode;
@@ -268,20 +357,48 @@ router.post("/check-otp", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/update-forgot-password", auth, async (req: Request, res: Response) => {
+/**
+ * @openapi
+ * /auth/set-password:
+ *   put:
+ *     tags:
+ *      - "[App] auth"
+ *     summary: Đặt mật khẩu không cần mật khẩu cũ (dành cho quên mật khâủ và đăng kí)
+ *     security:
+ *      - Bearer: []
+ *     parameters:
+ *      - in: "body"
+ *        name: "body"
+ *        description: "Mật khẩu mới"
+ *        require: true
+ *        schema:
+ *          type: "object"
+ *          properties:
+ *            phone:
+ *              type: "string"
+ *            otpcode:
+ *              type: "string"
+ *     responses:
+ *       200:
+ *         description: Return data.
+ *       400:
+ *         description: Error can't get data.
+ */
+
+router.put("/set-password", auth, async (req: Request, res: Response) => {
   try {
     const { password } = req.body;
     const userLogin: any = req.user;
-    
+
     if (password == null || password == "") {
       res.json({ status: false, message: "missing field list" });
     } else {
-      if(userLogin !== null) {
+      if (userLogin !== null) {
         userLogin.password = encryptPassword(password);
         await userLogin.save();
         delete userLogin.password;
-        res.send({ status: true, user: userLogin});
-      }else {
+        res.send({ status: true, user: userLogin });
+      } else {
         res.json({ status: false, message: "Auth Error" });
       }
 
@@ -292,7 +409,33 @@ router.post("/update-forgot-password", auth, async (req: Request, res: Response)
 
 });
 
-
+/**
+ * @openapi
+ * /auth/update-password:
+ *   put:
+ *     tags:
+ *      - "[App] auth"
+ *     summary: Đặt mật khẩu cần mật khẩu cũ (dành cho đổi mật khâủ)
+ *     security:
+ *      - Bearer: []
+ *     parameters:
+ *      - in: "body"
+ *        name: "body"
+ *        description: "Mật khẩu cũ và mật khâủ mới"
+ *        require: true
+ *        schema:
+ *          type: "object"
+ *          properties:
+ *            oldpassword:
+ *              type: "string"
+ *            password:
+ *              type: "string"
+ *     responses:
+ *       200:
+ *         description: Return data.
+ *       400:
+ *         description: Error can't get data.
+ */
 router.put("/update-password", auth, async (req: Request, res: Response) => {
   try {
     const { oldPassword, password } = req.body;
@@ -320,6 +463,41 @@ router.put("/update-password", auth, async (req: Request, res: Response) => {
   }
 });
 
+/**
+ * @openapi
+ * /auth/me:
+ *   put:
+ *     tags:
+ *      - "[App] auth"
+ *     summary: Cập nhật thông tin người dùng
+ *     security:
+ *      - Bearer: []
+ *     parameters:
+ *      - in: "body"
+ *        name: "body"
+ *        description: "thông tin cần cập nhật"
+ *        require: fale
+ *        schema:
+ *          type: "object"
+ *          properties:
+ *            name:
+ *              type: "string"
+ *            nickname:
+ *              type: "string"
+ *            avatar:
+ *              type: "string"
+ *            gender:
+ *              type: "string"
+ *            identify:
+ *              type: "string"
+ *            dateOfbirth:
+ *              type: "string"
+ *     responses:
+ *       200:
+ *         description: Return data.
+ *       400:
+ *         description: Error can't get data.
+ */
 router.put("/me", auth, async (req, res) => {
   try {
     const user: any = req.user;
