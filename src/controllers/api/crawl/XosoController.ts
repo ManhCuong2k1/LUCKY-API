@@ -430,5 +430,12 @@ router.get("/guild/:type", (req, res) => {
     }
 });
 
+router.get("/terms", (req, res) => {
+    try {
+        res.sendFile(path.resolve("public/views/terms/terms.html"));
+    } catch (error) {
+        res.send("ERROR");
+    }
+});
 
 export default router;
