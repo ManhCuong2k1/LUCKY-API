@@ -90,7 +90,7 @@ const LotteryTicketDefine = {
         type: DataTypes.STRING,
     },
     totalreward: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.BIGINT,
         defaultValue: 0,
     },
     employeStatus: {
