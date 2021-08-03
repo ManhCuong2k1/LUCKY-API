@@ -264,7 +264,9 @@ UserModel.init(UserDefine, {
 
 const findCredentials = async (username: string, password: string) => {
   const user = await UserModel.findOne({
-    where: { phone: username, status: UserModel.STATUS_ENUM.WORKING },
+    where: { 
+      phone: username
+    },
   });
   if (user == null) {
     throw new Error(ERROR_CODES.InvalidLoginCredentials);

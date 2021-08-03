@@ -4,6 +4,7 @@ import { generateAuthToken, findCredentials, findCredentialAdmin, UserModel, fin
 import { sendSuccess, sendError } from "@util/response";
 import { auth, authAdmin, authEmploye } from "@middleware/auth";
 import { encryptPassword } from "@util/md5password";
+import isEmpty from "lodash.isempty";
 
 const router = express.Router();
 
@@ -40,8 +41,10 @@ router.post("/login", async (req: Request, res: Response) => {
   try {
     const { username, password } = req.body;
     const user = await findCredentials(username, password);
+
     const token: string = await generateAuthToken(user);
     const userJSON: any = user.toJSON();
+    delete userJSON.otpCode;
     delete userJSON.password;
     res.send({ user: userJSON, token });
   } catch (e) {
@@ -221,30 +224,43 @@ router.get("/meAdmin", authEmploye, async (req, res) => {
  */
 router.post("/checkphone", async (req: Request, res: Response) => {
   try {
-    const { phone }: any = req.body;
-    const user: any = await findPhone(phone);
-    if (user.status == false) {
-      const userInterf: any = req.body;
-      userInterf.username = await generateUsername(6);
-      userInterf.password = generateString(8);
-      userInterf.password = encryptPassword(userInterf.password);
-      const userSaved = await UserModel.create(userInterf);
-      const newOTP = await PostUserOtp(userSaved.id);
-      await userSaved.reload();
-      const token: string = await generateAuthToken(userSaved);
-      const userJSON: any = userSaved.toJSON();
-      delete userJSON.password;
-      res.json({
-        status: true,
-        isnew: true,
-        data: userJSON,
-        token
-      });
 
-    } else {
-      user.isnew = false;
-      res.json(user);
+    if(!isEmpty(req.body.phone)) {
+
+      const { phone }: any = req.body;
+      const user: any = await findPhone(phone);
+      if (user.status == false) {
+        const userInterf: any = req.body;
+        userInterf.username = await generateUsername(6);
+        userInterf.password = generateString(8);
+        userInterf.password = encryptPassword(userInterf.password);
+        const userSaved = await UserModel.create(userInterf);
+        const newOTP = await PostUserOtp(userSaved.id);
+        await userSaved.reload();
+        const userJSON: any = userSaved.toJSON();
+        delete userJSON.otpCode;
+        delete userJSON.password;
+        res.json({
+          status: true,
+          isnew: true,
+          data: userJSON
+        });
+
+      } else {
+        if(user.data.status == UserModel.STATUS_ENUM.PENDING) {
+          await PostUserOtp(user.data.id);
+          user.isnew = true;
+        }else{
+          user.isnew = false;
+        }
+        res.json(user);
+      }      
+    }else {
+      res.status(401).json({
+        status: false, message: "missing phone filed!"
+      });
     }
+
   } catch (e) {
     res.status(401).send({
       code: e.message,
