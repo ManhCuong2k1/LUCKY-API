@@ -424,7 +424,7 @@ router.get("/results/:type", async (req: Request, res: Response) => {
 
 router.get("/guild/:type", (req, res) => {
     try {
-        res.sendFile(path.resolve("public/views/guild/" + req.params.type + ".html"));
+        res.sendFile(process.cwd() +  "/public/views/guild/" + req.params.type + ".html");
     } catch (error) {
         res.send("ERROR");
     }
@@ -432,7 +432,7 @@ router.get("/guild/:type", (req, res) => {
 
 router.get("/terms", (req, res) => {
     try {
-        res.sendFile(path.resolve("public/views/terms/terms.html"));
+        res.sendFile(process.cwd() +  "/public/views/terms/terms.html");
     } catch (error) {
         res.send("ERROR");
     }
