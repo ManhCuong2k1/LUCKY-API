@@ -4,13 +4,15 @@ import sequelize from "@database/connection";
 interface LotteryImagesInterface {
     id: number;
     LotteryTicketModelId: number;
-    imageslist: string;
+    beforeImage: string;
+    afterImage: string;
 }
 
 class LotteryImagesModel extends Model<LotteryImagesInterface> implements LotteryImagesInterface {
     public id!: number;
     public LotteryTicketModelId: number;
-    public imageslist: string;
+    public beforeImage: string;
+    public afterImage: string;
 }
 
 const LotteryImagesDefine = {
@@ -22,7 +24,10 @@ const LotteryImagesDefine = {
     LotteryTicketModelId: {
         type: DataTypes.INTEGER,
     },
-    imageslist: {
+    beforeImage: {
+        type: DataTypes.TEXT,
+    },
+    afterImage: {
         type: DataTypes.TEXT,
     },
 };

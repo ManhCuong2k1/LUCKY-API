@@ -10,44 +10,7 @@ dotenv.config();
 const router = Router();
 
 
-
-/**
- * @openapi
- * /
- *   post:
- *     tags:
- *      - "[Transaction] Payment & Recharge"
- *     summary:  API tạo giao dịch nạp tiền
- *     security:
- *      - Bearer: []
- *     parameters:
- *      - in: "body"
- *        name: "body"
- *        description: "thông tin người dùng gửi lên"
- *        require: true
- *        schema:
- *          type: "object"
- *          properties:
- *            method:
- *              type: "string"
- *            nickname:
- *              type: "string"
- *            avatar:
- *              type: "string"
- *            gender:
- *              type: "string"
- *            identify:
- *              type: "string"
- *            dateOfbirth:
- *              type: "string"
- *     responses:
- *       200:
- *         description: Return data.
- *       400:
- *         description: Error can't get data.
- */
-
- router.post("/", auth, async (req: Request, res: Response) => {
+router.post("/", auth, async (req: Request, res: Response) => {
 
     try {
         const user: any = req.user;
@@ -247,7 +210,7 @@ router.get("/endpoint/:type", async (req: Request, res: Response) => {
                     });
                 }
 
-            break;
+                break;
 
 
             case "vnpay":
@@ -266,18 +229,18 @@ router.get("/endpoint/:type", async (req: Request, res: Response) => {
 
                     if (dbTransaction !== null) {
                         if (transaction.vnp_ResponseCode == "00") {
-                                const UserData = await UserModel.findOne({ where: { id: dbTransaction.userId } });
-                                if (!UserData) throw new Error("Not found user");
-                                const realCoin = Number(transaction.vnp_Amount) / 100;
-                                UserData.totalCoin = UserData.totalCoin + realCoin;
-                                await UserData.save();
-                                await UserData.reload();
+                            const UserData = await UserModel.findOne({ where: { id: dbTransaction.userId } });
+                            if (!UserData) throw new Error("Not found user");
+                            const realCoin = Number(transaction.vnp_Amount) / 100;
+                            UserData.totalCoin = UserData.totalCoin + realCoin;
+                            await UserData.save();
+                            await UserData.reload();
 
-                                dbTransaction.status = LotteryRechargeModel.STATUS_ENUM.PAID;
-                                dbTransaction.detail = LotteryRechargeModel.DETAIL_ENUM.SUCCESS;
-                                await dbTransaction.save();
-                                await dbTransaction.reload();
-                                res.send("Nạp tiền thành công. vui lòng quay trở lại App!");
+                            dbTransaction.status = LotteryRechargeModel.STATUS_ENUM.PAID;
+                            dbTransaction.detail = LotteryRechargeModel.DETAIL_ENUM.SUCCESS;
+                            await dbTransaction.save();
+                            await dbTransaction.reload();
+                            res.send("Nạp tiền thành công. vui lòng quay trở lại App!");
                         } else {
                             dbTransaction.status = LotteryRechargeModel.STATUS_ENUM.ERROR;
                             dbTransaction.detail = LotteryRechargeModel.DETAIL_ENUM.ERROR;

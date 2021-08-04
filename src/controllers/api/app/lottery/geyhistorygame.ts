@@ -145,7 +145,7 @@ router.get("/ticketDetail", async (req: Request, res: Response) => {
                 }
             }); 
 
-            const ticketImages = await LotteryImagesModel.findAll({
+            const ticketImages = await LotteryImagesModel.findOne({
                 where: {
                     LotteryTicketModelId: req.query.id
                 },

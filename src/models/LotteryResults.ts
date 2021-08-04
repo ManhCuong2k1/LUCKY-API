@@ -1,7 +1,7 @@
 import { DataTypes, Model, ModelScopeOptions, Op } from "sequelize";
 import sequelize from "@database/connection";
 
-interface LotteryInterface {
+interface LotteryResultsInterface {
     id: number;
     type: string;
     date: string;
@@ -13,7 +13,7 @@ interface LotteryInterface {
     deletedAt: Date;
 }
 
-class LotteryModel extends Model<LotteryInterface> implements LotteryInterface {
+class LotteryResultsModel extends Model<LotteryResultsInterface> implements LotteryResultsInterface {
     public id!: number;
     public type: string;
     public date: string;
@@ -33,7 +33,7 @@ class LotteryModel extends Model<LotteryInterface> implements LotteryInterface {
     };
 }
 
-const LotteryDefine = {
+const LotteryResultsDefine = {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -66,7 +66,7 @@ const LotteryDefine = {
     },
 };
 
-LotteryModel.init(LotteryDefine, {
+LotteryResultsModel.init(LotteryResultsDefine, {
     paranoid: true,
     tableName: "lottery_results",
     deletedAt: "deletedAt",
@@ -77,8 +77,8 @@ LotteryModel.init(LotteryDefine, {
 
 
 // Func
-const LotteryCheck = async (type: string, round: string) => {
-    const RoundCheck = await LotteryModel.findOne({
+const LotteryResultsCheck = async (type: string, round: string) => {
+    const RoundCheck = await LotteryResultsModel.findOne({
       where: { type, round },
     });
     const exportData = (RoundCheck == null) ? false: RoundCheck;
@@ -86,7 +86,7 @@ const LotteryCheck = async (type: string, round: string) => {
   };
 
 export {
-    LotteryInterface, 
-    LotteryModel,
-    LotteryCheck
+    LotteryResultsInterface, 
+    LotteryResultsModel,
+    LotteryResultsCheck
 };

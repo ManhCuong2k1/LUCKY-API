@@ -3,7 +3,7 @@ import express, { Response, Request } from "express";
 import Crawl from "./Crawl";
 import helper from "@controllers/api/helper/helper";
 import updateTicket from "../app/lottery/updateresult";
-import { LotteryInterface, LotteryModel } from "@models/Lottery";
+import { LotteryResultsInterface, LotteryResultsModel } from "@models/LotteryResults";
 
 const router = express.Router();
 
@@ -33,7 +33,7 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
         case "keno":
             try {
                 const crawling = await Crawl.XosoKenoData();
-                const updateData = updateTicket.updateResult(LotteryModel.GAME_ENUM.KENO, crawling.data);
+                const updateData = updateTicket.updateResult(LotteryResultsModel.GAME_ENUM.KENO, crawling.data);
                 return res.send(crawling);
             } catch (e) {
                 res.status(401).send({
@@ -44,7 +44,7 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
         case "power":
             try {
                 const crawling = await Crawl.XosoPowerData();
-                const updateData = updateTicket.updateResult(LotteryModel.GAME_ENUM.POWER, crawling.data);
+                const updateData = updateTicket.updateResult(LotteryResultsModel.GAME_ENUM.POWER, crawling.data);
                 return res.send(crawling);
             } catch (e) {
                 res.status(401).send({
@@ -55,7 +55,7 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
         case "mega":
             try {
                 const crawling = await Crawl.XosoMegaData();
-                const updateData = updateTicket.updateResult(LotteryModel.GAME_ENUM.MEGA, crawling.data);
+                const updateData = updateTicket.updateResult(LotteryResultsModel.GAME_ENUM.MEGA, crawling.data);
                 return res.send(crawling);
             } catch (e) {
                 res.status(401).send({
@@ -66,7 +66,7 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
         case "max3d":
             try {
                 const crawling = await Crawl.XosoMax3dData();
-                const updateData = updateTicket.updateResult(LotteryModel.GAME_ENUM.MAX3D, crawling.data);
+                const updateData = updateTicket.updateResult(LotteryResultsModel.GAME_ENUM.MAX3D, crawling.data);
                 return res.send(crawling);
             } catch (e) {
                 res.status(401).send({
@@ -78,7 +78,7 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
         case "max3dplus":
             try {
                 const crawling = await Crawl.XosoMax3dData();
-                const updateData = updateTicket.updateResult(LotteryModel.GAME_ENUM.MAX3DPLUS, crawling.data);
+                const updateData = updateTicket.updateResult(LotteryResultsModel.GAME_ENUM.MAX3DPLUS, crawling.data);
                 return res.send(crawling);
             } catch (e) {
                 res.status(401).send({
@@ -90,7 +90,7 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
         case "max4d":
             try {
                 const crawling = await Crawl.XosoMax4dData();
-                const updateData = updateTicket.updateResult(LotteryModel.GAME_ENUM.MAX4D, crawling.data);
+                const updateData = updateTicket.updateResult(LotteryResultsModel.GAME_ENUM.MAX4D, crawling.data);
                 return res.send(crawling);
             } catch (e) {
                 res.status(401).send({
@@ -137,9 +137,9 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                 break;
 
             case "power":
-                const lastRecord = await LotteryModel.findOne({
+                const lastRecord = await LotteryResultsModel.findOne({
                     where: {
-                        type: LotteryModel.GAME_ENUM.POWER
+                        type: LotteryResultsModel.GAME_ENUM.POWER
                     },
                     order: [["id", "DESC"]],
                 });
@@ -189,9 +189,9 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
 
 
             case "mega":
-                const lastRecordMega = await LotteryModel.findOne({
+                const lastRecordMega = await LotteryResultsModel.findOne({
                     where: {
-                        type: LotteryModel.GAME_ENUM.MEGA
+                        type: LotteryResultsModel.GAME_ENUM.MEGA
                     },
                     order: [["id", "DESC"]],
                 });
@@ -239,9 +239,9 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                 break;
 
             case "max3d":
-                const lastRecordMax3d = await LotteryModel.findOne({
+                const lastRecordMax3d = await LotteryResultsModel.findOne({
                     where: {
-                        type: LotteryModel.GAME_ENUM.MAX3D
+                        type: LotteryResultsModel.GAME_ENUM.MAX3D
                     },
                     order: [["id", "DESC"]],
                 });
@@ -288,9 +288,9 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                 break;
 
             case "max4d":
-                const lastRecordMax4d = await LotteryModel.findOne({
+                const lastRecordMax4d = await LotteryResultsModel.findOne({
                     where: {
-                        type: LotteryModel.GAME_ENUM.MAX4D
+                        type: LotteryResultsModel.GAME_ENUM.MAX4D
                     },
                     order: [["id", "DESC"]],
                 });
@@ -359,7 +359,7 @@ router.get("/results/:type", async (req: Request, res: Response) => {
     try {
 
         if (typeof req.query.round !== "undefined") {
-            const resultsData = await LotteryModel.findOne({
+            const resultsData = await LotteryResultsModel.findOne({
                 where: {
                     round: req.query.round,
                     type: req.params.type
@@ -382,7 +382,7 @@ router.get("/results/:type", async (req: Request, res: Response) => {
             res.json(dataExport);
 
         } else {
-            const resultsData = await LotteryModel.findAll({
+            const resultsData = await LotteryResultsModel.findAll({
                 where: {
                     type: req.params.type
                 }, order: [["id", "DESC"]]

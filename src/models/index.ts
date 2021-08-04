@@ -6,7 +6,7 @@ import { LotteryImagesModel } from "@models/LotteryImages";
 import { LotteryRechargeModel } from "@models/LotteryRecharge";
 import { UserHistoryModel } from "@models/LotteryUserHistory";
 import { LotteryNotifyModel } from "@models/LotteryNotify";
-import { SettingsModel } from "@models/Setting";
+import { SettingsModel } from "@models/LotterySettings";
 
 
 LotteryOrdersModel.belongsTo(UserModel, { as: "user", constraints: false });

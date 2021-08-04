@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 import { UserModel } from "@models/User";
-import { LotteryExchangesModel } from "@models/LotteryExchange";
+import { LotteryExchangesModel } from "@models/LotteryExchanges";
 
 const router = Router();
 
