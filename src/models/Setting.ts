@@ -1,19 +1,19 @@
 import { DataTypes, Model} from "sequelize";
 import sequelize from "@database/connection";
 
-interface SettingInterface {
+interface SettingsInterface {
     id: number;
     key: string;
     value: string;
 }
 
-class SettingModel extends Model<SettingInterface> implements SettingInterface {
+class SettingsModel extends Model<SettingsInterface> implements SettingsInterface {
     public id!: number;
     public key: string;
     public value: string;
 }
 
-const SettingDefine = {
+const SettingsDefine = {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -27,9 +27,9 @@ const SettingDefine = {
     },
 };
 
-SettingModel.init(SettingDefine, {
+SettingsModel.init(SettingsDefine, {
     paranoid: true,
-    tableName: "lottery_setting",
+    tableName: "lottery_settings",
     updatedAt: "updatedAt",
     createdAt: "createdAt",
     sequelize,
@@ -37,6 +37,6 @@ SettingModel.init(SettingDefine, {
 
 
 export {
-    SettingInterface,
-    SettingModel
+    SettingsInterface,
+    SettingsModel
 };

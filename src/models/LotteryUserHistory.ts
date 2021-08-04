@@ -61,7 +61,7 @@ const UserHistoryDefine = {
 
 UserHistoryModel.init(UserHistoryDefine, {
     paranoid: true,
-    tableName: "lottery_user_history",
+    tableName: "lottery_user_historys",
     updatedAt: "updatedAt",
     createdAt: "createdAt",
     sequelize,

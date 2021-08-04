@@ -1,10 +1,10 @@
 import { Router, Request, Response } from "express";
-import { SettingModel } from "@models/Setting";
+import { SettingsModel } from "@models/Setting";
 const router = Router();
 
 router.get("/", async (req: Request, res: Response) => {
     try {
-        const dataExchangeLimit = await SettingModel.findOne({
+        const dataExchangeLimit = await SettingsModel.findOne({
             where: {
                 key: "limit_exchange"
             }
@@ -18,7 +18,7 @@ router.get("/", async (req: Request, res: Response) => {
 
 router.post("/", async (req: Request, res: Response) => {
     try {
-        const dataExchangeLimit = await SettingModel.findAll({
+        const dataExchangeLimit = await SettingsModel.findAll({
             where: {
                 key: "limit_exchange"
             }
@@ -30,7 +30,7 @@ router.post("/", async (req: Request, res: Response) => {
         };
 
         if(dataExchangeLimit.length === 0) {
-            const data = await SettingModel.create(limitExchange);
+            const data = await SettingsModel.create(limitExchange);
             res.send(data);
         } else {
             res.status(400).send("Cannot create because this field already exists");
@@ -43,7 +43,7 @@ router.post("/", async (req: Request, res: Response) => {
 router.put("/", async (req: Request, res: Response) => {
     try {
         const data = req.body.value;
-        const limitExchange = await SettingModel.findOne({
+        const limitExchange = await SettingsModel.findOne({
             where: {
                 key: "limit_exchange"
             }
