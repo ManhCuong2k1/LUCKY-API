@@ -538,4 +538,28 @@ router.put("/me", auth, async (req, res) => {
   }
 });
 
+
+router.post("/register", async (req: Request, res: Response) => {
+  try {
+    const user: UserInterface = req.body;
+    if (user.username == null || user.password == null || user.username == "" || user.password == "") throw new Error("Username or password invalid");
+    const passwordHash = encryptPassword(user.password);
+    user.password = passwordHash;
+    const userSaved = await UserModel.create(user);
+    await userSaved.reload();
+
+    const token: string = await generateAuthToken(userSaved);
+    const userJSON: any = userSaved.toJSON();
+    delete userJSON.password;
+    sendSuccess(res, { user: userJSON, token });
+
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      return sendError(res, 422, error.errors.map((err: ValidationErrorItem) => err.message), error);
+    }
+    sendError(res, 400, error.message, error);
+  }
+});
+
+
 export default router;
