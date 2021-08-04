@@ -34,7 +34,7 @@ const router = Router();
 router.post("/single-upload",upload.single("image"), async (req, res, next) => {
     try {
         if (!req.file) throw new Error("No file to upload");
-        const fileName = await saveFile(req.file);
+        const fileName = await saveFile(req.file, "normal");
         return res.send({ url: fileName });
     } catch (e) {
         console.log(e);
@@ -85,7 +85,7 @@ router.post("/multi-upload",upload.array("image"), async (req, res, next) => {
 
         await Promise.all(
             files.map(async file => {
-                const fileName = await saveFile(file);
+                const fileName = await saveFile(file, "normal");
                 images.push({url: fileName});
             })
         );

@@ -128,7 +128,7 @@ router.post("/:id/images", upload.array("file"), async (req: Request, res: Respo
             
         if(ticketItem !== null) {     
             await data.forEach(async (element: any) => {
-                const fileName = await saveFile(element);
+                const fileName = await saveFile(element, "user");
                 const objectData: any = {
                     imageslist: fileName,
                     LotteryTicketModelId: req.params.id
@@ -168,7 +168,7 @@ router.post("/banner", upload.array("file"), async (req: Request, res: Response)
         const data = Object.values(req.files);
             
         await data.forEach(async (element: any) => {            
-            const fileName = await saveFile(element);
+            const fileName = await saveFile(element, "normal");
             const objectData: any = {
                 imageslist: fileName,
             };
