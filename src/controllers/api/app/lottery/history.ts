@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
 import Crawl from "../../crawl/Crawl";
 
-import { LotteryInterface, LotteryModel } from "@models/Lottery";
+import { LotteryResultsInterface, LotteryResultsModel } from "@models/LotteryResults";
 import { LotteryOrdersInterface, LotteryOrdersModel } from "@models/LotteryOrder";
 import { LotteryTicketInterface, LotteryTicketModel } from "@models/LotteryTicket";
 

@@ -1,6 +1,6 @@
 import { LotteryTicketModel } from "@models/LotteryTicket";
 import { LotteryRechargeModel } from "@models/LotteryRecharge";
-import { LotteryExchangesModel } from "@models/LotteryExchange";
+import { LotteryExchangesModel } from "@models/LotteryExchanges";
 
 import { Router, Request, Response } from "express";
 import moment from "moment-timezone";

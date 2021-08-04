@@ -1,7 +1,7 @@
 import helper from "./Helper";
 import request from "request-promise";
 import axios from "axios";
-import { LotteryModel, LotteryCheck } from "@models/Lottery";
+import { LotteryResultsModel, LotteryResultsCheck } from "@models/LotteryResults";
 
 
 const XosoGetNextTime = async (type: string) => {
@@ -171,7 +171,7 @@ const XosoKenoData = async () => {
     dataXoso["chanleresult"] = chanleResult;
     dataXoso["lonnhoResult"] = lonnhoResult;
 
-    const LotteryCheckExits = await LotteryCheck("keno", dataXoso["round"]);
+    const LotteryCheckExits = await LotteryResultsCheck("keno", dataXoso["round"]);
 
     const arrImport: any = {};
     arrImport["chanle"] = dataXoso["chanleresult"];
@@ -194,7 +194,7 @@ const XosoKenoData = async () => {
         result: JSON.stringify(arrImport)
       };
 
-      LotteryModel.create(dataImport);
+      LotteryResultsModel.create(dataImport);
     }
 
     return {
@@ -254,7 +254,7 @@ const XosoPowerData = async () => {
     dataXoso["result"] = arrNumber;
     dataXoso["next"] = getNextTime.next;
 
-    const LotteryCheckExits = await LotteryCheck("power", dataXoso["round"]);
+    const LotteryCheckExits = await LotteryResultsCheck("power", dataXoso["round"]);
 
     if (!LotteryCheckExits) {
       const dataImport: any = {
@@ -265,7 +265,7 @@ const XosoPowerData = async () => {
         result: JSON.stringify(dataXoso["result"])
       };
 
-      LotteryModel.create(dataImport);
+      LotteryResultsModel.create(dataImport);
     }
 
     return {
@@ -325,7 +325,7 @@ const XosoMegaData = async () => {
     dataXoso["result"] = arrNumber;
     dataXoso["next"] = getNextTime.next;
 
-    const LotteryCheckExits = await LotteryCheck("mega", dataXoso["round"]);
+    const LotteryCheckExits = await LotteryResultsCheck("mega", dataXoso["round"]);
 
     if (!LotteryCheckExits) {
       const dataImport: any = {
@@ -336,7 +336,7 @@ const XosoMegaData = async () => {
         result: JSON.stringify(dataXoso["result"])
       };
 
-      LotteryModel.create(dataImport);
+      LotteryResultsModel.create(dataImport);
     }
 
     return {
@@ -507,7 +507,7 @@ const XosoMax3dData = async () => {
     dataExport["result"] = dataXoso;
     dataExport["next"] = getNextTime.next;
 
-    const LotteryCheckExits = await LotteryCheck("max3d", dataExport["round"]);
+    const LotteryCheckExits = await LotteryResultsCheck("max3d", dataExport["round"]);
 
     if (!LotteryCheckExits) {
       const dataImport: any = {
@@ -518,7 +518,7 @@ const XosoMax3dData = async () => {
         result: JSON.stringify(dataExport["result"])
       };
 
-      LotteryModel.create(dataImport);
+      LotteryResultsModel.create(dataImport);
     }
 
     return {
@@ -622,7 +622,7 @@ const XosoMax4dData = async () => {
     dataExport["result"] = dataXoso;
     dataExport["next"] = getNextTime.next;
 
-    const LotteryCheckExits = await LotteryCheck("max4d", dataExport["round"]);
+    const LotteryCheckExits = await LotteryResultsCheck("max4d", dataExport["round"]);
 
     if (!LotteryCheckExits) {
       const dataImport: any = {
@@ -633,7 +633,7 @@ const XosoMax4dData = async () => {
         result: JSON.stringify(dataExport["result"])
       };
 
-      LotteryModel.create(dataImport);
+      LotteryResultsModel.create(dataImport);
     }
 
 

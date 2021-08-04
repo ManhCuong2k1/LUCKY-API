@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { SettingsModel } from "@models/Setting";
+import { SettingsModel } from "@models/LotterySettings";
 const router = Router();
 
 router.get("/", async (req: Request, res: Response) => {

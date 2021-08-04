@@ -11,8 +11,9 @@ import axios from "axios";
 
 const router = Router();
 
-router.post("/upload/:id", upload.array("image"), async (req, res, next) => {
+router.post("/upload/:id", upload.fields([{ name: "beforeimage", maxCount: 1 }, { name: "afterimage", maxCount: 1 }]), async (req: any, res: any, next) => {
     try {
+
         if (!req.files || req.files.length === 0) {
             res.json({
                 status: false,
@@ -35,57 +36,51 @@ router.post("/upload/:id", upload.array("image"), async (req, res, next) => {
 
             if (ticketItem !== null) {
 
-                const files: any[] = [];
-                const fileKeys = Object.keys(req.files);
-                fileKeys.forEach(function (key) {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-                    // @ts-ignore
-                    files.push(req.files[key]);
+                const img1 = new FormData();
+                img1.append("file", req.files.beforeimage[0].buffer);
+                const postImg1 = await axios({
+                    method: "post",
+                    url: process.env.HOST_IMAGES_URL + "/images?category=content",
+                    headers: {
+                        ...img1.getHeaders()
+                    },
+                    data: img1
+                });
+                const dataResp1 = postImg1.data;
+                const beforeImageSrc = dataResp1.data.url.src;
+
+                const img2 = new FormData();
+                img2.append("file", req.files.afterimage[0].buffer);
+                const postImg2 = await axios({
+                    method: "post",
+                    url: process.env.HOST_IMAGES_URL + "/images?category=content",
+                    headers: {
+                        ...img2.getHeaders()
+                    },
+                    data: img2
+                });
+                const dataResp2 = postImg2.data;
+                const afterImageSrc = dataResp2.data.url.src;
+
+                const objectData: any = {
+                    LotteryTicketModelId: req.params.id,
+                    beforeImage: beforeImageSrc,
+                    afterImage: afterImageSrc
+                };
+                await LotteryImagesModel.create(objectData);
+
+                orderItem.forEach(async (element) => {
+                    element.orderStatus = await LotteryOrdersModel.ORDERSTATUS_ENUM.PRINTED;
+                    await element.save();
                 });
 
-                const images: any[] = [];
+                ticketItem.orderStatus = await LotteryTicketModel.TICKET_ENUM.PRINTED;
+                ticketItem.resultDetail = await LotteryTicketModel.RESULTSTATUS_ENUM.DRAWNED;
+                await ticketItem.save();
 
-
-                await Promise.all(
-                    files.map(async file => {
-
-                        const data = new FormData();
-                        data.append("file", file.buffer);
-
-                        const postImg = await axios({
-                            method: "post",
-                            url: process.env.HOST_IMAGES_URL + "/images?category=content",
-                            headers: {
-                                ...data.getHeaders()
-                            },
-                            data: data
-                        });
-
-                        const dataResp = postImg.data;
-
-                        const fileName = dataResp.data.url.src;
-                        images.push({ url: fileName });
-
-                        const objectData: any = {
-                            imageslist: fileName,
-                             LotteryTicketModelId: req.params.id
-                         };
-                         await LotteryImagesModel.create(objectData);
-
-                         orderItem.forEach(async (element) => {
-                             element.orderStatus = await LotteryOrdersModel.ORDERSTATUS_ENUM.PRINTED;
-                             await element.save();
-                         });
-                         ticketItem.orderStatus = await LotteryTicketModel.TICKET_ENUM.PRINTED;
-                         ticketItem.resultDetail = await LotteryTicketModel.RESULTSTATUS_ENUM.DRAWNED;
-
-                         await ticketItem.save();
-                    })
-                );
-
-                 ticketItem.employeStatus = LotteryTicketModel.EMPLOYESTATUS_ENUM.RECEIVED;
-                 await ticketItem.save();
-                 await ticketItem.reload();
+                ticketItem.employeStatus = LotteryTicketModel.EMPLOYESTATUS_ENUM.RECEIVED;
+                await ticketItem.save();
+                await ticketItem.reload();
 
                 return res.json({
                     status: true,
