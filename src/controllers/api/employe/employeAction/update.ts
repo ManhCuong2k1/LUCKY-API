@@ -40,7 +40,7 @@ router.post("/upload/:id", upload.fields([{ name: "beforeimage", maxCount: 1 }, 
 
                 let beforeImageSrc, afterImageSrc;
 
-                if (typeof req.files.beforeimage !== 'undefined') {
+                if (typeof req.files.beforeimage !== "undefined") {
                     const img1 = new FormData();
                     img1.append("file", req.files.beforeimage[0].buffer);
                     const postImg1 = await axios({
@@ -55,7 +55,7 @@ router.post("/upload/:id", upload.fields([{ name: "beforeimage", maxCount: 1 }, 
                     beforeImageSrc = dataResp1.data.url.src;
                 }
 
-                if (typeof req.files.afterimage !== 'undefined') {
+                if (typeof req.files.afterimage !== "undefined") {
                     const img2 = new FormData();
                     img2.append("file", req.files.afterimage[0].buffer);
                     const postImg2 = await axios({
