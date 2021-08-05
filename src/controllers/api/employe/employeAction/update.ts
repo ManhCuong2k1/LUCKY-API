@@ -12,6 +12,8 @@ import axios from "axios";
 const router = Router();
 
 router.post("/upload/:id", upload.fields([{ name: "beforeimage", maxCount: 1 }, { name: "afterimage", maxCount: 1 }]), async (req: any, res: any, next) => {
+
+
     try {
 
         if (!req.files || req.files.length === 0) {
@@ -36,31 +38,37 @@ router.post("/upload/:id", upload.fields([{ name: "beforeimage", maxCount: 1 }, 
 
             if (ticketItem !== null) {
 
-                const img1 = new FormData();
-                img1.append("file", req.files.beforeimage[0].buffer);
-                const postImg1 = await axios({
-                    method: "post",
-                    url: process.env.HOST_IMAGES_URL + "/images?category=content",
-                    headers: {
-                        ...img1.getHeaders()
-                    },
-                    data: img1
-                });
-                const dataResp1 = postImg1.data;
-                const beforeImageSrc = dataResp1.data.url.src;
+                let beforeImageSrc, afterImageSrc;
 
-                const img2 = new FormData();
-                img2.append("file", req.files.afterimage[0].buffer);
-                const postImg2 = await axios({
-                    method: "post",
-                    url: process.env.HOST_IMAGES_URL + "/images?category=content",
-                    headers: {
-                        ...img2.getHeaders()
-                    },
-                    data: img2
-                });
-                const dataResp2 = postImg2.data;
-                const afterImageSrc = dataResp2.data.url.src;
+                if (typeof req.files.beforeimage !== 'undefined') {
+                    const img1 = new FormData();
+                    img1.append("file", req.files.beforeimage[0].buffer);
+                    const postImg1 = await axios({
+                        method: "post",
+                        url: process.env.HOST_IMAGES_URL + "/images?category=content",
+                        headers: {
+                            ...img1.getHeaders()
+                        },
+                        data: img1
+                    });
+                    const dataResp1 = postImg1.data;
+                    beforeImageSrc = dataResp1.data.url.src;
+                }
+
+                if (typeof req.files.afterimage !== 'undefined') {
+                    const img2 = new FormData();
+                    img2.append("file", req.files.afterimage[0].buffer);
+                    const postImg2 = await axios({
+                        method: "post",
+                        url: process.env.HOST_IMAGES_URL + "/images?category=content",
+                        headers: {
+                            ...img2.getHeaders()
+                        },
+                        data: img2
+                    });
+                    const dataResp2 = postImg2.data;
+                    afterImageSrc = dataResp2.data.url.src;
+                }
 
                 const objectData: any = {
                     LotteryTicketModelId: req.params.id,
