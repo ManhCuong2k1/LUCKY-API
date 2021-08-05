@@ -74,7 +74,7 @@ const LotteryTicketDefine = {
         type: DataTypes.INTEGER,
     },
     totalPrice: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.BIGINT,
         defaultValue: 0,
     },
     orderDetail: {
