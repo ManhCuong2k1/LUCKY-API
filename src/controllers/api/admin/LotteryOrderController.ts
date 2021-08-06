@@ -5,8 +5,6 @@ import { UserModel } from "@models/User";
 import { LotteryTicketModel } from "@models/LotteryTicket";
 import { GridInterface } from "@models/Transformers/Grid";
 import { Op } from "sequelize";
-import upload from "@middleware/upload";
-import { saveFile } from "@util/resizeImage";
 import moment from "moment-timezone";
 const router = Router();
 
@@ -104,9 +102,11 @@ router.get("/detail/:id", async (req: Request, res: Response) => {
 
 // post ảnh theo id vé
 
-router.post("/:id/images", upload.array("file"), async (req: Request, res: Response) => {
+router.post("/:id/images", async (req: Request, res: Response) => {
     try {
-        if (!req.files) throw new Error("No file to upload");
+
+        const imageBefore = req.body.imageBefore;
+        const imageAfter = req.body.imageAfter;
         
         const ticketItem = await LotteryTicketModel.findOne({ 
             where: { 
@@ -115,7 +115,7 @@ router.post("/:id/images", upload.array("file"), async (req: Request, res: Respo
                     { orderStatus: LotteryTicketModel.TICKET_ENUM.DELAY }, 
                     { orderStatus: LotteryTicketModel.TICKET_ENUM.PRINTED }
                 ],
-            } 
+            }
         });
         
         const orderItem = await LotteryOrdersModel.findAll({
@@ -123,26 +123,22 @@ router.post("/:id/images", upload.array("file"), async (req: Request, res: Respo
                 ticketId: req.params.id
             }
         });
-        
-        const data: any = Object.values(req.files);
             
         if(ticketItem !== null) {     
-            await data.forEach(async (element: any) => {
-                const fileName = await saveFile(element, "user");
-                const objectData: any = {
-                    imageslist: fileName,
-                    LotteryTicketModelId: req.params.id
-                };
-                await LotteryImagesModel.create(objectData);
-                orderItem.forEach( async (element) => {
-                    element.orderStatus = await LotteryOrdersModel.ORDERSTATUS_ENUM.PRINTED;
-                    await element.save();
-                });
-                ticketItem.orderStatus = await LotteryTicketModel.TICKET_ENUM.PRINTED;
-                ticketItem.resultDetail = await LotteryTicketModel.RESULTSTATUS_ENUM.DRAWNED;
-                
-                await ticketItem.save();
+            const objectData: any = {
+                beforeImage: imageBefore,
+                afterImage: imageAfter,
+                LotteryTicketModelId: req.params.id
+            };
+            await LotteryImagesModel.create(objectData);
+            orderItem.forEach( async (element) => {
+                element.orderStatus = await LotteryOrdersModel.ORDERSTATUS_ENUM.PRINTED;
+                await element.save();
             });
+            ticketItem.orderStatus = await LotteryTicketModel.TICKET_ENUM.PRINTED;
+            ticketItem.resultDetail = await LotteryTicketModel.RESULTSTATUS_ENUM.DRAWNED;
+            
+            await ticketItem.save();
             
             res.send({data: ticketItem});
         } else {
@@ -159,36 +155,12 @@ router.post("/:id/images", upload.array("file"), async (req: Request, res: Respo
     }
 });
 
-// post banner
-
-router.post("/banner", upload.array("file"), async (req: Request, res: Response) => {
-    try {
-
-        if (!req.files) throw new Error("No file to upload");
-        const data = Object.values(req.files);
-            
-        await data.forEach(async (element: any) => {            
-            const fileName = await saveFile(element, "normal");
-            const objectData: any = {
-                imageslist: fileName,
-            };
-            await LotteryImagesModel.create(objectData);
-        });
-        res.send({status: true});  
-    } catch (e) {
-        console.log(e.message);
-        res.status(400).send({
-            error: e.message
-        });
-    }
-});
-
 // update images
 router.put("/updateImage/:id", async (req: Request, res: Response) => {
     try {
         const idTicket = req.params.id;
-        const idImage1 = req.body.imageId1;
-        const idImage2 = req.body.imageId2;
+        const imageBefore = req.body.imageBefore;
+        const imageAfter = req.body.imageAfter;
 
         const ticketItem = await LotteryTicketModel.findOne({
             where: { 
@@ -206,12 +178,9 @@ router.put("/updateImage/:id", async (req: Request, res: Response) => {
             }
         });
 
-        const dataImage: any = await LotteryImagesModel.findAll({
+        const dataImage: any = await LotteryImagesModel.findOne({
             where: {
-                [Op.or]: [
-                    { id: idImage1 }, 
-                    { id: idImage2 }
-                ],
+                LotteryTicketModelId: idTicket
             }
         });
 
@@ -220,15 +189,14 @@ router.put("/updateImage/:id", async (req: Request, res: Response) => {
             await element.save();
         });
         
-        dataImage[0].LotteryTicketModelId = parseInt(idTicket);
-        dataImage[1].LotteryTicketModelId = parseInt(idTicket);
+        dataImage.beforeImage = imageBefore;
+        dataImage.afterImage = imageAfter;
         ticketItem.orderStatus = await LotteryTicketModel.TICKET_ENUM.PRINTED;
         ticketItem.resultDetail = await LotteryTicketModel.RESULTSTATUS_ENUM.DRAWNED;
         
         await ticketItem.save();
         
-        await dataImage[0].save();
-        await dataImage[1].save();
+        await dataImage.save();
         res.send(dataImage);
     } catch (error) {
         res.send({

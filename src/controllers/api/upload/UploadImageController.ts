@@ -1,8 +1,10 @@
-import { Router } from "express";
+import { Router, Request, Response } from "express";
 import upload from "@middleware/upload";
 import { saveFile } from "@util/resizeImage";
-import { LotteryImagesInterface,  LotteryImagesModel } from "@models/LotteryImages";
+import { LotteryImagesModel } from "@models/LotteryImages";
+import { Image } from "@models/Images";
 import { GridInterface } from "@models/Transformers/Grid";
+import { auth, authAdmin, authEmploye } from "../../../middleware/auth";
 
 const router = Router();
 
@@ -31,17 +33,24 @@ const router = Router();
  *     security:
  *      - Bearer: []
  */
-router.post("/single-upload",upload.single("image"), async (req, res, next) => {
+router.post("/single-upload", [ authEmploye, upload.single("file") ], async (req: Request, res: Response) => {
     try {
+        const user: any = req.user;
         if (!req.file) throw new Error("No file to upload");
         const fileName = await saveFile(req.file, "normal");
-        return res.send({ url: fileName });
+        
+        const newImage: any = {
+            imageUrl: fileName,
+            UserId: user.id
+        };
+        await Image.create(newImage);
+        res.send(newImage);
     } catch (e) {
-        console.log(e);
         res.status(400).send({
             error: e.message
         });
     }
+
 });
 
 /**
@@ -70,7 +79,7 @@ router.post("/single-upload",upload.single("image"), async (req, res, next) => {
  *     security:
  *      - Bearer: []
  */
-router.post("/multi-upload",upload.array("image"), async (req, res, next) => {
+router.post("/multi-upload",upload.array("image"), async (req: Request, res: Response) => {
     try {
         if (!req.files || req.files.length === 0) throw new Error("No file to upload");
         const files: any[] = [];
@@ -117,23 +126,24 @@ router.post("/multi-upload",upload.array("image"), async (req, res, next) => {
  *         description: Error can't get data.
  */
 
-router.get("/images", async (req, res) => {
+router.get("/images", authEmploye, async (req: Request, res: Response) => {
     try {
-        // const user: any = req.user;
+        const user: any = req.user;
         const page: number = parseInt(req.query.page ? req.query.page.toString() : "1");
         const pageSize: number = parseInt(req.query.pageSize ? req.query.pageSize.toString() : "99999");
         const cursor: number = (page - 1) * pageSize;
-        const { rows, count } = await LotteryImagesModel.findAndCountAll({
-            // where: {
-            //     ticketId: user.id
-            // },
+        
+        const { rows, count } = await Image.findAndCountAll({
+            where: {
+                UserId: user.id
+            },
             limit: pageSize,
             offset: cursor,
             order: [
                 ["createdAt", "DESC"],
             ],
         });
-        const responseData: GridInterface<LotteryImagesModel> = {
+        const responseData: GridInterface<Image> = {
             data: rows,
             page: page,
             pageSize: pageSize,
@@ -166,15 +176,15 @@ router.get("/images", async (req, res) => {
  *       400:
  *         description: Error can't get data.
  */
-router.get("/images/:id", async (req, res) => {
+router.get("/images/:id", async (req: Request, res: Response) => {
     try {
         const id = req.params.id;
-        const responseData = await LotteryImagesModel.findAll({
+        const responseData = await LotteryImagesModel.findOne({
             where: {
                 LotteryTicketModelId: id,
             }
         });
-        res.send(responseData);
+        res.send({data: responseData});
     } catch (e) {
         res.status(400).send({
             error: e.message
