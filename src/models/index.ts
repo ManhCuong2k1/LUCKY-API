@@ -7,6 +7,7 @@ import { LotteryRechargeModel } from "@models/LotteryRecharge";
 import { UserHistoryModel } from "@models/LotteryUserHistory";
 import { LotteryNotifyModel } from "@models/LotteryNotify";
 import { SettingsModel } from "@models/LotterySettings";
+import { Image } from "@models/Images";
 
 
 LotteryOrdersModel.belongsTo(UserModel, { as: "user", constraints: false });
@@ -16,6 +17,8 @@ LotteryTicketModel.hasMany(LotteryImagesModel, { as: "image", constraints: false
 LotteryRechargeModel.belongsTo(UserModel, { as: "user", constraints: false });
 UserHistoryModel.belongsTo(UserModel, { as: "user", constraints: false, foreignKey: "userId"  });
 UserModel.hasMany(LotteryNotifyModel, { as: "user_notify", constraints: false, foreignKey: "userId" });
+// Image.belongsTo(UserModel, { constraints: false });
+UserModel.hasMany(Image, { as: "user", constraints: false, foreignKey: "UserId" });
 SettingsModel;
 
 const models = sequelize.sync({ alter: true, logging: false });
