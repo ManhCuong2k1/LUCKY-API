@@ -114,7 +114,7 @@ router.get("/get-last-orders", async (req: Request, res: Response) => {
 
             });
 
-            getLastTicket.employeStatus = LotteryTicketModel.EMPLOYESTATUS_ENUM.RECEIVED;
+            getLastTicket.employeStatus = LotteryTicketModel.EMPLOYESTATUS_ENUM.RECEIVING;
             await getLastTicket.save();
             await getLastTicket.reload();
 
