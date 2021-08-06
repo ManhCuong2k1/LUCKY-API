@@ -11,15 +11,15 @@ router.get("/get-last-orders", async (req: Request, res: Response) => {
 
         const TicketPrinter: any = [];
 
-        const getLastTicket = await LotteryTicketModel.findOne({
-            where: { 
+        const getLastTicket: any = await LotteryTicketModel.findOne({
+            where: {
                 employeStatus: LotteryTicketModel.EMPLOYESTATUS_ENUM.NOT_RECEIVED,
                 orderStatus: LotteryTicketModel.TICKET_ENUM.DELAY
-             },
-             include: [{
+            },
+            include: [{
                 model: UserModel,
                 as: "user",
-                attributes: { 
+                attributes: {
                     exclude: [
                         "password",
                         "referrerId",
@@ -31,14 +31,15 @@ router.get("/get-last-orders", async (req: Request, res: Response) => {
                         "totalCoin",
                         "totalReward",
                         "deletedAt"
-                    ], 
+                    ],
                 },
                 required: false
-            }],
+            },
+            ],
             order: [["id", "ASC"]],
         });
 
-        if(getLastTicket !== null) {
+        if (getLastTicket !== null) {
 
             const getOrderFromTicket = await LotteryOrdersModel.findAll({
                 where: {
@@ -46,29 +47,29 @@ router.get("/get-last-orders", async (req: Request, res: Response) => {
                 }
             });
 
-            switch(getLastTicket.type) {
+            switch (getLastTicket.type) {
                 case LotteryTicketModel.GAME_ENUM.KENO:
                     TicketPrinter.push("keno");
                     TicketPrinter.push("1ky");
-                break;
+                    break;
                 case LotteryTicketModel.GAME_ENUM.POWER:
                     TicketPrinter.push("6tren55");
-                break;
+                    break;
                 case LotteryTicketModel.GAME_ENUM.MEGA:
                     TicketPrinter.push("6tren45");
-                break;
+                    break;
                 case LotteryTicketModel.GAME_ENUM.MAX3D:
                     TicketPrinter.push("3d");
-                break;
+                    break;
                 case LotteryTicketModel.GAME_ENUM.MAX3DPLUS:
                     TicketPrinter.push("3dplus");
-                break;
+                    break;
                 case LotteryTicketModel.GAME_ENUM.MAX4D:
                     TicketPrinter.push("4d");
-                break;
+                    break;
             }
 
-            
+
             const arrListOnPrinter = [
                 "a",
                 "b",
@@ -80,47 +81,52 @@ router.get("/get-last-orders", async (req: Request, res: Response) => {
 
             const run = 0;
 
+            let orders:any [] = [];
+
             getOrderFromTicket.forEach((order: any) => {
-        
-                switch(order.type) {
+
+                order.toJSON();
+                order.orderDetail = JSON.parse(order.orderDetail);
+                orders.push(order);
+
+                switch (order.type) {
                     case LotteryTicketModel.GAME_ENUM.KENO:
                         TicketPrinter.push("keno");
-                    break;
+                        break;
                     case LotteryTicketModel.GAME_ENUM.POWER:
                         TicketPrinter.push("power");
-                    break;
+                        break;
                     case LotteryTicketModel.GAME_ENUM.MEGA:
                         TicketPrinter.push("mega");
-                    break;
+                        break;
                     case LotteryTicketModel.GAME_ENUM.MAX3D:
                         TicketPrinter.push("3d");
-                    break;
+                        break;
                     case LotteryTicketModel.GAME_ENUM.MAX3DPLUS:
                         TicketPrinter.push("3dplus");
-                    break;
+                        break;
                     case LotteryTicketModel.GAME_ENUM.MAX4D:
                         TicketPrinter.push("4d");
-                    break;
+                        break;
                 }
-        
+
 
 
             });
 
-
-
-
-            getLastTicket.employeStatus = LotteryTicketModel.EMPLOYESTATUS_ENUM.RECEIVING;
+            getLastTicket.employeStatus = LotteryTicketModel.EMPLOYESTATUS_ENUM.NOT_RECEIVED;
             await getLastTicket.save();
             await getLastTicket.reload();
 
+            getLastTicket.setDataValue("orders", orders);
+
             res.json({
                 status: true,
-                data: getLastTicket,
+                data: getLastTicket
                 //signal: helper.employeStringToSignalCode(TicketPrinter)
             });
 
-        }else {
+        } else {
             res.json({
                 status: false,
                 message: "Hiện tại chưa có đơn hàng nào cần xử lý!"
