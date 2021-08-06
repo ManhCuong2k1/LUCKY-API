@@ -81,7 +81,7 @@ router.get("/get-last-orders", async (req: Request, res: Response) => {
 
             const run = 0;
 
-            let orders:any [] = [];
+            const orders: any [] = [];
 
             getOrderFromTicket.forEach((order: any) => {
 
@@ -114,7 +114,7 @@ router.get("/get-last-orders", async (req: Request, res: Response) => {
 
             });
 
-            getLastTicket.employeStatus = LotteryTicketModel.EMPLOYESTATUS_ENUM.NOT_RECEIVED;
+            getLastTicket.employeStatus = LotteryTicketModel.EMPLOYESTATUS_ENUM.RECEIVED;
             await getLastTicket.save();
             await getLastTicket.reload();
 
