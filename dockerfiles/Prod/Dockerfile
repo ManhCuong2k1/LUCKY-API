@@ -5,7 +5,7 @@ RUN apk add --no-cache git
 RUN yarn
 COPY tsconfig.json /app/
 COPY src /app/src/
-COPY public /app/
+COPY public /app/public/
 RUN yarn build-ts
 
 FROM alpine:3
