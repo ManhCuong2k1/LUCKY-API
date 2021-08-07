@@ -1,33 +1,22 @@
-import path from "path";
-import fs from "fs";
+import axios from "axios";
+import FormData from "form-data";
 
-const getFileName = () => {
-    return new Date().getTime().toString();
-};
-
-interface SizeInterface {
-    width: number;
-    height: number;
-}
-
-const saveFile = async (file: any, category: any) => {
-    const fileNameImage: string = getFileName();
-
-    const imageFolder = path.join(__dirname, "../../public/images/" + category);
-    const ext = path.extname(file.originalname);
-    const filePath = path.resolve(`${imageFolder}/${fileNameImage}${ext}`);
-    console.log(filePath);
+const saveFile = async (file: any) => {
+    const img1 = new FormData();
+    img1.append("file", file.buffer);
     
-    fs.mkdir(path.join(__dirname, "../../public/images/" + category), async () => {
-        console.log("Created folder images!");
+    
+    const postImg1 = await axios({
+        method: "post",
+        url: process.env.HOST_IMAGES_URL + "/images?category=content",
+        headers: {
+            ...img1.getHeaders()
+        },
+        data: img1
     });
-    console.log("Folder check done!");
-    // await sharp(file.buffer).toFile(filePath);
-    fs.writeFile(filePath, file.buffer, "binary", function(err){
-        if (err) throw err;
-        console.log("File saved.");
-    });
-    return `images/${category}/${fileNameImage}${ext}`;
+    console.log(postImg1.data);
+
+    return postImg1.data;
 };
 
 export {

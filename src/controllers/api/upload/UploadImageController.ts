@@ -37,10 +37,9 @@ router.post("/single-upload", [ authEmploye, upload.single("file") ], async (req
     try {
         const user: any = req.user;
         if (!req.file) throw new Error("No file to upload");
-        const fileName = await saveFile(req.file, "normal");
-        
+        const fileName = await saveFile(req.file);
         const newImage: any = {
-            imageUrl: fileName,
+            imageUrl: fileName.data.url.src,
             UserId: user.id
         };
         await Image.create(newImage);
@@ -94,7 +93,7 @@ router.post("/multi-upload",upload.array("image"), async (req: Request, res: Res
 
         await Promise.all(
             files.map(async file => {
-                const fileName = await saveFile(file, "normal");
+                const fileName = await saveFile(file);
                 images.push({url: fileName});
             })
         );
