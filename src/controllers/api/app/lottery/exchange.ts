@@ -53,6 +53,7 @@ router.post("/", async (req: Request, res: Response) => {
         const minwallet = 100000;
         const minBank = 100000;
 
+
         switch (transaction.method) {
             case "local":
                 try {

@@ -1,4 +1,5 @@
 import express from "express";
+import InitController from "./init/initController";
 import AuthController from "./auth/AuthController";
 import AdminController from "./admin/AdminController";
 import UploadController from "./upload/UploadImageController";
@@ -12,6 +13,8 @@ import TransactionController from "./transaction/TransactionControlller";
 
 const router = express.Router();
 
+
+router.use("/init", InitController);
 router.use("/auth", AuthController);
 router.use("/admin", AdminController);
 router.use("/app", auth, AppController);

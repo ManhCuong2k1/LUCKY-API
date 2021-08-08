@@ -1,5 +1,6 @@
 import { Request, Response, Router } from "express";
 import upload from "@middleware/upload";
+import { saveFile } from "@util/resizeImage";
 import FormData from "form-data";
 import { LotteryTicketModel } from "@models/LotteryTicket";
 import { LotteryOrdersModel } from "@models/LotteryOrder";
@@ -12,7 +13,6 @@ import axios from "axios";
 const router = Router();
 
 router.post("/upload/:id", upload.fields([{ name: "beforeimage", maxCount: 1 }, { name: "afterimage", maxCount: 1 }]), async (req: any, res: any, next) => {
-
 
     try {
 
@@ -41,33 +41,13 @@ router.post("/upload/:id", upload.fields([{ name: "beforeimage", maxCount: 1 }, 
                 let beforeImageSrc, afterImageSrc;
 
                 if (typeof req.files.beforeimage !== "undefined") {
-                    const img1 = new FormData();
-                    img1.append("file", req.files.beforeimage[0].buffer);
-                    const postImg1 = await axios({
-                        method: "post",
-                        url: process.env.HOST_IMAGES_URL + "/images?category=content",
-                        headers: {
-                            ...img1.getHeaders()
-                        },
-                        data: img1
-                    });
-                    const dataResp1 = postImg1.data;
-                    beforeImageSrc = dataResp1.data.url.src;
+                    const saveImage = await saveFile(req.files.beforeimage[0]);
+                    beforeImageSrc = saveImage.data.url.src;
                 }
 
                 if (typeof req.files.afterimage !== "undefined") {
-                    const img2 = new FormData();
-                    img2.append("file", req.files.afterimage[0].buffer);
-                    const postImg2 = await axios({
-                        method: "post",
-                        url: process.env.HOST_IMAGES_URL + "/images?category=content",
-                        headers: {
-                            ...img2.getHeaders()
-                        },
-                        data: img2
-                    });
-                    const dataResp2 = postImg2.data;
-                    afterImageSrc = dataResp2.data.url.src;
+                    const saveImage = await saveFile(req.files.afterimage[0]);
+                    afterImageSrc = saveImage.data.url.src;
                 }
 
                 const objectData: any = {
