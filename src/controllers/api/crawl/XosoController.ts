@@ -438,4 +438,12 @@ router.get("/terms", (req, res) => {
     }
 });
 
+router.get("/banks", (req, res) => {
+    try {
+        res.sendFile(process.cwd() +  "/public/views/bank/banks.html");
+    } catch (error) {
+        res.send("ERROR");
+    }
+});
+
 export default router;

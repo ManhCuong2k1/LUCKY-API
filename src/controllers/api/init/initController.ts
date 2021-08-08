@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/camelcase */
+
 import express, { Response, Request, Router } from "express";
 import dotenv from "dotenv";
-import { BannerInterface, Banner } from "@models/Banner"
+import { BannerInterface, Banner } from "@models/Banner";
 
 
 dotenv.config();
@@ -11,9 +13,9 @@ router.get("/app-settings", async (req: Request, res: Response) => {
     try {
 
         interface ExportInterface {
-            [key: string]: any
+            [key: string]: any;
         }
-        let dataExport: ExportInterface = {};
+        const dataExport: ExportInterface = {};
         
 
         dataExport.host = process.env.HOST;
