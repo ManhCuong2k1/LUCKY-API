@@ -152,8 +152,11 @@ router.put("/:id", authAdmin, async (req: Request, res: Response) => {
   try {
     const updateUser: UserInterface = req.body;
     const user = await UserModel.findByPk(req.params.id);
+    
 
+    user.username = updateUser.username;
     user.name = updateUser.name;
+    user.phone = updateUser.phone;
     user.email = updateUser.email;
     user.identify = updateUser.identify;
     user.gender = updateUser.gender;
