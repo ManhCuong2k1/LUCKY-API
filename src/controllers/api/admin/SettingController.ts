@@ -17,6 +17,7 @@ router.get("/", async (req: Request, res: Response) => {
                 "exchange_bank_max": dataExchangeLimit[7].value,
                 "recharge_momo_max": dataExchangeLimit[8].value,
                 "recharge_vnpay_max": dataExchangeLimit[9].value,
+                "ticket_storage_fee": dataExchangeLimit[10].value,
             };
             
             res.send({data: result});
@@ -72,6 +73,10 @@ router.post("/", async (req: Request, res: Response) => {
                 key: "recharge_vnpay_max",
                 value: req.body.recharge_vnpay_max
             },
+            {
+                key: "ticket_storage_fee",
+                value: req.body.ticket_storage_fee
+            },
             
         ];
         const data = await SettingsModel.bulkCreate(limitExchange);
@@ -96,6 +101,7 @@ router.put("/", async (req: Request, res: Response) => {
         data[7].value = dataSetting.exchange_bank_max;
         data[8].value = dataSetting.recharge_momo_max;
         data[9].value = dataSetting.recharge_vnpay_max;
+        data[10].value = dataSetting.ticket_storage_fee;
         
         for(let i = 0; i < data.length; i++) {
             await data[i].save();
