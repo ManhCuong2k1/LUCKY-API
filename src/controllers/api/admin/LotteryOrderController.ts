@@ -26,7 +26,7 @@ router.get("/", async (req: Request, res: Response) => {
         const where: any = Object.assign({},
             type === null ? null : { type },
             orderStatus === null ? null : orderStatus === "drawned" ? { resultDetail: "ĐÃ XỔ VÉ" } : orderStatus === "winned" ? { resultDetail: "TRÚNG GIẢI" } : { orderStatus },
-            fromDate && toDate ? { createdAt: { [Op.between]: [moment(fromDate).startOf("day"), moment(toDate).endOf("day")] } } : null
+            fromDate && toDate ? { createdAt: { [Op.between]: [moment(fromDate).startOf("day").subtract(8, "hours"), moment(toDate).endOf("day").subtract(8, "hours")] } } : null
         );
         const whereUser: any = Object.assign({},
             searchKey === null ? null : { phone: { [Op.like]: `%${searchKey.trim()}%` } },
