@@ -17,7 +17,7 @@ router.get("/app-settings", async (req: Request, res: Response) => {
         }
         const dataExport: ExportInterface = {};
         
-
+        dataExport.appver = process.env.APP_VERSION;
         dataExport.host = process.env.HOST;
         dataExport.port = process.env.PORT;
         dataExport.images = {};
