@@ -11,12 +11,12 @@ router.get("/", async (req: Request, res: Response) => {
     try {
 
         const whereToday: any = Object.assign({},
-            { createdAt: { [Op.between]: [moment().startOf("day").format(), moment().format()] } }
+            { createdAt: { [Op.between]: [moment().startOf("day").format(), moment().endOf("day").format()] } }
         );
          const whereWeek = Object.assign({},
-            { createdAt: { [Op.between]: [moment().startOf("week").format(), moment().format()] } }
-        );
-
+            { createdAt: { [Op.between]: [moment().startOf("isoWeek").format(), moment().format()] } }
+        );  
+            
         // Số vé bán trong ngày
         const numberTicketToday = await LotteryTicketModel.findAll({
             where: whereToday,
