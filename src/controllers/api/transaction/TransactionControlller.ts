@@ -1,4 +1,3 @@
-import { LotteryRechargeModel } from "@models/LotteryRecharge";
 import express, { Response, Request, Router } from "express";
 import { auth } from "@middleware/auth";
 import momo from "./sdk/momo";
@@ -6,6 +5,8 @@ import vnpay from "./sdk/vnpay";
 import dotenv from "dotenv";
 import { sendError } from "@util/response";
 import { UserModel } from "@models/User";
+import { LotteryRechargeModel } from "@models/LotteryRecharge";
+
 dotenv.config();
 const router = Router();
 

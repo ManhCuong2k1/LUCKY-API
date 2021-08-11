@@ -3,6 +3,7 @@
 import express, { Response, Request, Router } from "express";
 import dotenv from "dotenv";
 import { BannerInterface, Banner } from "@models/Banner";
+import { getSettings, SettingsInterface, SettingsModel } from "@models/LotterySettings";
 
 
 dotenv.config();
@@ -17,27 +18,44 @@ router.get("/app-settings", async (req: Request, res: Response) => {
         }
         const dataExport: ExportInterface = {};
         
-
+        dataExport.appver = process.env.APP_VERSION;
         dataExport.host = process.env.HOST;
-        dataExport.port = process.env.PORT;
         dataExport.images = {};
-        dataExport.images.service_upload = process.env.HOST_IMAGES_URL;
         dataExport.images.service_export = process.env.HOST_IMAGES_EXPORT_URL;
-        dataExport.banner = await Banner.findAll();
+        const bannerDB = await Banner.findAll({
+            order: [["index", "ASC"]],
+        });
 
+        dataExport.banner = [];
+        bannerDB.forEach((banner: any) => {
+            dataExport.banner.push({
+                id: banner.id,
+                image: process.env.HOST_IMAGES_EXPORT_URL + banner.image,
+                type: banner.type,
+                index: banner.index
+            });
+        });
 
-        
-        dataExport.recharge = {};
         dataExport.exchange = {};
-        dataExport.exchange.local_min = 100000;
-        dataExport.exchange.wallet_min = 100000;
-        dataExport.exchange.bank_min = 100000;
-        dataExport.recharge.momo_min = 10000;
-        dataExport.recharge.vnpay_min = 10000;
+        dataExport.exchange.local_min = await getSettings("exchange_local_min");
+        dataExport.exchange.local_max = await getSettings("exchange_local_max");
+        dataExport.exchange.wallet_min = await getSettings("exchange_wallet_min");
+        dataExport.exchange.wallet_max = await getSettings("exchange_wallet_max");
+        dataExport.exchange.bank_min = await getSettings("exchange_bank_min");
+        dataExport.exchange.bank_max = await getSettings("exchange_bank_max");
 
-
-
+        dataExport.recharge = {};
+        dataExport.recharge.momo_min = await getSettings("recharge_momo_min");
+        dataExport.recharge.momo_max = await getSettings("recharge_momo_max");
+        dataExport.recharge.vnpay_min = await getSettings("recharge_vnpay_min");
+        dataExport.recharge.vnpay_max = await getSettings("recharge_vnpay_max");
         
+        dataExport.ticket = {};
+        dataExport.ticket.ticket_storage_fee = await getSettings("ticket_storage_fee");
+
+
+        dataExport.support = {};
+        dataExport.support.phone = await getSettings("hot_line");
 
         res.json({
             status: true,

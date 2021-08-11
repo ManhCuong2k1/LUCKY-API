@@ -1,4 +1,4 @@
-import { DataTypes, Model} from "sequelize";
+import { DataTypes, Model } from "sequelize";
 import sequelize from "@database/connection";
 
 interface SettingsInterface {
@@ -35,8 +35,21 @@ SettingsModel.init(SettingsDefine, {
     sequelize,
 });
 
+const getSettings = async (settingKey: string) => {
+    const fetchRow = await SettingsModel.findOne({
+        where: {
+            key: settingKey
+        },
+        order: [["id", "DESC"]]
+    });
+    if (fetchRow !== null) {
+        return fetchRow.value;
+    }
+    return null;
+};
 
 export {
     SettingsInterface,
-    SettingsModel
+    SettingsModel,
+    getSettings
 };

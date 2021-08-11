@@ -152,6 +152,9 @@ router.get("/ticketDetail", async (req: Request, res: Response) => {
                 order: [["id", "ASC"]]
             });
 
+            ticketImages.beforeImage = process.env.HOST_IMAGES_EXPORT_URL + ticketImages.beforeImage;
+            ticketImages.afterImage = process.env.HOST_IMAGES_EXPORT_URL + ticketImages.afterImage;
+
             const ordersData = await LotteryOrdersModel.findAll({
                 where: {
                     userId: user.id,
