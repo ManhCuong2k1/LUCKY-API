@@ -6,6 +6,7 @@ import { LotteryTicketModel } from "@models/LotteryTicket";
 import { GridInterface } from "@models/Transformers/Grid";
 import { Op } from "sequelize";
 import moment from "moment-timezone";
+import { type } from "os";
 const router = Router();
 
 // Lấy danh sách vé 
@@ -198,6 +199,39 @@ router.put("/updateImage/:id", async (req: Request, res: Response) => {
         
         await dataImage.save();
         res.send(dataImage);
+    } catch (error) {
+        res.send({
+            status: false, 
+            message: "can\'t upload image with ID: "+ req.params.id
+        });   
+    }
+});
+
+router.post("/:id", async (req: Request, res: Response) => {
+    try {
+        const ticketId = req.params.id;
+        const ticketDetail = await LotteryTicketModel.findOne({
+            where: {
+                id: ticketId,
+            },
+        });
+
+        const orderItem = await LotteryOrdersModel.findAll({
+            where: {
+                ticketId: req.params.id
+            }
+        });
+
+        orderItem.forEach( async (e) => {
+            e.orderStatus = LotteryOrdersModel.ORDERSTATUS_ENUM.CANCELED;
+            await e.save();
+        });
+        
+        ticketDetail.orderStatus = LotteryTicketModel.TICKET_ENUM.CANCELED;
+        ticketDetail.resultDetail = "Đã hủy";
+        ticketDetail.save();
+        
+        res.send({ticketDetail, orderItem});
     } catch (error) {
         res.send({
             status: false, 
