@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import { sendError } from "@util/response";
 import { UserModel } from "@models/User";
 import { LotteryRechargeModel } from "@models/LotteryRecharge";
+import { UserHistoryAdd, UserHistoryModel } from "@models/LotteryUserHistory";
 
 dotenv.config();
 const router = Router();
@@ -37,6 +38,14 @@ router.post("/", auth, async (req: Request, res: Response) => {
                 const respMomo = await momoService.makePayment();
 
                 if (respMomo.errorCode == 0) {
+
+                    await UserHistoryAdd(
+                        user.id,
+                        UserHistoryModel.ACTION_SLUG_ENUM.RECHARGE,
+                        UserHistoryModel.ACTION_NAME_ENUM.RECHARGE,
+                        "Vừa tạo yêu cầu nạp " + Number(transaction.amount) + " VND bằng ví điện tử Momo"
+                    );
+
                     res.json({
                         status: true,
                         data: respMomo,
@@ -70,6 +79,14 @@ router.post("/", auth, async (req: Request, res: Response) => {
                 vnpayService.orderType = "250000"; // giữ nguyên
                 vnpayService.orderInfo = "naptien";
                 const postTransactionVnpay = await vnpayService.makePayment();
+
+
+                await UserHistoryAdd(
+                    user.id,
+                    UserHistoryModel.ACTION_SLUG_ENUM.RECHARGE,
+                    UserHistoryModel.ACTION_NAME_ENUM.RECHARGE,
+                    "Vừa tạo yêu cầu nạp " + Number(transaction.amount) + " VND bằng ví điện tử VNPay"
+                );
 
                 res.json({ status: true, url: postTransactionVnpay });
                 break;

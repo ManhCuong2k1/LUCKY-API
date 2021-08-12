@@ -28,7 +28,7 @@ const getDate = (string: string) => {
       }catch (e) {
         console.log(e.message);
       }
-}
+};
 
 
 const getTime = (timeStamp: any) => {

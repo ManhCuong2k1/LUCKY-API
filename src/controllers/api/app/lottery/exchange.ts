@@ -2,6 +2,7 @@ import { Request, Response, Router } from "express";
 import { UserModel } from "@models/User";
 import { LotteryExchangesModel } from "@models/LotteryExchanges";
 import { getSettings, SettingsInterface, SettingsModel } from "@models/LotterySettings";
+import { UserHistoryAdd, UserHistoryModel } from "@models/LotteryUserHistory";
 
 
 const router = Router();
@@ -80,6 +81,13 @@ router.post("/", async (req: Request, res: Response) => {
                                 };
                                 LotteryExchangesModel.create(dataImport);
 
+                                await UserHistoryAdd(
+                                    user.id,
+                                    UserHistoryModel.ACTION_SLUG_ENUM.EXCHANGE_REWARD,
+                                    UserHistoryModel.ACTION_NAME_ENUM.EXCHANGE_REWARD,
+                                    "Vừa đổi thưởng " + Number(transaction.amount) + " VND về ví LuckyPloyLot"
+                                );
+
                                 res.json({
                                     status: true,
                                     message: "Đổi thưởng thành công!"
@@ -125,6 +133,13 @@ router.post("/", async (req: Request, res: Response) => {
                                 };
                                 LotteryExchangesModel.create(dataImport);
 
+                                await UserHistoryAdd(
+                                    user.id,
+                                    UserHistoryModel.ACTION_SLUG_ENUM.EXCHANGE_REWARD,
+                                    UserHistoryModel.ACTION_NAME_ENUM.EXCHANGE_REWARD,
+                                    "Vừa yêu cầu đổi thưởng " + Number(transaction.amount) + " VND về ví điện tử " + transaction.bankCode.toUpperCase()
+                                );
+
                                 res.json({
                                     status: true,
                                     message: "Thành Công! Chờ Duyệt Thưởng!"
@@ -169,6 +184,14 @@ router.post("/", async (req: Request, res: Response) => {
                                     status: LotteryExchangesModel.STATUS_ENUM.DELAY,
                                 };
                                 LotteryExchangesModel.create(dataImport);
+
+                                await UserHistoryAdd(
+                                    user.id,
+                                    UserHistoryModel.ACTION_SLUG_ENUM.EXCHANGE_REWARD,
+                                    UserHistoryModel.ACTION_NAME_ENUM.EXCHANGE_REWARD,
+                                    "Vừa yêu cầu đổi thưởng " + Number(transaction.amount) + " VND về ngân hàng" + transaction.bankCode.toUpperCase()
+                                );
+
 
                                 res.json({
                                     status: true,
