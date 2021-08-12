@@ -42,6 +42,9 @@ class LotteryTicketModel extends Model<LotteryTicketInterface> implements Lotter
         COMPUTE636: "compute636",
         THANTAI4: "godofwealth",
         LOTO234: "loto234",
+        LOTO2: "loto2",
+        LOTO3: "loto3",
+        LOTO5: "loto5",
     };
     static readonly TICKET_ENUM = {
         DELAY: "delay",

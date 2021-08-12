@@ -21,6 +21,15 @@ const timeConverterNoChar = (string: string) => {
 };
   
 
+const getDate = (string: string) => {
+    try {
+        string = string.split(" ")[0];
+        return string;
+      }catch (e) {
+        console.log(e.message);
+      }
+}
+
 
 const getTime = (timeStamp: any) => {
     // chuỗi timestamp không nhân với 1000 
@@ -159,6 +168,7 @@ const employeStringToSignalCode = (arrString: any) => {
 
 export default {
     timeStamp,
+    getDate,
     getTime,
     timeConverter,
     timeConverterNoChar,
