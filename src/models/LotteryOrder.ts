@@ -105,11 +105,10 @@ const LotteryOrdersDefine = {
 };
 
 LotteryOrdersModel.init(LotteryOrdersDefine, {
-    // paranoid: true,
+    paranoid: true,
     tableName: "lottery_orders",
     updatedAt: "updatedAt",
     createdAt: "createdAt",
-    deletedAt: "deletedAt",
     sequelize,
 });
 
