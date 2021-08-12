@@ -105,7 +105,6 @@ LotteryOrdersModel.init(LotteryOrdersDefine, {
     tableName: "lottery_orders",
     updatedAt: "updatedAt",
     createdAt: "createdAt",
-    deletedAt: "deletedAt",
     sequelize,
 });
 
