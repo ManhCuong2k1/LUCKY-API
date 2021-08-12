@@ -48,7 +48,7 @@ router.post("/", async (req: Request, res: Response) => {
                     fee = (fee * totalPrice) / 100;
 
                     const orderPrice = totalPrice; // tiền 1 đơn
-                    totalPrice = (totalPrice * body.preriod) + fee; // tiền thanh toán khi đặt liên tiếp các kỳ
+                    totalPrice = (totalPrice * Number(body.preriod)) + fee; // tiền thanh toán khi đặt liên tiếp các kỳ
 
                     if (user.totalCoin >= totalPrice) { // kiểm tra tài khoản có đủ tiền hay không
 
@@ -61,7 +61,7 @@ router.post("/", async (req: Request, res: Response) => {
                         const dataTicket: any = {
                             userId: user.id,
                             type: LotteryTicketModel.GAME_ENUM.COMPUTE123,
-                            preriod: body.preriod,
+                            preriod: Number(body.preriod),
                             totalPrice: totalPrice,
                             orderDetail: "Mua Vé Số Điện Toán 123",
                             orderStatus: LotteryTicketModel.TICKET_ENUM.DELAY,
@@ -72,7 +72,7 @@ router.post("/", async (req: Request, res: Response) => {
 
 
                         // order
-                        for (let i = 1; i <= body.preriod; i++) {
+                        for (let i = 1; i <= Number(body.preriod); i++) {
 
                             if (isFirst == false) {
                                 timeOrder = helper.addMinuteToTime(timeOrder, 1440);
@@ -98,8 +98,7 @@ router.post("/", async (req: Request, res: Response) => {
                             isFirst = false;
                             status = true, message = "Đặt Vé Thành Công!";
 
-                            const dbExecQuery = (dataImport !== null) ? await LotteryOrdersModel.create(dataImport) : "";
-                            // trừ tiền truocứ khi order 
+                            (dataImport !== null) ? await LotteryOrdersModel.create(dataImport) : "";
 
                         }
 
@@ -145,7 +144,7 @@ router.post("/", async (req: Request, res: Response) => {
                     fee = (fee * totalPrice) / 100;
 
                     const orderPrice = totalPrice; // tiền 1 đơn
-                    totalPrice = (totalPrice * body.preriod) + fee; // tiền thanh toán khi đặt liên tiếp các kỳ
+                    totalPrice = (totalPrice * Number(body.preriod)) + fee; // tiền thanh toán khi đặt liên tiếp các kỳ
 
                     if (user.totalCoin >= totalPrice) { // kiểm tra tài khoản có đủ tiền hay không
 
@@ -158,7 +157,7 @@ router.post("/", async (req: Request, res: Response) => {
                         const dataTicket: any = {
                             userId: user.id,
                             type: LotteryTicketModel.GAME_ENUM.COMPUTE636,
-                            preriod: body.preriod,
+                            preriod: Number(body.preriod),
                             totalPrice: totalPrice,
                             orderDetail: "Mua Vé Số Điện Toán 636",
                             orderStatus: LotteryTicketModel.TICKET_ENUM.DELAY,
@@ -169,7 +168,7 @@ router.post("/", async (req: Request, res: Response) => {
 
 
                         // order
-                        for (let i = 1; i <= body.preriod; i++) {
+                        for (let i = 1; i <= Number(body.preriod); i++) {
 
                             if (isFirst == false) {
                                 timeOrder = helper.addMinuteToTime(timeOrder, 1440);
@@ -242,7 +241,7 @@ router.post("/", async (req: Request, res: Response) => {
                     fee = (fee * totalPrice) / 100;
 
                     const orderPrice = totalPrice; // tiền 1 đơn
-                    totalPrice = (totalPrice * body.preriod) + fee; // tiền thanh toán khi đặt liên tiếp các kỳ
+                    totalPrice = (totalPrice * Number(body.preriod)) + fee; // tiền thanh toán khi đặt liên tiếp các kỳ
 
                     if (user.totalCoin >= totalPrice) { // kiểm tra tài khoản có đủ tiền hay không
 
@@ -255,7 +254,7 @@ router.post("/", async (req: Request, res: Response) => {
                         const dataTicket: any = {
                             userId: user.id,
                             type: LotteryTicketModel.GAME_ENUM.THANTAI4,
-                            preriod: body.preriod,
+                            preriod: Number(body.preriod),
                             totalPrice: totalPrice,
                             orderDetail: "Mua Vé Số Thần Tài 4",
                             orderStatus: LotteryTicketModel.TICKET_ENUM.DELAY,
@@ -266,7 +265,7 @@ router.post("/", async (req: Request, res: Response) => {
 
 
                         // order
-                        for (let i = 1; i <= body.preriod; i++) {
+                        for (let i = 1; i <= Number(body.preriod); i++) {
 
                             if (isFirst == false) {
                                 timeOrder = helper.addMinuteToTime(timeOrder, 1440);
@@ -340,7 +339,7 @@ router.post("/", async (req: Request, res: Response) => {
                     fee = (fee * totalPrice) / 100;
 
                     const orderPrice = totalPrice; // tiền 1 đơn
-                    totalPrice = (totalPrice * body.preriod) + fee; // tiền thanh toán khi đặt liên tiếp các kỳ
+                    totalPrice = (totalPrice * Number(body.preriod)) + fee; // tiền thanh toán khi đặt liên tiếp các kỳ
 
                     if (user.totalCoin >= totalPrice) { // kiểm tra tài khoản có đủ tiền hay không
 
@@ -353,7 +352,7 @@ router.post("/", async (req: Request, res: Response) => {
                         const dataTicket: any = {
                             userId: user.id,
                             type: LotteryTicketModel.GAME_ENUM.LOTO234,
-                            preriod: body.preriod,
+                            preriod: Number(body.preriod),
                             totalPrice: totalPrice,
                             orderDetail: "Mua Vé Số Loto 234",
                             orderStatus: LotteryTicketModel.TICKET_ENUM.DELAY,
@@ -364,7 +363,7 @@ router.post("/", async (req: Request, res: Response) => {
 
 
                         // order
-                        for (let i = 1; i <= body.preriod; i++) {
+                        for (let i = 1; i <= Number(body.preriod); i++) {
 
                             if (isFirst == false) {
                                 timeOrder = helper.addMinuteToTime(timeOrder, 1440);
@@ -437,7 +436,7 @@ router.post("/", async (req: Request, res: Response) => {
                     fee = (fee * totalPrice) / 100;
 
                     const orderPrice = totalPrice; // tiền 1 đơn
-                    totalPrice = (totalPrice * body.preriod) + fee; // tiền thanh toán khi đặt liên tiếp các kỳ
+                    totalPrice = (totalPrice * Number(body.preriod)) + fee; // tiền thanh toán khi đặt liên tiếp các kỳ
 
                     if (user.totalCoin >= totalPrice) { // kiểm tra tài khoản có đủ tiền hay không
 
@@ -450,7 +449,7 @@ router.post("/", async (req: Request, res: Response) => {
                         const dataTicket: any = {
                             userId: user.id,
                             type: LotteryTicketModel.GAME_ENUM.LOTO2,
-                            preriod: body.preriod,
+                            preriod: Number(body.preriod),
                             totalPrice: totalPrice,
                             orderDetail: "Mua Vé Số Loto 2 Số",
                             orderStatus: LotteryTicketModel.TICKET_ENUM.DELAY,
@@ -461,7 +460,7 @@ router.post("/", async (req: Request, res: Response) => {
 
 
                         // order
-                        for (let i = 1; i <= body.preriod; i++) {
+                        for (let i = 1; i <= Number(body.preriod); i++) {
 
                             if (isFirst == false) {
                                 timeOrder = helper.addMinuteToTime(timeOrder, 1440);
@@ -532,7 +531,7 @@ router.post("/", async (req: Request, res: Response) => {
                     fee = (fee * totalPrice) / 100;
 
                     const orderPrice = totalPrice; // tiền 1 đơn
-                    totalPrice = (totalPrice * body.preriod) + fee; // tiền thanh toán khi đặt liên tiếp các kỳ
+                    totalPrice = (totalPrice * Number(body.preriod)) + fee; // tiền thanh toán khi đặt liên tiếp các kỳ
 
                     if (user.totalCoin >= totalPrice) { // kiểm tra tài khoản có đủ tiền hay không
 
@@ -545,7 +544,7 @@ router.post("/", async (req: Request, res: Response) => {
                         const dataTicket: any = {
                             userId: user.id,
                             type: LotteryTicketModel.GAME_ENUM.LOTO3,
-                            preriod: body.preriod,
+                            preriod: Number(body.preriod),
                             totalPrice: totalPrice,
                             orderDetail: "Mua Vé Số Loto 3 Số",
                             orderStatus: LotteryTicketModel.TICKET_ENUM.DELAY,
@@ -556,7 +555,7 @@ router.post("/", async (req: Request, res: Response) => {
 
 
                         // order
-                        for (let i = 1; i <= body.preriod; i++) {
+                        for (let i = 1; i <= Number(body.preriod); i++) {
 
                             if (isFirst == false) {
                                 timeOrder = helper.addMinuteToTime(timeOrder, 1440);
@@ -628,7 +627,7 @@ router.post("/", async (req: Request, res: Response) => {
                     fee = (fee * totalPrice) / 100;
 
                     const orderPrice = totalPrice; // tiền 1 đơn
-                    totalPrice = (totalPrice * body.preriod) + fee; // tiền thanh toán khi đặt liên tiếp các kỳ
+                    totalPrice = (totalPrice * Number(body.preriod)) + fee; // tiền thanh toán khi đặt liên tiếp các kỳ
 
                     if (user.totalCoin >= totalPrice) { // kiểm tra tài khoản có đủ tiền hay không
 
@@ -641,7 +640,7 @@ router.post("/", async (req: Request, res: Response) => {
                         const dataTicket: any = {
                             userId: user.id,
                             type: LotteryTicketModel.GAME_ENUM.LOTO5,
-                            preriod: body.preriod,
+                            preriod: Number(body.preriod),
                             totalPrice: totalPrice,
                             orderDetail: "Mua Vé Số Loto 5 Số",
                             orderStatus: LotteryTicketModel.TICKET_ENUM.DELAY,
@@ -652,7 +651,7 @@ router.post("/", async (req: Request, res: Response) => {
 
 
                         // order
-                        for (let i = 1; i <= body.preriod; i++) {
+                        for (let i = 1; i <= Number(body.preriod); i++) {
 
                             if (isFirst == false) {
                                 timeOrder = helper.addMinuteToTime(timeOrder, 1440);
