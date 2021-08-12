@@ -37,7 +37,10 @@ class LotteryTicketModel extends Model<LotteryTicketInterface> implements Lotter
         MEGA: "mega",
         MAX3D: "max3d",
         MAX3DPLUS: "max3dplus",
-        MAX4D: "max4d"
+        MAX4D: "max4d",
+        COMPUTE123: "compute123",
+        COMPUTE636: "compute636",
+        THANTAI4: "godofwealth",
     };
     static readonly TICKET_ENUM = {
         DELAY: "delay",

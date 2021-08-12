@@ -67,8 +67,21 @@ UserHistoryModel.init(UserHistoryDefine, {
     sequelize,
 });
 
+const UserHistoryAdd = async (userId: number, actionSlug: string, actionName: string, detail: string) => {
+    const dataAction: any = {
+        userId,
+        actionSlug,
+        actionName,
+        detail
+    };
+    const createHistory = await UserHistoryModel.create(dataAction);    
+
+    return createHistory;
+};
+
 
 export {
     UserHistoryInterface,
-    UserHistoryModel
+    UserHistoryModel,
+    UserHistoryAdd
 };
