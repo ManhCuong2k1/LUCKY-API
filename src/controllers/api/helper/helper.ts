@@ -16,7 +16,7 @@ const timeConverterNoChar = (string: string) => {
       string = string.split(" ")[0];
       return string;
     }catch (e) {
-      console.log(e.message)
+      console.log(e.message);
     }
 };
   
