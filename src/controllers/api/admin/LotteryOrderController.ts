@@ -9,7 +9,7 @@ import moment from "moment-timezone";
 import { type } from "os";
 const router = Router();
 
-// Lấy danh sách vé 
+// Lấy danh sách vé Vietlott
 
 router.get("/vietlott", async (req: Request, res: Response) => {
     try {
@@ -81,6 +81,8 @@ router.get("/vietlott", async (req: Request, res: Response) => {
     }
 });
 
+// Lấy danh sách vé Dien toan
+
 router.get("/computer", async (req: Request, res: Response) => {
     try {
         const page: number = parseInt(req.query.page ? req.query.page.toString() : "1");
@@ -107,8 +109,79 @@ router.get("/computer", async (req: Request, res: Response) => {
             where: {
                 ...where,
                 [Op.or]: [
-                    { type: LotteryTicketModel.GAME_ENUM.COMPUTE123 }, 
+                    { type: LotteryTicketModel.GAME_ENUM.COMPUTE123 },
                     { type: LotteryTicketModel.GAME_ENUM.COMPUTE636 },
+                    { type: LotteryTicketModel.GAME_ENUM.THANTAI4 },
+                ],
+
+            },
+            include: [{
+                model: UserModel,
+                as: "user",
+                where: whereUser,
+            },
+            {
+                model: LotteryImagesModel,
+                as : "image"
+            },
+            {
+                model: LotteryOrdersModel,
+                as: "orders"
+            }
+            ],
+            distinct: true,
+            limit: pageSize,
+            offset: cursor,
+            order: [
+                ["createdAt", "DESC"],
+            ],
+        });
+        const responseData: GridInterface<LotteryTicketModel> = {
+            data: rows,
+            page: page,
+            pageSize: pageSize,
+            total: count
+        };
+        res.send(responseData );
+    } catch (e) {
+        res.status(400).send({
+        error: e.message,
+        });
+    }
+});
+
+// Lấy danh sách vé Loto
+
+router.get("/loto", async (req: Request, res: Response) => {
+    try {
+        const page: number = parseInt(req.query.page ? req.query.page.toString() : "1");
+        const pageSize: number = parseInt(req.query.pageSize ? req.query.pageSize.toString() : "20");
+        const cursor: number = (page - 1) * pageSize;
+
+        const searchKey: string = req.query.searchKey ? req.query.searchKey.toString() : null;
+        const type: string = req.query.type ? req.query.type.toString() : null;
+        const orderStatus: string = req.query.orderStatus ? req.query.orderStatus.toString() : null;
+        const fromDate: any = req.query.fromDate || null;
+        const toDate: any = req.query.toDate || null;
+
+
+        const where: any = Object.assign({},
+            type === null ? null : { type },
+            orderStatus === null ? null : orderStatus === "drawned" ? { resultDetail: "ĐÃ XỔ VÉ" } : orderStatus === "winned" ? { resultDetail: "TRÚNG GIẢI" } : { orderStatus },
+            fromDate && toDate ? { createdAt: { [Op.between]: [moment(fromDate).startOf("day").subtract(8, "hours"), moment(toDate).endOf("day").subtract(8, "hours")] } } : null
+        );
+        const whereUser: any = Object.assign({},
+            searchKey === null ? null : { phone: { [Op.like]: `%${searchKey.trim()}%` } },
+        );
+
+        const { rows, count } = await LotteryTicketModel.findAndCountAll({
+            where: {
+                ...where,
+                [Op.or]: [
+                    { type: LotteryTicketModel.GAME_ENUM.LOTO234 },
+                    { type: LotteryTicketModel.GAME_ENUM.LOTO2 },
+                    { type: LotteryTicketModel.GAME_ENUM.LOTO3 },
+                    { type: LotteryTicketModel.GAME_ENUM.LOTO5 },
                 ],
 
             },
