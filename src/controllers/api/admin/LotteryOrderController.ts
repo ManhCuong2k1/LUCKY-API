@@ -360,17 +360,27 @@ router.put("/updateImage/:id", async (req: Request, res: Response) => {
 router.post("/:id", async (req: Request, res: Response) => {
     try {
         const ticketId = req.params.id;
-        const ticketDetail = await LotteryTicketModel.findOne({
+        const ticketDetail: any = await LotteryTicketModel.findOne({
             where: {
                 id: ticketId,
             },
         });
 
+        const user: any = await UserModel.findOne({
+            where : {
+                id: ticketDetail.userId,
+            }
+        });
+
         const orderItem = await LotteryOrdersModel.findAll({
             where: {
                 ticketId: req.params.id
-            }
+            },
         });
+        const number: any =  user.totalCoin + ticketDetail.totalPrice;
+        user.totalCoin = number;
+        await user.save();
+        
 
         orderItem.forEach( async (e) => {
             e.orderStatus = LotteryOrdersModel.ORDERSTATUS_ENUM.CANCELED;
@@ -381,7 +391,7 @@ router.post("/:id", async (req: Request, res: Response) => {
         ticketDetail.resultDetail = "Đã hủy";
         ticketDetail.save();
         
-        res.send({ticketDetail, orderItem});
+        res.send({ticketDetail, orderItem, user});
     } catch (error) {
         res.send({
             status: false, 
