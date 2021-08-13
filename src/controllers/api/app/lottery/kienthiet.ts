@@ -56,7 +56,7 @@ router.post("/orders", async (req: Request, res: Response) => {
         const user: any = req.user;
         const body = req.body;
         let status = true, message, dataImport: any = null;
-        let orderDetail: any[] = [];
+        const orderDetail: any[] = [];
         const numberPrice = 5000;
         let isCreateTicket: boolean = false;
         let fee = 0;
@@ -81,7 +81,7 @@ router.post("/orders", async (req: Request, res: Response) => {
                 if (Object.keys(body.data).length > 0) {
 
                     // tạm tính tiền
-                    let priceOrder:number = 0;
+                    let priceOrder: number = 0;
                     body.data.forEach((number: any) => {
                         priceOrder = priceOrder + (numberPrice * number.total);
                     });

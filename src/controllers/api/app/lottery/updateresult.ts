@@ -2,7 +2,9 @@ import { LotteryOrdersModel } from "@models/LotteryOrder";
 import { LotteryTicketModel } from "@models/LotteryTicket";
 import { UserModel } from "@models/User";
 import LotteryHelper from "./helper";
-import { UserHistoryModel } from "@models/LotteryUserHistory";
+import { UserHistoryModel, UserHistoryAdd } from "@models/LotteryUserHistory";
+import { LotteryNotifyModel, UserNotifyAdd } from "@models/LotteryNotify";
+import helper from "@controllers/api/helper/helper";
 
 const updateResult = async (game: string, data: any) => {
 
@@ -71,6 +73,22 @@ const updateResult = async (game: string, data: any) => {
                             orderUpdate.resultStatus = (isWin) ? LotteryOrdersModel.RESULTSTATUS_ENUM.WINNED : LotteryOrdersModel.RESULTSTATUS_ENUM.DRAWNED;
                             await orderUpdate.save();
                             await orderUpdate.reload();
+
+                            if (isWin) {
+                                UserNotifyAdd(
+                                    orderUpdate.userId,
+                                    LotteryNotifyModel.NOTIFY_SLUG_ENUM.KENO,
+                                    LotteryNotifyModel.NOTIFY_NAME_ENUM.KENO,
+                                    "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + "."
+                                );
+                                UserHistoryAdd(
+                                    orderData.userId,
+                                    UserHistoryModel.ACTION_SLUG_ENUM.USER_REWARD,
+                                    UserHistoryModel.ACTION_NAME_ENUM.USER_REWARD,
+                                    "Trúng " + helper.numberformat(updateReward) + "đ vé Keno " + orderData.ticketId + "."
+                                );
+                            }
+
                             break;
 
 
@@ -167,6 +185,21 @@ const updateResult = async (game: string, data: any) => {
                             await orderUpdateChanle.save();
                             await orderUpdateChanle.reload();
 
+                            if (isWinChanLe) {
+                                await UserNotifyAdd(
+                                    orderData.userId,
+                                    LotteryNotifyModel.NOTIFY_SLUG_ENUM.KENO,
+                                    LotteryNotifyModel.NOTIFY_NAME_ENUM.KENO,
+                                    "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + "."
+                                );
+                                await UserHistoryAdd(
+                                    orderData.userId,
+                                    UserHistoryModel.ACTION_SLUG_ENUM.USER_REWARD,
+                                    UserHistoryModel.ACTION_NAME_ENUM.USER_REWARD,
+                                    "Trúng " + helper.numberformat(updateReward) + "đ vé Keno " + orderData.ticketId + "."
+                                );
+                            }
+
                             break;
                     }
                 });
@@ -237,6 +270,21 @@ const updateResult = async (game: string, data: any) => {
                     await orderUpdate.save();
                     await orderUpdate.reload();
 
+                    if (isWin) {
+                        await UserNotifyAdd(
+                            orderData.userId,
+                            LotteryNotifyModel.NOTIFY_SLUG_ENUM.POWER,
+                            LotteryNotifyModel.NOTIFY_NAME_ENUM.POWER,
+                            "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + "."
+                        );
+                        await UserHistoryAdd(
+                            orderData.userId,
+                            UserHistoryModel.ACTION_SLUG_ENUM.USER_REWARD,
+                            UserHistoryModel.ACTION_NAME_ENUM.USER_REWARD,
+                            "Trúng " + helper.numberformat(updateReward) + "đ vé Power " + orderData.ticketId + "."
+                        );
+                    }
+
                 });
 
             } catch (error) {
@@ -303,6 +351,22 @@ const updateResult = async (game: string, data: any) => {
                     orderUpdate.resultStatus = (isWin) ? LotteryOrdersModel.RESULTSTATUS_ENUM.WINNED : LotteryOrdersModel.RESULTSTATUS_ENUM.DRAWNED;
                     await orderUpdate.save();
                     await orderUpdate.reload();
+
+                    if (isWin) {
+                        await UserNotifyAdd(
+                            orderData.userId,
+                            LotteryNotifyModel.NOTIFY_SLUG_ENUM.MEGA,
+                            LotteryNotifyModel.NOTIFY_NAME_ENUM.MEGA,
+                            "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + "."
+                        );
+                        await  UserHistoryAdd(
+                            orderData.userId,
+                            UserHistoryModel.ACTION_SLUG_ENUM.USER_REWARD,
+                            UserHistoryModel.ACTION_NAME_ENUM.USER_REWARD,
+                            "Trúng " + helper.numberformat(updateReward) + "đ vé Mega " + orderData.ticketId + "."
+                        );
+                    }
+
 
                 });
 
@@ -460,9 +524,6 @@ const updateResult = async (game: string, data: any) => {
 
                     };
 
-                    console.log(dataUpdate);
-
-
                     dataUpdate.result.iswin = isWin, dataUpdate.result.totalreward = updateReward;
 
                     const orderUpdate = await LotteryOrdersModel.findOne({ where: { id: orderData.id } });
@@ -471,6 +532,21 @@ const updateResult = async (game: string, data: any) => {
                     orderUpdate.resultStatus = (isWin) ? LotteryOrdersModel.RESULTSTATUS_ENUM.WINNED : LotteryOrdersModel.RESULTSTATUS_ENUM.DRAWNED;
                     await orderUpdate.save();
                     await orderUpdate.reload();
+
+                    if (isWin) {
+                        await UserNotifyAdd(
+                            orderData.userId,
+                            LotteryNotifyModel.NOTIFY_SLUG_ENUM.MAX3D,
+                            LotteryNotifyModel.NOTIFY_NAME_ENUM.MAX3D,
+                            "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + "."
+                        );
+                        await UserHistoryAdd(
+                            orderData.userId,
+                            UserHistoryModel.ACTION_SLUG_ENUM.USER_REWARD,
+                            UserHistoryModel.ACTION_NAME_ENUM.USER_REWARD,
+                            "Trúng " + helper.numberformat(updateReward) + "đ vé Max3D " + orderData.ticketId + "."
+                        );
+                    }
 
                 });
 
@@ -638,6 +714,22 @@ const updateResult = async (game: string, data: any) => {
                     orderUpdate.resultStatus = (isWin) ? LotteryOrdersModel.RESULTSTATUS_ENUM.WINNED : LotteryOrdersModel.RESULTSTATUS_ENUM.DRAWNED;
                     await orderUpdate.save();
                     await orderUpdate.reload();
+
+                    if (isWin) {
+                        await UserNotifyAdd(
+                            orderData.userId,
+                            LotteryNotifyModel.NOTIFY_SLUG_ENUM.MAX3DPLUS,
+                            LotteryNotifyModel.NOTIFY_NAME_ENUM.MAX3DPLUS,
+                            "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + "."
+                        );
+                        await UserHistoryAdd(
+                            orderData.userId,
+                            UserHistoryModel.ACTION_SLUG_ENUM.USER_REWARD,
+                            UserHistoryModel.ACTION_NAME_ENUM.USER_REWARD,
+                            "Trúng " + helper.numberformat(updateReward) + "đ vé Max3D Plus " + orderData.ticketId + "."
+                        );
+                    }
+
 
                 });
 
@@ -844,6 +936,21 @@ const updateResult = async (game: string, data: any) => {
                                 await orderUpdate.save();
                                 await orderUpdate.reload();
 
+                                if (isWin) {
+                                    await UserNotifyAdd(
+                                        orderData.userId,
+                                        LotteryNotifyModel.NOTIFY_SLUG_ENUM.MAX4D,
+                                        LotteryNotifyModel.NOTIFY_NAME_ENUM.MAX4D,
+                                        "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + "."
+                                    );
+                                    await UserHistoryAdd(
+                                        orderData.userId,
+                                        UserHistoryModel.ACTION_SLUG_ENUM.USER_REWARD,
+                                        UserHistoryModel.ACTION_NAME_ENUM.USER_REWARD,
+                                        "Trúng " + helper.numberformat(updateReward) + "đ vé Max4D " + orderData.ticketId + "."
+                                    );
+                                }
+
                                 break;
 
 
@@ -857,7 +964,7 @@ const updateResult = async (game: string, data: any) => {
                         }
 
 
-                        
+
                     }
 
                 });

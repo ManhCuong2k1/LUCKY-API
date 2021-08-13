@@ -23,13 +23,15 @@ class UserHistoryModel extends Model<UserHistoryInterface> implements UserHistor
     static readonly ACTION_SLUG_ENUM = {
         RECHARGE: "rechage",
         BUY_TICKET: "buy_ticket",
-        EXCHANGE_REWARD: "exchange_reward"
+        EXCHANGE_REWARD: "exchange_reward",
+        USER_REWARD: "user_reward"
     }
 
     static readonly ACTION_NAME_ENUM = {
         BUY_TICKET: "Mua vé",
         RECHARGE: "Nạp tiền",
         EXCHANGE_REWARD: "Đổi thưởng",
+        USER_REWARD: "Trúng Thưởng"
     };
 }
 
