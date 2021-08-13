@@ -45,6 +45,7 @@ class LotteryTicketModel extends Model<LotteryTicketInterface> implements Lotter
         LOTO2: "loto2",
         LOTO3: "loto3",
         LOTO5: "loto5",
+        KIENTHIET: "kienthiet",
     };
     static readonly TICKET_ENUM = {
         DELAY: "delay",

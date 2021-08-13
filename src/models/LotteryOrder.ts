@@ -45,6 +45,7 @@ class LotteryOrdersModel extends Model<LotteryOrdersInterface> implements Lotter
         LOTO3: "loto3",
         LOTO5: "loto5",
         LOTO234: "loto234",
+        KIENTHIET: "kienthiet",
     };
     static readonly ORDERSTATUS_ENUM = {
         DELAY: "delay",

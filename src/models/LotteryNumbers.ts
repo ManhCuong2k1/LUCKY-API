@@ -3,8 +3,8 @@ import sequelize from "@database/connection";
 
 interface LotteryNumbersInterface {
     id: number;
-    userId: number;
     number: string;
+    total: number;
     date: string;
     status: string;
     createdAt: Date;
@@ -13,16 +13,16 @@ interface LotteryNumbersInterface {
 
 class LotteryNumbersModel extends Model<LotteryNumbersInterface> implements LotteryNumbersInterface {
     public id!: number;
-    public userId: number;
     public number: string;
+    public total: number;
     public date: string;
     public status: string;
     public createdAt: Date;
     public updatedAt: Date;
 
     static readonly STATUS_ENUM = {
-        TRUE: true,
-        FASLE: false
+        TRUE: "true",
+        FASLE: "false"
     };
 }
 
@@ -32,11 +32,11 @@ const LotteryNumbersDefine = {
         primaryKey: true,
         autoIncrement: true,
     },
-    userId: {
-        type: DataTypes.INTEGER,
-    },
     number: {
         type: DataTypes.STRING,
+    },
+    total: {
+        type: DataTypes.INTEGER,
     },
     date: {
         type: DataTypes.STRING,
@@ -60,18 +60,6 @@ LotteryNumbersModel.init(LotteryNumbersDefine, {
     sequelize,
 });
 
-const sortArr = (arr: any) => {
-    const length = arr.length;
-    for (let j = 0; j < length - 1; j++) {
-        if (Number(arr[j]) > Number(arr[j + 1])) {
-            const temp = arr[j];
-            arr[j] = arr[j + 1];
-            arr[j + 1] = temp;
-            j = -1;
-        }
-    }
-    return arr;
-};
 
 const getNumbers = async (date: string, status: string) => {
     const dataExport: any[] = [];
@@ -82,31 +70,34 @@ const getNumbers = async (date: string, status: string) => {
         order: [["number", "ASC"]],
     });
 
-    getNumberDB.forEach(async (data: any) => {
+    for (const data of getNumberDB) {
         if (arrNumbers.indexOf(data.number) < 0) {
             arrNumbers.push(data.number);
-
-            const rowsCount = await LotteryNumbersModel.findAndCountAll({
-                where: { number: data.number }
-            });
-
             dataExport.push({
                 number: data.number,
-                total: rowsCount.count
+                total: data.total
             });
         }
-    });
+    }
 
     return dataExport;
 };
 
-// const sayHi = async () => {
-//     const hi = await getNumbers("13-08-2021", "true");
-//     console.log(hi);
-// };
+const getOneNumber = async (number: string, date: string, status: string) => {
+    const numberDB = await LotteryNumbersModel.findOne({
+        where: {
+            number,
+            date,
+            status
+        }
+    });
+    return numberDB;
+};
+
 
 export {
     LotteryNumbersInterface,
     LotteryNumbersModel,
-    getNumbers
+    getNumbers,
+    getOneNumber
 };

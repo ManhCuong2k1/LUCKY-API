@@ -19,13 +19,8 @@ LotteryTicketModel.hasMany(LotteryImagesModel, { as: "image", constraints: false
 LotteryRechargeModel.belongsTo(UserModel, { as: "user", constraints: false });
 UserHistoryModel.belongsTo(UserModel, { as: "user", constraints: false, foreignKey: "userId"  });
 UserModel.hasMany(LotteryNotifyModel, { as: "user_notify", constraints: false, foreignKey: "userId" });
-UserModel.hasMany(LotteryNumbersModel, { as: "user_number", constraints: false, foreignKey: "userId" });
-
-
 UserModel.hasMany(Image, { as: "user", constraints: false, foreignKey: "UserId" });
 LotteryExchangesModel.belongsTo(UserModel, { as: "user_exchange", constraints: false, foreignKey: "userId" });
-SettingsModel;
-LotteryNumbersModel;
 const models = sequelize.sync({ alter: true, logging: false });
 
 export { models };

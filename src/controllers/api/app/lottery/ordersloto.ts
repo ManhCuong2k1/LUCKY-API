@@ -604,7 +604,7 @@ router.post("/", async (req: Request, res: Response) => {
                 const currentTimeLoto5 = helper.getTime(helper.timeStamp());
                 const isActiveOrderLoto5 = (currentTimeLoto5.getHours() != 18) ? true : false;
 
-                if (isActiveOrderLoto3) { // kiểm tra đơn hàng có thể order trong thời gian cho phép hay không
+                if (isActiveOrderLoto5) { // kiểm tra đơn hàng có thể order trong thời gian cho phép hay không
 
                     let timeOrder: any = helper.timeStamp();
 
