@@ -29,7 +29,8 @@ class LotteryResultsModel extends Model<LotteryResultsInterface> implements Lott
         MEGA: "mega",
         MAX3D: "max3d",
         MAX3DPLUS: "max3dplus",
-        MAX4D: "max4d"
+        MAX4D: "max4d",
+        XOSOMIENBAC: "xosomienbac"
     };
 }
 

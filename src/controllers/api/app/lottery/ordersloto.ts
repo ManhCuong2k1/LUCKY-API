@@ -142,7 +142,6 @@ router.post("/", async (req: Request, res: Response) => {
                     });
 
                     fee = (fee * totalPrice) / 100;
-
                     const orderPrice = totalPrice; // tiền 1 đơn
                     totalPrice = (totalPrice * Number(body.preriod)) + fee; // tiền thanh toán khi đặt liên tiếp các kỳ
 
@@ -624,6 +623,7 @@ router.post("/", async (req: Request, res: Response) => {
                         totalPrice = totalPrice + data.price;
                     });
 
+            
                     fee = (fee * totalPrice) / 100;
 
                     const orderPrice = totalPrice; // tiền 1 đơn
