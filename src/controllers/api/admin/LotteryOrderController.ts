@@ -3,9 +3,15 @@ import { LotteryOrdersModel } from "@models/LotteryOrder";
 import { LotteryImagesModel } from "@models/LotteryImages";
 import { UserModel } from "@models/User";
 import { LotteryTicketModel } from "@models/LotteryTicket";
+import { LotteryNumbersModel } from "@models/LotteryNumbers";
+import { LotteryNumberExcelsModel } from "@models/LotteryNumberExcel";
 import { GridInterface } from "@models/Transformers/Grid";
 import { Op } from "sequelize";
 import moment from "moment-timezone";
+import { uploadFile } from "../../../middleware/file";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const readXlsxFile = require("read-excel-file/node");
+import path from "path";
 import { type } from "os";
 const router = Router();
 
@@ -111,7 +117,10 @@ router.get("/computer", async (req: Request, res: Response) => {
                 [Op.or]: [
                     { type: LotteryTicketModel.GAME_ENUM.COMPUTE123 },
                     { type: LotteryTicketModel.GAME_ENUM.COMPUTE636 },
-                    { type: LotteryTicketModel.GAME_ENUM.THANTAI4 },
+                    { type: LotteryTicketModel.GAME_ENUM.LOTO234 },
+                    { type: LotteryTicketModel.GAME_ENUM.LOTO2 },
+                    { type: LotteryTicketModel.GAME_ENUM.LOTO3 },
+                    { type: LotteryTicketModel.GAME_ENUM.LOTO5 },
                 ],
 
             },
@@ -150,9 +159,9 @@ router.get("/computer", async (req: Request, res: Response) => {
     }
 });
 
-// Lấy danh sách vé Loto
+// Lấy danh sách vé Kien thiet
 
-router.get("/loto", async (req: Request, res: Response) => {
+router.get("/construction", async (req: Request, res: Response) => {
     try {
         const page: number = parseInt(req.query.page ? req.query.page.toString() : "1");
         const pageSize: number = parseInt(req.query.pageSize ? req.query.pageSize.toString() : "20");
@@ -177,12 +186,7 @@ router.get("/loto", async (req: Request, res: Response) => {
         const { rows, count } = await LotteryTicketModel.findAndCountAll({
             where: {
                 ...where,
-                [Op.or]: [
-                    { type: LotteryTicketModel.GAME_ENUM.LOTO234 },
-                    { type: LotteryTicketModel.GAME_ENUM.LOTO2 },
-                    { type: LotteryTicketModel.GAME_ENUM.LOTO3 },
-                    { type: LotteryTicketModel.GAME_ENUM.LOTO5 },
-                ],
+                type: LotteryTicketModel.GAME_ENUM.KIENTHIET,
 
             },
             include: [{
@@ -398,6 +402,78 @@ router.post("/:id", async (req: Request, res: Response) => {
             message: "can\'t upload image with ID: "+ req.params.id
         });   
     }
+});
+
+router.post("/excel/upload", uploadFile.single("file"), async (req: Request, res: Response) => {
+    try {
+        if (req.file == undefined) {
+          return res.status(400).send("Please upload an excel file!");
+        }
+        
+        const fileFolder = path.join(__dirname, "../../../../public/uploads/" + req.file.filename);
+        
+        const excelFile: any = {
+            name: req.file.filename,
+            path: `/uploads/${req.file.filename}`,
+        };
+        
+        await LotteryNumberExcelsModel.create(excelFile);
+    
+        readXlsxFile(fileFolder).then(async (rows: any[]) => {
+            rows.shift();
+            
+            const tutorials: any = [];
+        
+            rows.forEach((row) => {
+                const tutorial = {
+                number: row[0],
+                total: row[1],
+                status: LotteryNumbersModel.STATUS_ENUM.TRUE,
+                date: req.body.date
+                };
+        
+                tutorials.push(tutorial);
+            });
+    
+            const response = await LotteryNumbersModel.bulkCreate(tutorials);
+            res.send({response, file: req.file.filename});
+        });
+      } catch (error) {
+        console.log(error);
+        res.status(500).send({
+          message: "Could not upload the file: " + req.file.originalname,
+        });
+      }
+});
+
+router.post("/date/upload", async (req: Request, res: Response) => {
+    try {
+        const data = await LotteryNumbersModel.findAll({
+            where: {    
+                createdAt: req.body.createAt    
+            }
+        });
+        console.log(data);
+        
+        const dataExcel = await LotteryNumberExcelsModel.findOne({
+            where: {
+                name: req.body.file
+            }
+        });
+        dataExcel.date = req.body.date;
+        await dataExcel.save();
+        data.forEach( async (e) => {
+            e.date = req.body.date;
+            await e.save();
+        });
+        res.send(data);
+        
+      } catch (error) {
+        console.log(error);
+        res.status(500).send({
+          message: "Could not upload the file: " + req.file.originalname,
+        });
+      }
 });
 
 export default router;
