@@ -30,7 +30,16 @@ class LotteryResultsModel extends Model<LotteryResultsInterface> implements Lott
         MAX3D: "max3d",
         MAX3DPLUS: "max3dplus",
         MAX4D: "max4d",
-        XOSOMIENBAC: "xosomienbac"
+        XOSOMIENBAC: "xosomienbac",
+        COMPUTE123: "compute123",
+        COMPUTE636: "compute636",
+        THANTAI4: "godofwealth",
+        LOTO2: "loto2",
+        LOTO3: "loto3",
+        LOTO5: "loto5",
+        LOTO234: "loto234",
+        KIENTHIET: "kienthiet",
+        LOTORESULT: "loto_result",
     };
 }
 

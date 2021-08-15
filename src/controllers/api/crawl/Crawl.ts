@@ -733,14 +733,14 @@ const XosoMienBac = async () => {
 
       // lấy nội dung giải db trong bảng
       html = helper.cutstring(tableResult, "<tbody>", "</tbody>");
-      dataXoso["giaidacbiet"] = helper.cutstring(html, 'f3b" colspan="12">', "</td>");
+      dataXoso["giaidacbiet"] = helper.cutstring(html, "f3b\" colspan=\"12\">", "</td>");
       // lấy nội dung giải nhat trong bảng
-      dataXoso["giainhat"] = helper.cutstring(html, 'f2" colspan="12">', "</td>");
+      dataXoso["giainhat"] = helper.cutstring(html, "f2\" colspan=\"12\">", "</td>");
 
       // lấy nội dung giải nhi trong bảng
-      html = helper.cutstring(html, '<h3>Giải Nhì</h3>', '</tr>');
-      html = helper.replaceString(html, '</td>', '');
-      html = helper.replaceString(html, '<td class="bor f2" colspan="6">', ",");
+      html = helper.cutstring(html, "<h3>Giải Nhì</h3>", "</tr>");
+      html = helper.replaceString(html, "</td>", "");
+      html = helper.replaceString(html, "<td class=\"bor f2\" colspan=\"6\">", ",");
       html = helper.replaceString(html, "\n", "");
       html = html.substring(1);
       arrNumber = html.split(",");
@@ -748,11 +748,11 @@ const XosoMienBac = async () => {
 
       // lấy nội dung giải ba trong bảng
       html = helper.cutstring(tableResult, "<tbody>", "</tbody>");
-      html = helper.cutstring(html, '<h3>Giải Ba</h3>', '<td class="span-2 bol f1b">');
-      html = helper.replaceString(html, '</td>', '');
-      html = helper.replaceString(html, '<tr>', '');
-      html = helper.replaceString(html, '</tr>', '');
-      html = helper.replaceString(html, '<td class="bol f2" colspan="4">', ",");
+      html = helper.cutstring(html, "<h3>Giải Ba</h3>", "<td class=\"span-2 bol f1b\">");
+      html = helper.replaceString(html, "</td>", "");
+      html = helper.replaceString(html, "<tr>", "");
+      html = helper.replaceString(html, "</tr>", "");
+      html = helper.replaceString(html, "<td class=\"bol f2\" colspan=\"4\">", ",");
       html = helper.replaceString(html, "\n", "");
       html = html.substring(1);
       arrNumber = html.split(",");
@@ -760,9 +760,9 @@ const XosoMienBac = async () => {
 
       // lấy nội dung giải tu trong bảng
       html = helper.cutstring(tableResult, "<tbody>", "</tbody>");
-      html = helper.cutstring(html, '<h3>Giải Tư</h3>', '</tr>');
-      html = helper.replaceString(html, '</td>', '');
-      html = helper.replaceString(html, '<td class="bol f2" colspan="3">', ",");
+      html = helper.cutstring(html, "<h3>Giải Tư</h3>", "</tr>");
+      html = helper.replaceString(html, "</td>", "");
+      html = helper.replaceString(html, "<td class=\"bol f2\" colspan=\"3\">", ",");
       html = helper.replaceString(html, "\n", "");
       html = html.substring(1);
       arrNumber = html.split(",");
@@ -770,11 +770,11 @@ const XosoMienBac = async () => {
 
       // lấy nội dung giải nam trong bảng
       html = helper.cutstring(tableResult, "<tbody>", "</tbody>");
-      html = helper.cutstring(html, '<h3>Giải Năm</h3>', '<td class="span-2 bol f1b">');
-      html = helper.replaceString(html, '</td>', '');
-      html = helper.replaceString(html, '<tr>', '');
-      html = helper.replaceString(html, '</tr>', '');
-      html = helper.replaceString(html, '<td class="bol f2" colspan="4">', ",");
+      html = helper.cutstring(html, "<h3>Giải Năm</h3>", "<td class=\"span-2 bol f1b\">");
+      html = helper.replaceString(html, "</td>", "");
+      html = helper.replaceString(html, "<tr>", "");
+      html = helper.replaceString(html, "</tr>", "");
+      html = helper.replaceString(html, "<td class=\"bol f2\" colspan=\"4\">", ",");
       html = helper.replaceString(html, "\n", "");
       html = html.substring(1);
       arrNumber = html.split(",");
@@ -782,9 +782,9 @@ const XosoMienBac = async () => {
 
       // lấy nội dung giải sau trong bảng
       html = helper.cutstring(tableResult, "<tbody>", "</tbody>");
-      html = helper.cutstring(html, '<h3>Giải Sáu</h3>', '</tr>');
-      html = helper.replaceString(html, '</td>', '');
-      html = helper.replaceString(html, '<td class="bol f2" colspan="4">', ",");
+      html = helper.cutstring(html, "<h3>Giải Sáu</h3>", "</tr>");
+      html = helper.replaceString(html, "</td>", "");
+      html = helper.replaceString(html, "<td class=\"bol f2\" colspan=\"4\">", ",");
       html = helper.replaceString(html, "\n", "");
       html = html.substring(1);
       arrNumber = html.split(",");
@@ -792,9 +792,9 @@ const XosoMienBac = async () => {
 
       // lấy nội dung giải bay trong bảng
       html = helper.cutstring(tableResult, "<tbody>", "</tbody>");
-      html = helper.cutstring(html, '<h3>Giải Bảy</h3>', '</tr>');
-      html = helper.replaceString(html, '</td>', '');
-      html = helper.replaceString(html, '<td class="bol f2" colspan="3">', ",");
+      html = helper.cutstring(html, "<h3>Giải Bảy</h3>", "</tr>");
+      html = helper.replaceString(html, "</td>", "");
+      html = helper.replaceString(html, "<td class=\"bol f2\" colspan=\"3\">", ",");
       html = helper.replaceString(html, "\n", "");
       html = html.substring(1);
       arrNumber = html.split(",");
@@ -807,7 +807,7 @@ const XosoMienBac = async () => {
         const dataImport: any = {
           type: LotteryResultsModel.GAME_ENUM.XOSOMIENBAC,
           date: currentDate,
-          next: moment().add(1, 'days').format('YYYY/MM/DD 18:15:00'),
+          next: moment().add(1, "days").format("YYYY/MM/DD 18:15:00"),
           round: roundId,
           result: JSON.stringify(dataXoso)
         };
@@ -833,6 +833,173 @@ const XosoMienBac = async () => {
   }
 };
 
+const Xoso6x36 = async () => {
+  try {
+    const options = {
+      "method": "GET",
+      "rejectUnauthorized": false,
+      "url": "https://api.vietluck.vn/api/v1/lottery-results?productid=9",
+      "headers": {}
+    };
+
+    // lấy nội dung kỳ quay số  kết quả
+    let dataResp = await request(options);
+    dataResp = JSON.parse(dataResp);
+
+    const TimeOfData = dataResp.termDate.split("/");
+    const TimeMomentInput = TimeOfData[1] + "-" + TimeOfData[0] + "-" + TimeOfData[2];
+    
+    const roundId = moment(TimeMomentInput).format("YYYYMMDD");
+    const result = dataResp.result.split(",");
+    const date = moment(TimeMomentInput).format("DD/MM/YYYY");
+
+    const LotteryCheckExits = await LotteryResultsCheck(LotteryResultsModel.GAME_ENUM.COMPUTE636, roundId);
+
+    if (!LotteryCheckExits) {
+      const dataImport: any = {
+        type: LotteryResultsModel.GAME_ENUM.COMPUTE636,
+        date: date,
+        next: moment().add(1, "days").format("YYYY/MM/DD 18:15:00"),
+        round: roundId,
+        result: JSON.stringify(result)
+      };
+
+      LotteryResultsModel.create(dataImport);
+    }
+
+    return {
+      status: true,
+      data: dataResp,
+      message: "Success"
+    };
+
+  }catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      msg: error.message
+    };
+  }
+}
+
+
+const DienToan123 = async () => {
+  try {
+    const options = {
+      "method": "GET",
+      "rejectUnauthorized": false,
+      "url": "https://api.vietluck.vn/api/v1/lottery-results?productid=11",
+      "headers": {}
+    };
+
+    // lấy nội dung kỳ quay số  kết quả
+    let dataResp = await request(options);
+    dataResp = JSON.parse(dataResp);
+
+    const TimeOfData = dataResp.termDate.split("/");
+    const TimeMomentInput = TimeOfData[1] + "-" + TimeOfData[0] + "-" + TimeOfData[2];
+    
+    const roundId = moment(TimeMomentInput).format("YYYYMMDD");
+    const result = dataResp.result.split(",");
+    const date = moment(TimeMomentInput).format("DD/MM/YYYY");
+
+    const LotteryCheckExits = await LotteryResultsCheck(LotteryResultsModel.GAME_ENUM.COMPUTE123, roundId);
+
+    if (!LotteryCheckExits) {
+      const dataImport: any = {
+        type: LotteryResultsModel.GAME_ENUM.COMPUTE123,
+        date: date,
+        next: moment().add(1, "days").format("YYYY/MM/DD 18:15:00"),
+        round: roundId,
+        result: JSON.stringify(result)
+      };
+
+      LotteryResultsModel.create(dataImport);
+    }
+    
+    return {
+      status: true,
+      data: dataResp,
+      message: "Success"
+    };
+
+  }catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      msg: error.message
+    };
+  }
+}
+
+
+
+const LotoCrawl = async () => {
+  try {
+    const options = {
+      "method": "GET",
+      "rejectUnauthorized": false,
+      "url": "https://rongbachkim.com/ketqua.php?getkq&ngay=&days=1&wday=0",
+      "headers": {}
+    };
+    // lấy nội dung kỳ quay số  kết quả
+    let dataResp = await request(options);
+    dataResp = JSON.parse(dataResp);
+    dataResp = dataResp[0];
+
+    const today = moment().format("YYYY-MM-DD");
+
+    const roundId = moment().format("YYYYMMDD");
+    const date = moment().format("DD/MM/YYYY");
+
+
+    if(dataResp[0] == today) {
+
+      let dataExport: any[] = [];
+
+      for (var number of dataResp[1]) {
+        const numberLastChar = number.slice(-2);;
+        if(numberLastChar >= 2) {
+         dataExport.push(numberLastChar);          
+        }
+      }
+
+      const LotteryCheckExits = await LotteryResultsCheck(LotteryResultsModel.GAME_ENUM.LOTORESULT, roundId);
+
+      if (!LotteryCheckExits) {
+        const dataImport: any = {
+          type: LotteryResultsModel.GAME_ENUM.LOTORESULT,
+          date: date,
+          next: moment().add(1, "days").format("YYYY/MM/DD 18:15:00"),
+          round: roundId,
+          result: JSON.stringify(dataExport)
+        };
+        LotteryResultsModel.create(dataImport);
+      }
+    
+
+      return {
+        status: true,
+        data: dataExport,
+        message: "Success"
+      };
+    }else {
+      return {
+        status: false,
+        msg: "Chưa có kết quả cho ngày " + today
+      };
+    }
+
+  }catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      msg: error.message
+    };
+  }
+}
+
+
 
 
 
@@ -844,5 +1011,8 @@ export default {
   XosoMax3dData,
   XosoMax4dData,
   getKenoCurrentRound,
-  XosoMienBac
+  XosoMienBac,
+  Xoso6x36,
+  DienToan123,
+  LotoCrawl
 };

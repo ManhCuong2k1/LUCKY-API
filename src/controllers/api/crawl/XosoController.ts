@@ -121,9 +121,38 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
             }
         break;
 
+        case "6x36":
+            try {
+                const crawling = await Crawl.Xoso6x36();
+                return res.send(crawling);
+            }catch(e) {
+                res.status(401).send({
+                    code: e.message
+                });
+            }
+        break;
 
+        case "dientoan123":
+            try {
+                const crawling = await Crawl.DienToan123();
+                return res.send(crawling);
+            }catch(e) {
+                res.status(401).send({
+                    code: e.message
+                });
+            }
+        break;
 
-
+        case "ketqualoto":
+            try {
+                const crawling = await Crawl.LotoCrawl();
+                return res.send(crawling);
+            }catch(e) {
+                res.status(401).send({
+                    code: e.message
+                });
+            }
+        break;
 
 
         default:
