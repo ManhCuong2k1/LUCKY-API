@@ -110,6 +110,22 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
             }
             break;
 
+        case "mienbac":
+            try {
+                const crawling = await Crawl.XosoMienBac();
+                return res.send(crawling);
+            }catch(e) {
+                res.status(401).send({
+                    code: e.message
+                });
+            }
+        break;
+
+
+
+
+
+
         default:
             res.status(403).send("403");
             break;
