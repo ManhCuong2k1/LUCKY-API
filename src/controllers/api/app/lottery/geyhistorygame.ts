@@ -145,15 +145,13 @@ router.get("/ticketDetail", async (req: Request, res: Response) => {
                 }
             }); 
 
-            const ticketImages = await LotteryImagesModel.findOne({
+            let ticketImages = await LotteryImagesModel.findOne({
                 where: {
                     LotteryTicketModelId: req.query.id
                 },
                 order: [["id", "ASC"]]
             });
 
-            ticketImages.beforeImage = process.env.HOST_IMAGES_EXPORT_URL + ticketImages.beforeImage;
-            ticketImages.afterImage = process.env.HOST_IMAGES_EXPORT_URL + ticketImages.afterImage;
 
             const ordersData = await LotteryOrdersModel.findAll({
                 where: {
@@ -165,7 +163,16 @@ router.get("/ticketDetail", async (req: Request, res: Response) => {
 
             const dataExport: any = {};
             dataExport["ticket"] = ticketData;
-            dataExport["images"] = ticketImages;
+
+            if(ticketImages == null ) {
+                let ticketImages:any = {};
+                ticketImages.beforeImage = null;
+                ticketImages.afterImage = null;
+                dataExport["images"] = ticketImages;
+            }else {
+                dataExport["images"] = ticketImages;                
+            }
+
             dataExport["order"] = [];
 
             ordersData.forEach((order: any) => {
