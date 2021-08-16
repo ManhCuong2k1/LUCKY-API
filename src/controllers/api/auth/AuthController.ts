@@ -160,7 +160,6 @@ router.post("/refresh", auth, async (req: Request, res: Response) => {
 router.get("/me", auth, async (req, res) => {
   try {
     const user: any = req.user;
-    console.log(user);
     const userJSON: any = user.toJSON();
     delete userJSON.password;
     res.send({ user: userJSON });

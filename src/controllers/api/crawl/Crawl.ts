@@ -42,14 +42,14 @@ const XosoGetNextTime = async (type: string) => {
     return {
       status: status,
       next: timeNext,
-      msg: "Success"
+      message: "Success"
     };
 
   } catch (e) {
     console.log(e);
     return {
       status: false,
-      msg: e.message
+      message: e.message
     };
   }
 };
@@ -102,7 +102,7 @@ const XosoGetJackPot = async (type: string) => {
     console.log(e);
     return {
       status: false,
-      msg: e.message
+      message: e.message
     };
   }
 };
@@ -202,14 +202,14 @@ const XosoKenoData = async () => {
     return {
       status: true,
       data: dataXoso,
-      msg: "Success"
+      message: "Success"
     };
 
   } catch (e) {
     console.log(e);
     return {
       status: false,
-      msg: e.message
+      message: e.message
     };
   }
 };
@@ -273,14 +273,14 @@ const XosoPowerData = async () => {
     return {
       status: true,
       data: dataXoso,
-      msg: "Success"
+      message: "Success"
     };
 
   } catch (e) {
     console.log(e);
     return {
       status: false,
-      msg: e.message
+      message: e.message
     };
   }
 };
@@ -344,14 +344,14 @@ const XosoMegaData = async () => {
     return {
       status: true,
       data: dataXoso,
-      msg: "Success"
+      message: "Success"
     };
 
   } catch (e) {
     console.log(e);
     return {
       status: false,
-      msg: e.message
+      message: e.message
     };
   }
 };
@@ -533,7 +533,7 @@ const XosoMax3dData = async () => {
     console.log(e);
     return {
       status: false,
-      msg: e.message
+      message: e.message
     };
   }
 };
@@ -649,12 +649,10 @@ const XosoMax4dData = async () => {
     console.log(e);
     return {
       status: false,
-      msg: e.message
+      message: e.message
     };
   }
 };
-
-
 
 
 
@@ -685,7 +683,7 @@ const getKenoCurrentRound = async () => {
     console.log(error);
     return {
       status: false,
-      msg: error.message
+      message: error.message
     };
   }
 
@@ -712,7 +710,7 @@ const XosoMienBac = async () => {
     if (dataResp.includes("Không có kết quả") == true) {
       return {
         status: false,
-        msg: "Chưa có kết quả cho ngày " + today
+        message: "Chưa có kết quả cho ngày " + today
       };
     } else {
       // lấy nội dung bảng kết quả
@@ -828,7 +826,7 @@ const XosoMienBac = async () => {
     console.log(error);
     return {
       status: false,
-      msg: error.message
+      message: error.message
     };
   }
 };
@@ -877,7 +875,7 @@ const Xoso6x36 = async () => {
     console.log(error);
     return {
       status: false,
-      msg: error.message
+      message: error.message
     };
   }
 };
@@ -927,7 +925,7 @@ const DienToan123 = async () => {
     console.log(error);
     return {
       status: false,
-      msg: error.message
+      message: error.message
     };
   }
 };
@@ -985,7 +983,7 @@ const LotoCrawl = async () => {
     }else {
       return {
         status: false,
-        msg: "Chưa có kết quả cho ngày " + today
+        message: "Chưa có kết quả cho ngày " + today
       };
     }
 
@@ -993,7 +991,7 @@ const LotoCrawl = async () => {
     console.log(error);
     return {
       status: false,
-      msg: error.message
+      message: error.message
     };
   }
 };

@@ -34,6 +34,7 @@ interface UserInterface {
   totalCoin: number;
   totalReward: number;
   role: string;
+  fcmtoken: string;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date;
@@ -63,6 +64,7 @@ class UserModel extends Model<UserInterface> implements UserInterface {
   public totalCoin: number;
   public totalReward: number;
   public role: string;
+  public fcmtoken: string;
   public createdAt: Date;
   public updatedAt: Date;
   public deletedAt: Date;
@@ -245,6 +247,7 @@ const UserDefine = {
   isEnableReceiveEmail: { type: DataTypes.BOOLEAN, defaultValue: true },
   totalCoin: { type: DataTypes.BIGINT, defaultValue: 0 },
   totalReward: { type: DataTypes.BIGINT, defaultValue: 0 },
+  fcmtoken: { type: DataTypes.STRING},
   createdAt: { type: DataTypes.DATE },
   updatedAt: { type: DataTypes.DATE },
   deletedAt: { type: DataTypes.DATE },

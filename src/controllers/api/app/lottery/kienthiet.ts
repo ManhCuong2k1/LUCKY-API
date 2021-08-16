@@ -21,7 +21,7 @@ router.get("/getnumbers", async (req: Request, res: Response) => {
         let timeQuery;
         let dateOrder;
         const loop = 5;
-        const dataExport:any[] = [];
+        const dataExport: any[] = [];
 
         if (isActiveOrder) {
             currentDate = moment().add(1, "d");

@@ -108,8 +108,30 @@ const UserNotifyAdd = async (userId: number, notifySlug: string, notifyName: str
     return createNotify;
 };
 
+const GetUserNotify = async (userId: number, limit: number) => {
+    const UserNotify = await LotteryNotifyModel.findAll({
+        where : {
+            userId
+        },
+        attributes: [
+            'id',
+            'userId',
+            'notifySlug',
+            'notifyName',
+            'detail',
+            'createdAt'
+        ],
+        order : [["id", "DESC"]],
+        limit : limit,
+    });
+
+    return UserNotify;
+}
+
+
 export {
     LotteryNotifyInterface,
     LotteryNotifyModel,
-    UserNotifyAdd
+    UserNotifyAdd,
+    GetUserNotify
 };

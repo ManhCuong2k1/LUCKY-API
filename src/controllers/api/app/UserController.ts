@@ -3,6 +3,7 @@ import { UserInterface, UserModel } from "@models/User";
 import { Sequelize } from "sequelize";
 import { findCredentials } from "@models/User";
 import { encryptPassword } from "@util/md5password";
+import { LotteryNotifyModel, GetUserNotify } from "@models/LotteryNotify";
 
 const router = Router();
 
@@ -43,6 +44,34 @@ router.get("/me", async (req, res, next) => {
         });
     }
 });
+
+router.get("/notify", async (req: Request, res: Response) => {
+    try {
+        const user: any = req.user;
+        const limit: number = 18;
+
+        const notifyUser = await GetUserNotify(user.id, limit);
+
+        if(notifyUser == null || Object.keys(notifyUser).length == 0) {
+            res.json({
+                status: false,
+                message: "Bạn Chưa có thông báo nào!"
+              });
+        }else {
+            res.json({
+                status: true,
+                data: notifyUser,
+                message: "Success!"
+            });
+        }
+    }catch(e) {
+        res.status(400).send({
+            error: e.message
+        });
+    }
+});
+
+
 
 
 export default router;
