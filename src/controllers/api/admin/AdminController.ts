@@ -7,7 +7,7 @@ import HistoryController from "./HistoryController";
 import DashboardController from "./DashboardController";
 import SettingsController from "./SettingController";
 import ExchangeController from "./ExchangeController";
-import LotteryExcelController from "./LotteryExcelController";
+import LotteryStorageController from "./LotteryStorageController";
 
 router.use("/users", UserController);
 router.use("/lottery-order", LotteryOrderController);
@@ -16,6 +16,6 @@ router.use("/history", HistoryController);
 router.use("/dashboard", DashboardController);
 router.use("/setting", SettingsController);
 router.use("/exchange", ExchangeController);
-router.use("/excel", LotteryExcelController);
+router.use("/storage", LotteryStorageController);
 
 export default router;

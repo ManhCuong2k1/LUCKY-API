@@ -1,25 +1,30 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "@database/connection";
 
-interface LotteryNumberExcelsInterface {
+interface LotteryStoragesInterface {
     id: number;
     name: string;
     path: string;
+    slug: string;
     date: string;
     createdAt: Date;
     updatedAt: Date;
 }
 
-class LotteryNumberExcelsModel extends Model<LotteryNumberExcelsInterface> implements LotteryNumberExcelsInterface {
+class LotteryStoragesModel extends Model<LotteryStoragesInterface> implements LotteryStoragesInterface {
     public id!: number;
     public name: string;
     public path: string;
+    public slug: string;
     public date: string;
     public createdAt: Date;
     public updatedAt: Date;
+    static readonly STORAGE_ENUM = {
+        // DELAY: "delay",
+    };
 }
 
-const LotteryNumberExcelsDefine = {
+const LotteryStoragesDefine = {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -29,6 +34,9 @@ const LotteryNumberExcelsDefine = {
         type: DataTypes.STRING,
     },
     path: {
+        type: DataTypes.STRING,
+    },
+    slug: {
         type: DataTypes.STRING,
     },
     date: {
@@ -42,15 +50,15 @@ const LotteryNumberExcelsDefine = {
     },
 };
 
-LotteryNumberExcelsModel.init(LotteryNumberExcelsDefine, {
+LotteryStoragesModel.init(LotteryStoragesDefine, {
     paranoid: true,
-    tableName: "lottery_number_excels",
+    tableName: "lottery_storages",
     updatedAt: "updatedAt",
     createdAt: "createdAt",
     sequelize,
 });
 
 export {
-    LotteryNumberExcelsInterface,
-    LotteryNumberExcelsModel,
+    LotteryStoragesInterface,
+    LotteryStoragesModel,
 };
