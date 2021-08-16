@@ -39,8 +39,10 @@ router.get("/app-settings", async (req: Request, res: Response) => {
         dataExport.exchange = {};
         dataExport.exchange.local_min = await getSettings("exchange_local_min");
         dataExport.exchange.local_max = await getSettings("exchange_local_max");
-        dataExport.exchange.wallet_min = await getSettings("exchange_wallet_min");
-        dataExport.exchange.wallet_max = await getSettings("exchange_wallet_max");
+        dataExport.exchange.momo_min = await getSettings("exchange_momo_min");
+        dataExport.exchange.momo_max = await getSettings("exchange_momo_max");
+        dataExport.exchange.vnpay_min = await getSettings("exchange_vnpay_min");
+        dataExport.exchange.vnpay_max = await getSettings("recharge_vnpay_max");
         dataExport.exchange.bank_min = await getSettings("exchange_bank_min");
         dataExport.exchange.bank_max = await getSettings("exchange_bank_max");
 
@@ -53,9 +55,9 @@ router.get("/app-settings", async (req: Request, res: Response) => {
         dataExport.ticket = {};
         dataExport.ticket.ticket_storage_fee = await getSettings("ticket_storage_fee");
 
-
         dataExport.support = {};
         dataExport.support.phone = await getSettings("hot_line");
+
 
         res.json({
             status: true,
