@@ -4,7 +4,7 @@ import { LotteryImagesModel } from "@models/LotteryImages";
 import { UserModel } from "@models/User";
 import { LotteryTicketModel } from "@models/LotteryTicket";
 import { LotteryNumbersModel } from "@models/LotteryNumbers";
-import { LotteryNumberExcelsModel } from "@models/LotteryNumberExcel";
+import { LotteryStoragesModel } from "@models/LotteryStorage";
 import { GridInterface } from "@models/Transformers/Grid";
 import { Op } from "sequelize";
 import moment from "moment-timezone";
@@ -303,7 +303,6 @@ router.post("/:id/images", async (req: Request, res: Response) => {
             });    
         }
     } catch (e) {
-        console.log(e.message);
         res.status(400).send({
             error: e.message
         });
@@ -412,12 +411,13 @@ router.post("/excel/upload", uploadFile.single("file"), async (req: Request, res
         
         const fileFolder = path.join(__dirname, "../../../../public/uploads/" + req.file.filename);
         
+        
         const excelFile: any = {
             name: req.file.filename,
             path: `/uploads/${req.file.filename}`,
         };
         
-        await LotteryNumberExcelsModel.create(excelFile);
+        await LotteryStoragesModel.create(excelFile);
     
         readXlsxFile(fileFolder).then(async (rows: any[]) => {
             rows.shift();
@@ -439,7 +439,6 @@ router.post("/excel/upload", uploadFile.single("file"), async (req: Request, res
             res.send({response, file: req.file.filename});
         });
       } catch (error) {
-        console.log(error);
         res.status(500).send({
           message: "Could not upload the file: " + req.file.originalname,
         });
@@ -453,9 +452,8 @@ router.post("/date/upload", async (req: Request, res: Response) => {
                 createdAt: req.body.createAt    
             }
         });
-        console.log(data);
         
-        const dataExcel = await LotteryNumberExcelsModel.findOne({
+        const dataExcel = await LotteryStoragesModel.findOne({
             where: {
                 name: req.body.file
             }
@@ -469,7 +467,6 @@ router.post("/date/upload", async (req: Request, res: Response) => {
         res.send(data);
         
       } catch (error) {
-        console.log(error);
         res.status(500).send({
           message: "Could not upload the file: " + req.file.originalname,
         });

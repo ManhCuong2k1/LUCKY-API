@@ -12,7 +12,6 @@ router.get("/", async (req: Request, res: Response) => {
                 }
             }
         });
-        console.log(dataExchangeLimit);
         
         if(dataExchangeLimit.length !== 0) {
             const result: any = {

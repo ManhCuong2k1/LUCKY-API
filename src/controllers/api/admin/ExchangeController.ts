@@ -49,7 +49,6 @@ router.get("/", async (req: Request, res: Response) => {
             pageSize: pageSize,
             total: count
         };
-        console.log(1);
         
         res.send(responseData );
     } catch (e) {

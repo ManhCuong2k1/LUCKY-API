@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { LotteryNumberExcelsModel } from "@models/LotteryNumberExcel";
+import { LotteryStoragesModel } from "@models/LotteryStorage";
 import { GridInterface } from "@models/Transformers/Grid";
 import { Op } from "sequelize";
 import moment from "moment-timezone";
@@ -22,7 +22,7 @@ router.get("/", async (req: Request, res: Response) => {
             fromDate && toDate ? { createdAt: { [Op.between]: [moment(fromDate).startOf("day").subtract(8, "hours"), moment(toDate).endOf("day").subtract(8, "hours")] } } : null
         );
 
-        const { rows, count } = await LotteryNumberExcelsModel.findAndCountAll({
+        const { rows, count } = await LotteryStoragesModel.findAndCountAll({
             where,
             distinct: true,
             limit: pageSize,
@@ -31,7 +31,7 @@ router.get("/", async (req: Request, res: Response) => {
                 ["createdAt", "DESC"],
             ],
         });
-        const responseData: GridInterface<LotteryNumberExcelsModel> = {
+        const responseData: GridInterface<LotteryStoragesModel> = {
             data: rows,
             page: page,
             pageSize: pageSize,
