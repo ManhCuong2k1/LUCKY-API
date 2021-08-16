@@ -4,6 +4,7 @@ import Crawl from "./Crawl";
 import helper from "@controllers/api/helper/helper";
 import updateTicket from "../app/lottery/updateresult";
 import { LotteryResultsInterface, LotteryResultsModel } from "@models/LotteryResults";
+import moment from "moment-timezone";
 
 const router = express.Router();
 
@@ -169,11 +170,15 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
         switch (req.params.type) {
             case "keno":
                 const getKenoRoud: any = await Crawl.getKenoCurrentRound();
+
+                const toDateString = new Date(getKenoRoud.data.finish_time);
+                const momentTime = moment(toDateString).tz("Asia/Ho_Chi_Minh").format("X");
+
                 const datExport: any = {
                     status: true,
                     data: {
                         current_round: getKenoRoud.data.current_round, // eslint-disable-line
-                        finish_time: Date.parse(getKenoRoud.data.finish_time) // eslint-disable-line
+                        finish_time: Number(momentTime) * 1000 // eslint-disable-line
                     },
                     message: "success"
                 };

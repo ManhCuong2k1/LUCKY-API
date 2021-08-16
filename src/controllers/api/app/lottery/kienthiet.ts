@@ -13,32 +13,44 @@ const router = Router();
 router.get("/getnumbers", async (req: Request, res: Response) => {
 
     try {
-        const { date } = req.body; //2021-08-13
-        if (date) {
-            const timeQuery = moment(date).format("DD-MM-YYYY");
-            const getNumberAvailible = await getNumbers(timeQuery, "true");
 
-            if (Object.keys(getNumberAvailible).length > 0) {
-                res.json({
-                    status: true,
-                    data: {
-                        date: timeQuery,
-                        list: getNumberAvailible
-                    },
-                    message: "Lấy danh sách các số thành công!"
-                });
-            } else {
-                res.json({
-                    status: false,
-                    message: "Hiện tại chưa có số nào trong thời gian này! Vui lòng thử lại sau!"
-                });
-            }
+        const currentTime = helper.getTime(helper.timeStamp());
+        const isActiveOrder = (currentTime.getHours() >= 17) ? true : false;
+        console.log(isActiveOrder);
+        let currentDate;
+        let timeQuery;
+        let dateOrder;
+        const loop = 5;
+        const dataExport:any[] = [];
+
+        if (isActiveOrder) {
+            currentDate = moment().add(1, "d");
+            dateOrder = moment().add(1, "d").format("DD-MM-YYYY");
+            timeQuery = moment().add(1, "d").format("YYYY-MM-DD");
         } else {
-            res.json({
-                status: false,
-                message: "Vui lòng chọn ngày muốn lấy danh sách các số!"
+            currentDate = moment();
+            dateOrder = moment().format("DD-MM-YYYY");
+            timeQuery = moment().format("YYYY-MM-DD");
+        }
+
+        for (let i = 1; i <= loop; i++) {
+            if (i != 1) {
+                dateOrder = moment(currentDate).add(1, "d").format("DD-MM-YYYY");
+                timeQuery = moment(currentDate).add(1, "d").format("YYYY-MM-DD");
+                currentDate = moment(currentDate).add(1, "d");
+            }
+            const getNumberAvailible = await getNumbers(timeQuery, "true");
+            dataExport.push({
+                date: dateOrder,
+                list: getNumberAvailible
             });
         }
+
+        res.json({
+            status: true,
+            data: dataExport,
+            message: "Lấy danh sách các số thành công!"
+        });
 
     } catch (err) {
         console.log(err.message);

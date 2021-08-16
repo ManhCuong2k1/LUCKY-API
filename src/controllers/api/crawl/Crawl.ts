@@ -880,7 +880,7 @@ const Xoso6x36 = async () => {
       msg: error.message
     };
   }
-}
+};
 
 
 const DienToan123 = async () => {
@@ -930,7 +930,7 @@ const DienToan123 = async () => {
       msg: error.message
     };
   }
-}
+};
 
 
 
@@ -948,16 +948,15 @@ const LotoCrawl = async () => {
     dataResp = dataResp[0];
 
     const today = moment().format("YYYY-MM-DD");
-
     const roundId = moment().format("YYYYMMDD");
     const date = moment().format("DD/MM/YYYY");
 
 
     if(dataResp[0] == today) {
 
-      let dataExport: any[] = [];
+      const dataExport: any[] = [];
 
-      for (var number of dataResp[1]) {
+      for (const number of dataResp[1]) {
         const numberLastChar = number.slice(-2);;
         if(numberLastChar >= 2) {
          dataExport.push(numberLastChar);          
@@ -997,7 +996,7 @@ const LotoCrawl = async () => {
       msg: error.message
     };
   }
-}
+};
 
 
 

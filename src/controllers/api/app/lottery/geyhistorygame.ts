@@ -145,7 +145,7 @@ router.get("/ticketDetail", async (req: Request, res: Response) => {
                 }
             }); 
 
-            let ticketImages = await LotteryImagesModel.findOne({
+            const ticketImages = await LotteryImagesModel.findOne({
                 where: {
                     LotteryTicketModelId: req.query.id
                 },
@@ -165,7 +165,7 @@ router.get("/ticketDetail", async (req: Request, res: Response) => {
             dataExport["ticket"] = ticketData;
 
             if(ticketImages == null ) {
-                let ticketImages:any = {};
+                const ticketImages: any = {};
                 ticketImages.beforeImage = null;
                 ticketImages.afterImage = null;
                 dataExport["images"] = ticketImages;
