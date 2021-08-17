@@ -138,7 +138,7 @@ router.post("/", async (req: Request, res: Response) => {
                                     user.id,
                                     UserHistoryModel.ACTION_SLUG_ENUM.EXCHANGE_REWARD,
                                     UserHistoryModel.ACTION_NAME_ENUM.EXCHANGE_REWARD,
-                                    "Vừa yêu cầu đổi thưởng " + helper.numberformat((Number(transaction.amount)) + " VND về ví điện tử " + transaction.bankcode.toUpperCase()
+                                    "Vừa yêu cầu đổi thưởng " + helper.numberformat(Number(transaction.amount)) + " VND về ví điện tử " + transaction.bankcode.toUpperCase()
                                 );
 
                                 res.json({
