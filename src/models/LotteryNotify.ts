@@ -114,19 +114,19 @@ const GetUserNotify = async (userId: number, limit: number) => {
             userId
         },
         attributes: [
-            'id',
-            'userId',
-            'notifySlug',
-            'notifyName',
-            'detail',
-            'createdAt'
+            "id",
+            "userId",
+            "notifySlug",
+            "notifyName",
+            "detail",
+            "createdAt"
         ],
         order : [["id", "DESC"]],
         limit : limit,
     });
 
     return UserNotify;
-}
+};
 
 
 export {

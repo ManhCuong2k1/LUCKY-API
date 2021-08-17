@@ -137,7 +137,7 @@ router.post("/", async (req: Request, res: Response) => {
                                     user.id,
                                     UserHistoryModel.ACTION_SLUG_ENUM.EXCHANGE_REWARD,
                                     UserHistoryModel.ACTION_NAME_ENUM.EXCHANGE_REWARD,
-                                    "Vừa yêu cầu đổi thưởng " + Number(transaction.amount) + " VND về ví điện tử " + transaction.bankCode.toUpperCase()
+                                    "Vừa yêu cầu đổi thưởng " + Number(transaction.amount) + " VND về ví điện tử " + transaction.bankcode.toUpperCase()
                                 );
 
                                 res.json({
@@ -160,7 +160,7 @@ router.post("/", async (req: Request, res: Response) => {
                     } catch (error) {
                         res.json({
                             status: false,
-                            message: error
+                            message: error.message
                         });
                     }
                     break;
@@ -189,7 +189,7 @@ router.post("/", async (req: Request, res: Response) => {
                                     user.id,
                                     UserHistoryModel.ACTION_SLUG_ENUM.EXCHANGE_REWARD,
                                     UserHistoryModel.ACTION_NAME_ENUM.EXCHANGE_REWARD,
-                                    "Vừa yêu cầu đổi thưởng " + Number(transaction.amount) + " VND về ngân hàng" + transaction.bankCode.toUpperCase()
+                                    "Vừa yêu cầu đổi thưởng " + Number(transaction.amount) + " VND về ngân hàng" + transaction.bankcode.toUpperCase()
                                 );
 
 
@@ -213,7 +213,7 @@ router.post("/", async (req: Request, res: Response) => {
                     } catch (error) {
                         res.json({
                             status: false,
-                            message: error
+                            message: error.message
                         });
                     }
                     break;
