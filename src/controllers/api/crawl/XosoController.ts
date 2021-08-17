@@ -390,11 +390,21 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                 break;
 
             case "kienthiet":
-                const currentTimekienthiet = moment().format("YYYY-MM-DD");
-                const tomorowTimekienthiet: any = moment(currentTimekienthiet + " 18:30").add(1, "d").tz("Asia/Ho_Chi_Minh").format("X");
-                const roundIdkienthiet = moment(moment(currentTimekienthiet).add(1, "d").tz("Asia/Ho_Chi_Minh")).tz("Asia/Ho_Chi_Minh").format("YYYYMMDD");
+                const nowtime: any = moment().tz("Asia/Ho_Chi_Minh");
+                let currentTimekienthiet = moment().format("YYYY-MM-DD");
+                let tomorowTimekienthiet:any;
+                let roundIdkienthiet;
 
-                const datExportKienThiet: any = {
+
+                if(nowtime.format("H") >= 18) {
+                    tomorowTimekienthiet = moment(currentTimekienthiet + " 18:30").add(1, "d").tz("Asia/Ho_Chi_Minh").format("X");
+                }else {
+                    tomorowTimekienthiet = moment(new Date(moment(nowtime).format("YYYY/MM/DD") + " 18:30")).tz("Asia/Ho_Chi_Minh").format("X");
+                }
+
+                roundIdkienthiet =  moment(Number(tomorowTimekienthiet) * 1000).format("YYYYMMDD");
+
+                const dataExportKienThiet: any = {
                     status: true,
                     data: {
                         current_round: roundIdkienthiet, // eslint-disable-line
@@ -402,47 +412,78 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                     },
                     message: "success"
                 };
-                res.send(datExportKienThiet);
+                res.send(dataExportKienThiet);
             break;
 
             case "compute636":
-                let currentTimecompute636:any = moment().tz("Asia/Ho_Chi_Minh");
-                console.log(currentTimecompute636);
-                const nowHourTimecompute636:any = moment().format("H");
+                let currentTimecompute636: any = moment().tz("Asia/Ho_Chi_Minh");
+                let runTimecomputer636: any = moment().tz("Asia/Ho_Chi_Minh");
                 let nextTimecompute636;
-                console.log(currentTimecompute636.day());
-                //nowHourTimecompute636
+                let roundIdcompute636;
 
-
-                if(currentTimecompute636.day() == 4 || currentTimecompute636.day() == 7) {
-
+                if(currentTimecompute636.format('dddd') == 'Wednesday' || currentTimecompute636.format('dddd') == 'Friday') {
+                    if(currentTimecompute636.format("H") >= 18) {
+                        for(let loopTimecompute636 = 1; loopTimecompute636 <= 10 ;loopTimecompute636++) {
+                            runTimecomputer636 = moment(runTimecomputer636).format('dddd');
+                            if(runTimecomputer636 == 'Wednesday' || runTimecomputer636 == 'Friday') {
+                                nextTimecompute636 = moment(new Date(moment(runTimecomputer636).format("YYYY/MM/DD") + " 18:00")).tz("Asia/Ho_Chi_Minh").format("X");
+                                break;
+                            }else {
+                                runTimecomputer636 = moment(runTimecomputer636).add(1, "d");
+                            }
+                        } 
+                    }else {
+                        nextTimecompute636 = moment(new Date(moment().format("YYYY/MM/DD") + " 18:00")).tz("Asia/Ho_Chi_Minh").format("X");
+                    }
                 }else {
-                    for(var loopTimecompute636 = 1; loopTimecompute636 <= 5 ;loopTimecompute636++) {
-                        nextTimecompute636 = moment(currentTimecompute636).day();
-                        if(nextTimecompute636 == 4 || nextTimecompute636 == 7) {
-                            console.log("next day id "+ nextTimecompute636);
+                    for(let loopTimecompute636 = 1; loopTimecompute636 <= 10 ;loopTimecompute636++) {
+                        runTimecomputer636 = moment(runTimecomputer636).format('dddd');
+                        if(runTimecomputer636 == 'Wednesday' || runTimecomputer636 == 'Friday') {
+                            nextTimecompute636 = moment(new Date(moment(runTimecomputer636).format("YYYY/MM/DD") + " 18:00")).tz("Asia/Ho_Chi_Minh").format("X");
                             break;
                         }else {
-                            currentTimecompute636 = moment(currentTimecompute636).add(1, "d");
+                            runTimecomputer636 = moment(runTimecomputer636).add(1, "d");
                         }
-                    }                    
+                    }
                 }
 
+                roundIdcompute636 = moment(Number(nextTimecompute636) * 1000).format("YYYYMMDD");
 
-
+                res.json({
+                    status: true,
+                    data: {
+                        current_round: roundIdcompute636, // eslint-disable-line
+                        finish_time: runTimecomputer636 * 1000 // eslint-disable-line
+                    },
+                    message: "success"
+                });
 
             break;
+
             case "compute123":
-            break;
-            case "loto2":
-            break;
-            case "loto3":
-            break;
-            case "loto5":
-            break;
-            case "loto234":
-            break;
+                const nowtimecompute123: any = moment().tz("Asia/Ho_Chi_Minh");
+                let currentTimecompute123 = moment().format("YYYY-MM-DD");
+                let tomorowTimecompute123:any;
+                let roundIdcompute123;
 
+
+                if(nowtimecompute123.format("H") >= 18) {
+                    tomorowTimecompute123 = moment(currentTimecompute123 + " 18:00").add(1, "d").tz("Asia/Ho_Chi_Minh").format("X");
+                }else {
+                    tomorowTimecompute123 = moment(new Date(moment(nowtimecompute123).format("YYYY/MM/DD") + " 18:00")).tz("Asia/Ho_Chi_Minh").format("X");
+                }
+
+                roundIdcompute123 =  moment(Number(tomorowTimecompute123) * 1000).format("YYYYMMDD");
+
+                res.json({
+                    status: true,
+                    data: {
+                        current_round: roundIdcompute123, // eslint-disable-line
+                        finish_time: tomorowTimecompute123 * 1000 // eslint-disable-line
+                    },
+                    message: "success"
+                });
+            break;
 
             default:
         res.json({ status: false, message: "Error: error params!" });
