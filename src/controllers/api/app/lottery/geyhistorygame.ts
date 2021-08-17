@@ -170,6 +170,9 @@ router.get("/ticketDetail", async (req: Request, res: Response) => {
                 ticketImages.afterImage = null;
                 dataExport["images"] = ticketImages;
             }else {
+                ticketImages.beforeImage = process.env.HOST_IMAGES_EXPORT_URL + ticketImages.beforeImage;
+                ticketImages.afterImage = process.env.HOST_IMAGES_EXPORT_URL + ticketImages.afterImage;
+    
                 dataExport["images"] = ticketImages;                
             }
 
