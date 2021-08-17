@@ -108,27 +108,32 @@ router.post("/orders", async (req: Request, res: Response) => {
 
                         for (const orders of body.data) {
                             const numberDB = await getOneNumber(orders.number, dateQuery, LotteryNumbersModel.STATUS_ENUM.TRUE);
-                            if (numberDB.total > 0) {
-                                isCreateTicket = true;
-                                let setTotalDB: number = 0; // set số lượng sẽ trừ đi vào db lúc order
-                                if (numberDB.total < orders.total) {
-                                    setTotalDB = numberDB.total;
-                                } else if (numberDB.total >= orders.total) {
-                                    setTotalDB = orders.total;
-                                }
-                                const priceOfThisNumb: number = numberPrice * setTotalDB;
-                                totalPrice = totalPrice + priceOfThisNumb;
-                                numberDB.total = numberDB.total - setTotalDB;
-                                await numberDB.save();
-                                await numberDB.reload();
-                                orderDetail.push({
-                                    number: orders.number,
-                                    total: setTotalDB,
-                                    price: priceOfThisNumb
-                                });
 
-                            } else {
-                                console.log("ĐÃ HẾT SỐ " + orders.number + " NÊN KHÔNG THỂ MUA...");
+                            if(numberDB != null) {
+                                if (numberDB.total > 0) {
+                                    isCreateTicket = true;
+                                    let setTotalDB: number = 0; // set số lượng sẽ trừ đi vào db lúc order
+                                    if (numberDB.total < orders.total) {
+                                        setTotalDB = numberDB.total;
+                                    } else if (numberDB.total >= orders.total) {
+                                        setTotalDB = orders.total;
+                                    }
+                                    const priceOfThisNumb: number = numberPrice * setTotalDB;
+                                    totalPrice = totalPrice + priceOfThisNumb;
+                                    numberDB.total = numberDB.total - setTotalDB;
+                                    await numberDB.save();
+                                    await numberDB.reload();
+                                    orderDetail.push({
+                                        number: orders.number,
+                                        total: setTotalDB,
+                                        price: priceOfThisNumb
+                                    });
+
+                                } else {
+                                    console.log("ĐÃ HẾT SỐ " + orders.number + " NÊN KHÔNG THỂ MUA...");
+                                }                                
+                            }else {
+                                console.log("SỐ " + orders.number + " KHÔNG TỒN TẠI.");
                             }
                         }
 
@@ -199,7 +204,7 @@ router.post("/orders", async (req: Request, res: Response) => {
         console.log(err);
         res.json({
             status: false,
-            msg: err.message
+            message: err.message
         });
     }
 });
