@@ -102,7 +102,7 @@ router.post("/", async (req: Request, res: Response) => {
 
                         }
 
-                        (dataImport !== null) ? await UserHistoryAdd(user.id, UserHistoryModel.ACTION_SLUG_ENUM.BUY_TICKET, UserHistoryModel.ACTION_NAME_ENUM.BUY_TICKET, "Mua vé số Điện Toán 123 Hết " + totalPrice + " VND") : "";
+                        (dataImport !== null) ? await UserHistoryAdd(user.id, UserHistoryModel.ACTION_SLUG_ENUM.BUY_TICKET, UserHistoryModel.ACTION_NAME_ENUM.BUY_TICKET, "Mua vé số Điện Toán 123 Hết " + helper.numberformat(totalPrice) + " VND") : "";
 
 
                     } else {
@@ -198,7 +198,7 @@ router.post("/", async (req: Request, res: Response) => {
 
                         }
 
-                        (dataImport !== null) ? await UserHistoryAdd(user.id, UserHistoryModel.ACTION_SLUG_ENUM.BUY_TICKET, UserHistoryModel.ACTION_NAME_ENUM.BUY_TICKET, "Mua vé số Điện Toán 636 Hết " + totalPrice + " VND") : "";
+                        (dataImport !== null) ? await UserHistoryAdd(user.id, UserHistoryModel.ACTION_SLUG_ENUM.BUY_TICKET, UserHistoryModel.ACTION_NAME_ENUM.BUY_TICKET, "Mua vé số Điện Toán 636 Hết " + helper.numberformat(totalPrice) + " VND") : "";
 
 
                     } else {
@@ -295,7 +295,7 @@ router.post("/", async (req: Request, res: Response) => {
 
                         }
 
-                        (dataImport !== null) ? await UserHistoryAdd(user.id, UserHistoryModel.ACTION_SLUG_ENUM.BUY_TICKET, UserHistoryModel.ACTION_NAME_ENUM.BUY_TICKET, "Mua vé số Thần Tài 4 Hết " + totalPrice + " VND") : "";
+                        (dataImport !== null) ? await UserHistoryAdd(user.id, UserHistoryModel.ACTION_SLUG_ENUM.BUY_TICKET, UserHistoryModel.ACTION_NAME_ENUM.BUY_TICKET, "Mua vé số Thần Tài 4 Hết " + helper.numberformat(totalPrice) + " VND") : "";
 
 
                     } else {
@@ -393,7 +393,7 @@ router.post("/", async (req: Request, res: Response) => {
 
                         }
 
-                        (dataImport !== null) ? await UserHistoryAdd(user.id, UserHistoryModel.ACTION_SLUG_ENUM.BUY_TICKET, UserHistoryModel.ACTION_NAME_ENUM.BUY_TICKET, "Mua vé số Loto 234 Hết " + totalPrice + " VND") : "";
+                        (dataImport !== null) ? await UserHistoryAdd(user.id, UserHistoryModel.ACTION_SLUG_ENUM.BUY_TICKET, UserHistoryModel.ACTION_NAME_ENUM.BUY_TICKET, "Mua vé số Loto 234 Hết " + helper.numberformat(totalPrice) + " VND") : "";
 
 
                     } else {
@@ -490,7 +490,7 @@ router.post("/", async (req: Request, res: Response) => {
 
                         }
 
-                        (dataImport !== null) ? await UserHistoryAdd(user.id, UserHistoryModel.ACTION_SLUG_ENUM.BUY_TICKET, UserHistoryModel.ACTION_NAME_ENUM.BUY_TICKET, "Mua vé số Loto 2 Số Hết " + totalPrice + " VND") : "";
+                        (dataImport !== null) ? await UserHistoryAdd(user.id, UserHistoryModel.ACTION_SLUG_ENUM.BUY_TICKET, UserHistoryModel.ACTION_NAME_ENUM.BUY_TICKET, "Mua vé số Loto 2 Số Hết " + helper.numberformat(totalPrice) + " VND") : "";
 
 
                     } else {
@@ -585,7 +585,7 @@ router.post("/", async (req: Request, res: Response) => {
 
                         }
 
-                        (dataImport !== null) ? await UserHistoryAdd(user.id, UserHistoryModel.ACTION_SLUG_ENUM.BUY_TICKET, UserHistoryModel.ACTION_NAME_ENUM.BUY_TICKET, "Mua vé số Loto 3 Số Hết " + totalPrice + " VND") : "";
+                        (dataImport !== null) ? await UserHistoryAdd(user.id, UserHistoryModel.ACTION_SLUG_ENUM.BUY_TICKET, UserHistoryModel.ACTION_NAME_ENUM.BUY_TICKET, "Mua vé số Loto 3 Số Hết " + helper.numberformat(totalPrice) + " VND") : "";
 
 
                     } else {
@@ -682,7 +682,7 @@ router.post("/", async (req: Request, res: Response) => {
 
                         }
 
-                        (dataImport !== null) ? await UserHistoryAdd(user.id, UserHistoryModel.ACTION_SLUG_ENUM.BUY_TICKET, UserHistoryModel.ACTION_NAME_ENUM.BUY_TICKET, "Mua vé số Loto 5 Số Hết " + totalPrice + " VND") : "";
+                        (dataImport !== null) ? await UserHistoryAdd(user.id, UserHistoryModel.ACTION_SLUG_ENUM.BUY_TICKET, UserHistoryModel.ACTION_NAME_ENUM.BUY_TICKET, "Mua vé số Loto 5 Số Hết " + helper.numberformat(totalPrice) + " VND") : "";
 
 
                     } else {

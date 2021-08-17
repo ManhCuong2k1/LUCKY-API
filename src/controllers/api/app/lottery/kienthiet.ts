@@ -168,7 +168,7 @@ router.post("/orders", async (req: Request, res: Response) => {
                             };
                             (dataImport !== null) ? await LotteryOrdersModel.create(dataImport) : "";
 
-                            (dataImport !== null) ? await UserHistoryAdd(user.id, UserHistoryModel.ACTION_SLUG_ENUM.BUY_TICKET, UserHistoryModel.ACTION_NAME_ENUM.BUY_TICKET, "Mua vé số Kiến Thiết Hết " + totalPrice + " VND") : "";
+                            (dataImport !== null) ? await UserHistoryAdd(user.id, UserHistoryModel.ACTION_SLUG_ENUM.BUY_TICKET, UserHistoryModel.ACTION_NAME_ENUM.BUY_TICKET, "Mua vé số Kiến Thiết Hết " + helper.numberformat(totalPrice) + " VND") : "";
 
 
                             const UserData = await UserModel.findOne({ where: { id: user.id } });

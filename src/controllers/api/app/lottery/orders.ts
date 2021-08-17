@@ -130,7 +130,7 @@ router.post("/", async (req: Request, res: Response) => {
 
                         }
 
-                        (dataImport !== null) ? await UserHistoryAdd(user.id, UserHistoryModel.ACTION_SLUG_ENUM.BUY_TICKET, UserHistoryModel.ACTION_NAME_ENUM.BUY_TICKET, "Mua vé số Keno Hết "+totalPrice+ " VND"): "";
+                        (dataImport !== null) ? await UserHistoryAdd(user.id, UserHistoryModel.ACTION_SLUG_ENUM.BUY_TICKET, UserHistoryModel.ACTION_NAME_ENUM.BUY_TICKET, "Mua vé số Keno Hết "+helper.numberformat(totalPrice)+ " VND"): "";
 
 
                     } else {
@@ -249,7 +249,7 @@ router.post("/", async (req: Request, res: Response) => {
                         // trừ tiền truocứ khi order                                 
                     });
 
-                    (dataImport !== null) ? await UserHistoryAdd(user.id, UserHistoryModel.ACTION_SLUG_ENUM.BUY_TICKET, UserHistoryModel.ACTION_NAME_ENUM.BUY_TICKET, "Mua vé số Power Hết "+totalPrice+ " VND"): "";
+                    (dataImport !== null) ? await UserHistoryAdd(user.id, UserHistoryModel.ACTION_SLUG_ENUM.BUY_TICKET, UserHistoryModel.ACTION_NAME_ENUM.BUY_TICKET, "Mua vé số Power Hết "+helper.numberformat(totalPrice)+ " VND"): "";
 
                     status = true, message = "Đặt Vé Thành Công!";
 
@@ -364,7 +364,7 @@ router.post("/", async (req: Request, res: Response) => {
                         // trừ tiền truocứ khi order                                 
                     });
 
-                    (dataImport !== null) ? await UserHistoryAdd(user.id, UserHistoryModel.ACTION_SLUG_ENUM.BUY_TICKET, UserHistoryModel.ACTION_NAME_ENUM.BUY_TICKET, "Mua vé số Mega Hết "+totalPriceMega+ " VND"): "";
+                    (dataImport !== null) ? await UserHistoryAdd(user.id, UserHistoryModel.ACTION_SLUG_ENUM.BUY_TICKET, UserHistoryModel.ACTION_NAME_ENUM.BUY_TICKET, "Mua vé số Mega Hết "+helper.numberformat(totalPriceMega)+ " VND"): "";
 
                     status = true, message = "Đặt Vé Thành Công!";
 
@@ -436,7 +436,7 @@ router.post("/", async (req: Request, res: Response) => {
                         // trừ tiền truocứ khi order                                 
                     });
 
-                    (dataImport !== null) ? await UserHistoryAdd(user.id, UserHistoryModel.ACTION_SLUG_ENUM.BUY_TICKET, UserHistoryModel.ACTION_NAME_ENUM.BUY_TICKET, "Mua vé số Max3D Hết "+totalPriceMax3d+ " VND"): "";
+                    (dataImport !== null) ? await UserHistoryAdd(user.id, UserHistoryModel.ACTION_SLUG_ENUM.BUY_TICKET, UserHistoryModel.ACTION_NAME_ENUM.BUY_TICKET, "Mua vé số Max3D Hết "+helper.numberformat(totalPriceMax3d)+ " VND"): "";
 
                     status = true, message = "Đặt Vé Thành Công!";
 
@@ -507,7 +507,7 @@ router.post("/", async (req: Request, res: Response) => {
                         // trừ tiền truocứ khi order                                 
                     });
 
-                    (dataImport !== null) ? await UserHistoryAdd(user.id, UserHistoryModel.ACTION_SLUG_ENUM.BUY_TICKET, UserHistoryModel.ACTION_NAME_ENUM.BUY_TICKET, "Mua vé số Max3DPlus Hết "+totalPriceMax3dPlus+ " VND"): "";
+                    (dataImport !== null) ? await UserHistoryAdd(user.id, UserHistoryModel.ACTION_SLUG_ENUM.BUY_TICKET, UserHistoryModel.ACTION_NAME_ENUM.BUY_TICKET, "Mua vé số Max3DPlus Hết "+helper.numberformat(totalPriceMax3dPlus)+ " VND"): "";
 
 
                     status = true, message = "Đặt Vé Thành Công!";
@@ -578,7 +578,7 @@ router.post("/", async (req: Request, res: Response) => {
                         // trừ tiền truocứ khi order                                 
                     });
 
-                    (dataImport !== null) ? await UserHistoryAdd(user.id, UserHistoryModel.ACTION_SLUG_ENUM.BUY_TICKET, UserHistoryModel.ACTION_NAME_ENUM.BUY_TICKET, "Mua vé số Max4D Hết "+totalPriceMax4d+ " VND"): "";
+                    (dataImport !== null) ? await UserHistoryAdd(user.id, UserHistoryModel.ACTION_SLUG_ENUM.BUY_TICKET, UserHistoryModel.ACTION_NAME_ENUM.BUY_TICKET, "Mua vé số Max4D Hết "+helper.numberformat(totalPriceMax4d)+ " VND"): "";
 
 
                     status = true, message = "Đặt Vé Thành Công!";

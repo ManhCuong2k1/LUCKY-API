@@ -3,6 +3,7 @@ import { UserModel } from "@models/User";
 import { LotteryExchangesModel } from "@models/LotteryExchanges";
 import { getSettings, SettingsInterface, SettingsModel } from "@models/LotterySettings";
 import { UserHistoryAdd, UserHistoryModel } from "@models/LotteryUserHistory";
+import helper from "@controllers/api/helper/helper";
 
 
 const router = Router();
@@ -85,7 +86,7 @@ router.post("/", async (req: Request, res: Response) => {
                                     user.id,
                                     UserHistoryModel.ACTION_SLUG_ENUM.EXCHANGE_REWARD,
                                     UserHistoryModel.ACTION_NAME_ENUM.EXCHANGE_REWARD,
-                                    "Vừa đổi thưởng " + Number(transaction.amount) + " VND về ví LuckyPloyLot"
+                                    "Vừa đổi thưởng " + helper.numberformat(Number(transaction.amount)) + " VND về ví LuckyPloyLot"
                                 );
 
                                 res.json({
@@ -137,7 +138,7 @@ router.post("/", async (req: Request, res: Response) => {
                                     user.id,
                                     UserHistoryModel.ACTION_SLUG_ENUM.EXCHANGE_REWARD,
                                     UserHistoryModel.ACTION_NAME_ENUM.EXCHANGE_REWARD,
-                                    "Vừa yêu cầu đổi thưởng " + Number(transaction.amount) + " VND về ví điện tử " + transaction.bankcode.toUpperCase()
+                                    "Vừa yêu cầu đổi thưởng " + helper.numberformat((Number(transaction.amount)) + " VND về ví điện tử " + transaction.bankcode.toUpperCase()
                                 );
 
                                 res.json({
@@ -189,7 +190,7 @@ router.post("/", async (req: Request, res: Response) => {
                                     user.id,
                                     UserHistoryModel.ACTION_SLUG_ENUM.EXCHANGE_REWARD,
                                     UserHistoryModel.ACTION_NAME_ENUM.EXCHANGE_REWARD,
-                                    "Vừa yêu cầu đổi thưởng " + Number(transaction.amount) + " VND về ngân hàng" + transaction.bankcode.toUpperCase()
+                                    "Vừa yêu cầu đổi thưởng " + helper.numberformat(Number(transaction.amount)) + " VND về ngân hàng" + transaction.bankcode.toUpperCase()
                                 );
 
 

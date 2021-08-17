@@ -7,6 +7,7 @@ import { sendError } from "@util/response";
 import { UserModel } from "@models/User";
 import { LotteryRechargeModel } from "@models/LotteryRecharge";
 import { UserHistoryAdd, UserHistoryModel } from "@models/LotteryUserHistory";
+import helper from "../helper/helper";
 
 dotenv.config();
 const router = Router();
@@ -43,7 +44,7 @@ router.post("/", auth, async (req: Request, res: Response) => {
                         user.id,
                         UserHistoryModel.ACTION_SLUG_ENUM.RECHARGE,
                         UserHistoryModel.ACTION_NAME_ENUM.RECHARGE,
-                        "Vừa tạo yêu cầu nạp " + Number(transaction.amount) + " VND bằng ví điện tử Momo"
+                        "Vừa tạo yêu cầu nạp " + helper.numberformat(Number(transaction.amount)) + " VND bằng ví điện tử Momo"
                     );
 
                     res.json({
@@ -85,7 +86,7 @@ router.post("/", auth, async (req: Request, res: Response) => {
                     user.id,
                     UserHistoryModel.ACTION_SLUG_ENUM.RECHARGE,
                     UserHistoryModel.ACTION_NAME_ENUM.RECHARGE,
-                    "Vừa tạo yêu cầu nạp " + Number(transaction.amount) + " VND bằng ví điện tử VNPay"
+                    "Vừa tạo yêu cầu nạp " + helper.numberformat(Number(transaction.amount)) + " VND bằng ví điện tử VNPay"
                 );
 
                 res.json({ status: true, url: postTransactionVnpay });
