@@ -1,4 +1,3 @@
-import path from "path";
 import express, { Response, Request } from "express";
 import Crawl from "./Crawl";
 import helper from "@controllers/api/helper/helper";
@@ -391,9 +390,8 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
 
             case "kienthiet":
                 const nowtime: any = moment().tz("Asia/Ho_Chi_Minh");
-                let currentTimekienthiet = moment().format("YYYY-MM-DD");
-                let tomorowTimekienthiet:any;
-                let roundIdkienthiet;
+                const currentTimekienthiet = moment().format("YYYY-MM-DD");
+                let tomorowTimekienthiet: any;
 
 
                 if(nowtime.format("H") >= 18) {
@@ -402,7 +400,7 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                     tomorowTimekienthiet = moment(new Date(moment(nowtime).format("YYYY/MM/DD") + " 18:30")).tz("Asia/Ho_Chi_Minh").format("X");
                 }
 
-                roundIdkienthiet =  moment(Number(tomorowTimekienthiet) * 1000).format("YYYYMMDD");
+                const roundIdkienthiet =  moment(Number(tomorowTimekienthiet) * 1000).format("YYYYMMDD");
 
                 const dataExportKienThiet: any = {
                     status: true,
@@ -416,16 +414,15 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
             break;
 
             case "compute636":
-                let currentTimecompute636: any = moment().tz("Asia/Ho_Chi_Minh");
+                const currentTimecompute636: any = moment().tz("Asia/Ho_Chi_Minh");
                 let runTimecomputer636: any = moment().tz("Asia/Ho_Chi_Minh");
-                let nextTimecompute636;
-                let roundIdcompute636;
+                let nextTimecompute636: any;
 
-                if(currentTimecompute636.format('dddd') == 'Wednesday' || currentTimecompute636.format('dddd') == 'Friday') {
+                if(currentTimecompute636.format("dddd") == "Wednesday" || currentTimecompute636.format("dddd") == "Friday") {
                     if(currentTimecompute636.format("H") >= 18) {
                         for(let loopTimecompute636 = 1; loopTimecompute636 <= 10 ;loopTimecompute636++) {
-                            runTimecomputer636 = moment(runTimecomputer636).format('dddd');
-                            if(runTimecomputer636 == 'Wednesday' || runTimecomputer636 == 'Friday') {
+                            runTimecomputer636 = moment(runTimecomputer636).format("dddd");
+                            if(runTimecomputer636 == "Wednesday" || runTimecomputer636 == "Friday") {
                                 nextTimecompute636 = moment(new Date(moment(runTimecomputer636).format("YYYY/MM/DD") + " 18:00")).tz("Asia/Ho_Chi_Minh").format("X");
                                 break;
                             }else {
@@ -437,8 +434,8 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                     }
                 }else {
                     for(let loopTimecompute636 = 1; loopTimecompute636 <= 10 ;loopTimecompute636++) {
-                        runTimecomputer636 = moment(runTimecomputer636).format('dddd');
-                        if(runTimecomputer636 == 'Wednesday' || runTimecomputer636 == 'Friday') {
+                        runTimecomputer636 = moment(runTimecomputer636).format("dddd");
+                        if(runTimecomputer636 == "Wednesday" || runTimecomputer636 == "Friday") {
                             nextTimecompute636 = moment(new Date(moment(runTimecomputer636).format("YYYY/MM/DD") + " 18:00")).tz("Asia/Ho_Chi_Minh").format("X");
                             break;
                         }else {
@@ -447,13 +444,13 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                     }
                 }
 
-                roundIdcompute636 = moment(Number(nextTimecompute636) * 1000).format("YYYYMMDD");
+                const roundIdcompute636 = moment(Number(nextTimecompute636) * 1000).format("YYYYMMDD");
 
                 res.json({
                     status: true,
                     data: {
                         current_round: roundIdcompute636, // eslint-disable-line
-                        finish_time: runTimecomputer636 * 1000 // eslint-disable-line
+                        finish_time: nextTimecompute636 * 1000 // eslint-disable-line
                     },
                     message: "success"
                 });
@@ -462,9 +459,8 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
 
             case "compute123":
                 const nowtimecompute123: any = moment().tz("Asia/Ho_Chi_Minh");
-                let currentTimecompute123 = moment().format("YYYY-MM-DD");
-                let tomorowTimecompute123:any;
-                let roundIdcompute123;
+                const currentTimecompute123 = moment().format("YYYY-MM-DD");
+                let tomorowTimecompute123: any;
 
 
                 if(nowtimecompute123.format("H") >= 18) {
@@ -473,7 +469,7 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                     tomorowTimecompute123 = moment(new Date(moment(nowtimecompute123).format("YYYY/MM/DD") + " 18:00")).tz("Asia/Ho_Chi_Minh").format("X");
                 }
 
-                roundIdcompute123 =  moment(Number(tomorowTimecompute123) * 1000).format("YYYYMMDD");
+                const roundIdcompute123 =  moment(Number(tomorowTimecompute123) * 1000).format("YYYYMMDD");
 
                 res.json({
                     status: true,
