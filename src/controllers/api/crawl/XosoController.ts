@@ -390,35 +390,58 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                 break;
 
             case "kienthiet":
-                const currentTime = moment().format("YYYY-MM-DD");
-                const tomorowTime:any = moment(currentTime + " 18:30").add(1, 'd').tz("Asia/Ho_Chi_Minh").format("X");
-                const roundId = moment(moment(currentTime).add(1, 'd').tz("Asia/Ho_Chi_Minh")).tz("Asia/Ho_Chi_Minh").format("YYYYMMDD");
+                const currentTimekienthiet = moment().format("YYYY-MM-DD");
+                const tomorowTimekienthiet: any = moment(currentTimekienthiet + " 18:30").add(1, "d").tz("Asia/Ho_Chi_Minh").format("X");
+                const roundIdkienthiet = moment(moment(currentTimekienthiet).add(1, "d").tz("Asia/Ho_Chi_Minh")).tz("Asia/Ho_Chi_Minh").format("YYYYMMDD");
 
                 const datExportKienThiet: any = {
                     status: true,
                     data: {
-                        current_round: roundId, // eslint-disable-line
-                        finish_time: tomorowTime * 1000 // eslint-disable-line
+                        current_round: roundIdkienthiet, // eslint-disable-line
+                        finish_time: tomorowTimekienthiet * 1000 // eslint-disable-line
                     },
                     message: "success"
                 };
                 res.send(datExportKienThiet);
-        break;
+            break;
 
-                case "compute636":
-        break;
+            case "compute636":
+                let currentTimecompute636:any = moment().tz("Asia/Ho_Chi_Minh");
+                console.log(currentTimecompute636);
+                const nowHourTimecompute636:any = moment().format("H");
+                let nextTimecompute636;
+                console.log(currentTimecompute636.day());
+                //nowHourTimecompute636
 
-                case "compute123":
-        break;
 
-                case "loto2":
-        break;
-                case "loto3":
-        break;
-                case "loto5":
-        break;
-                case "loto234":
-        break;
+                if(currentTimecompute636.day() == 4 || currentTimecompute636.day() == 7) {
+
+                }else {
+                    for(var loopTimecompute636 = 1; loopTimecompute636 <= 5 ;loopTimecompute636++) {
+                        nextTimecompute636 = moment(currentTimecompute636).day();
+                        if(nextTimecompute636 == 4 || nextTimecompute636 == 7) {
+                            console.log("next day id "+ nextTimecompute636);
+                            break;
+                        }else {
+                            currentTimecompute636 = moment(currentTimecompute636).add(1, "d");
+                        }
+                    }                    
+                }
+
+
+
+
+            break;
+            case "compute123":
+            break;
+            case "loto2":
+            break;
+            case "loto3":
+            break;
+            case "loto5":
+            break;
+            case "loto234":
+            break;
 
 
             default:
