@@ -115,45 +115,45 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
             try {
                 const crawling = await Crawl.XosoMienBac();
                 return res.send(crawling);
-            }catch(e) {
+            } catch (e) {
                 res.status(401).send({
                     code: e.message
                 });
             }
-        break;
+            break;
 
         case "6x36":
             try {
                 const crawling = await Crawl.Xoso6x36();
                 return res.send(crawling);
-            }catch(e) {
+            } catch (e) {
                 res.status(401).send({
                     code: e.message
                 });
             }
-        break;
+            break;
 
         case "dientoan123":
             try {
                 const crawling = await Crawl.DienToan123();
                 return res.send(crawling);
-            }catch(e) {
+            } catch (e) {
                 res.status(401).send({
                     code: e.message
                 });
             }
-        break;
+            break;
 
         case "ketqualoto":
             try {
                 const crawling = await Crawl.LotoCrawl();
                 return res.send(crawling);
-            }catch(e) {
+            } catch (e) {
                 res.status(401).send({
                     code: e.message
                 });
             }
-        break;
+            break;
 
 
         default:
@@ -161,6 +161,9 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
             break;
     }
 });
+
+
+
 
 /* eslint-disable no-alert, no-console */
 router.get("/get-round/:type", async (req: express.Request, res: Response) => {
@@ -386,17 +389,49 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
 
                 break;
 
-            default:
-                res.json({ status: false, message: "Error: error params!" });
-                break;
+            case "kienthiet":
+                const currentTime = moment().format("YYYY-MM-DD");
+                const tomorowTime:any = moment(currentTime + " 18:30").add(1, 'd').tz("Asia/Ho_Chi_Minh").format("X");
+                const roundId = moment(moment(currentTime).add(1, 'd').tz("Asia/Ho_Chi_Minh")).tz("Asia/Ho_Chi_Minh").format("YYYYMMDD");
 
-        }
-    } catch (err) {
-        res.json({
-            status: false,
-            message: err.message
-        });
+                const datExportKienThiet: any = {
+                    status: true,
+                    data: {
+                        current_round: roundId, // eslint-disable-line
+                        finish_time: tomorowTime * 1000 // eslint-disable-line
+                    },
+                    message: "success"
+                };
+                res.send(datExportKienThiet);
+        break;
+
+                case "compute636":
+        break;
+
+                case "compute123":
+        break;
+
+                case "loto2":
+        break;
+                case "loto3":
+        break;
+                case "loto5":
+        break;
+                case "loto234":
+        break;
+
+
+            default:
+        res.json({ status: false, message: "Error: error params!" });
+        break;
+
     }
+    } catch (err) {
+    res.json({
+        status: false,
+        message: err.message
+    });
+}
 
 
 });
@@ -476,7 +511,7 @@ router.get("/results/:type", async (req: Request, res: Response) => {
 
 router.get("/guild/:type", (req, res) => {
     try {
-        res.sendFile(process.cwd() +  "/public/views/guild/" + req.params.type + ".html");
+        res.sendFile(process.cwd() + "/public/views/guild/" + req.params.type + ".html");
     } catch (error) {
         res.send("ERROR");
     }
@@ -484,7 +519,7 @@ router.get("/guild/:type", (req, res) => {
 
 router.get("/terms", (req, res) => {
     try {
-        res.sendFile(process.cwd() +  "/public/views/terms/terms.html");
+        res.sendFile(process.cwd() + "/public/views/terms/terms.html");
     } catch (error) {
         res.send("ERROR");
     }
@@ -492,7 +527,7 @@ router.get("/terms", (req, res) => {
 
 router.get("/banks", (req, res) => {
     try {
-        res.sendFile(process.cwd() +  "/public/views/bank/banks.html");
+        res.sendFile(process.cwd() + "/public/views/bank/banks.html");
     } catch (error) {
         res.send("ERROR");
     }
