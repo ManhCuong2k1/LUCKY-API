@@ -6,7 +6,7 @@ import { LotteryTicketModel } from "@models/LotteryTicket";
 import { LotteryNumbersModel } from "@models/LotteryNumbers";
 import { LotteryStoragesModel } from "@models/LotteryStorage";
 import { GridInterface } from "@models/Transformers/Grid";
-import { Op } from "sequelize";
+import { col, fn, Op } from "sequelize";
 import moment from "moment-timezone";
 import { uploadFile } from "../../../middleware/file";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -26,6 +26,7 @@ router.get("/vietlott", async (req: Request, res: Response) => {
         const searchKey: string = req.query.searchKey ? req.query.searchKey.toString() : null;
         const type: string = req.query.type ? req.query.type.toString() : null;
         const orderStatus: string = req.query.orderStatus ? req.query.orderStatus.toString() : null;
+        const custody: string = req.query.custody ? req.query.custody.toString() : null;
         const fromDate: any = req.query.fromDate || null;
         const toDate: any = req.query.toDate || null;
 
@@ -37,6 +38,10 @@ router.get("/vietlott", async (req: Request, res: Response) => {
         );
         const whereUser: any = Object.assign({},
             searchKey === null ? null : { phone: { [Op.like]: `%${searchKey.trim()}%` } },
+        );
+
+        const whereOder: any = Object.assign({},
+            custody === null ? null : custody === "big_win" ? { custody: {[Op.gt]: 0} } : "",
         );
 
         const { rows, count } = await LotteryTicketModel.findAndCountAll({
@@ -63,7 +68,8 @@ router.get("/vietlott", async (req: Request, res: Response) => {
             },
             {
                 model: LotteryOrdersModel,
-                as: "orders"
+                as: "orders",
+                where: whereOder
             }
             ],
             distinct: true,
@@ -98,6 +104,7 @@ router.get("/computer", async (req: Request, res: Response) => {
         const searchKey: string = req.query.searchKey ? req.query.searchKey.toString() : null;
         const type: string = req.query.type ? req.query.type.toString() : null;
         const orderStatus: string = req.query.orderStatus ? req.query.orderStatus.toString() : null;
+        const custody: string = req.query.custody ? req.query.custody.toString() : null;
         const fromDate: any = req.query.fromDate || null;
         const toDate: any = req.query.toDate || null;
 
@@ -109,6 +116,10 @@ router.get("/computer", async (req: Request, res: Response) => {
         );
         const whereUser: any = Object.assign({},
             searchKey === null ? null : { phone: { [Op.like]: `%${searchKey.trim()}%` } },
+        );
+
+        const whereOder: any = Object.assign({},
+            custody === null ? null : custody === "big_win" ? { custody: {[Op.gt]: 0} } : "",
         );
 
         const { rows, count } = await LotteryTicketModel.findAndCountAll({
@@ -135,7 +146,8 @@ router.get("/computer", async (req: Request, res: Response) => {
             },
             {
                 model: LotteryOrdersModel,
-                as: "orders"
+                as: "orders",
+                where: whereOder
             }
             ],
             distinct: true,
@@ -170,6 +182,7 @@ router.get("/construction", async (req: Request, res: Response) => {
         const searchKey: string = req.query.searchKey ? req.query.searchKey.toString() : null;
         const type: string = req.query.type ? req.query.type.toString() : null;
         const orderStatus: string = req.query.orderStatus ? req.query.orderStatus.toString() : null;
+        const custody: string = req.query.custody ? req.query.custody.toString() : null;
         const fromDate: any = req.query.fromDate || null;
         const toDate: any = req.query.toDate || null;
 
@@ -181,6 +194,10 @@ router.get("/construction", async (req: Request, res: Response) => {
         );
         const whereUser: any = Object.assign({},
             searchKey === null ? null : { phone: { [Op.like]: `%${searchKey.trim()}%` } },
+        );
+
+        const whereOder: any = Object.assign({},
+            custody === null ? null : custody === "big_win" ? { custody: {[Op.gt]: 0} } : "",
         );
 
         const { rows, count } = await LotteryTicketModel.findAndCountAll({
@@ -200,7 +217,8 @@ router.get("/construction", async (req: Request, res: Response) => {
             },
             {
                 model: LotteryOrdersModel,
-                as: "orders"
+                as: "orders",
+                where: whereOder
             }
             ],
             distinct: true,
@@ -243,7 +261,7 @@ router.get("/detail/:id", async (req: Request, res: Response) => {
             },
             {
                 model: LotteryOrdersModel,
-                as: "orders"
+                as: "orders",
             }
             ],
         });
@@ -360,6 +378,7 @@ router.put("/updateImage/:id", async (req: Request, res: Response) => {
     }
 });
 
+// Huy ve
 router.post("/:id", async (req: Request, res: Response) => {
     try {
         const ticketId = req.params.id;
@@ -403,6 +422,7 @@ router.post("/:id", async (req: Request, res: Response) => {
     }
 });
 
+// doc file excel ghi data vao db
 router.post("/excel/upload", uploadFile.single("file"), async (req: Request, res: Response) => {
     try {
         if (req.file == undefined) {
@@ -445,6 +465,7 @@ router.post("/excel/upload", uploadFile.single("file"), async (req: Request, res
       }
 });
 
+// update date vao trong db 
 router.post("/date/upload", async (req: Request, res: Response) => {
     try {
         const data = await LotteryNumbersModel.findAll({
@@ -471,6 +492,31 @@ router.post("/date/upload", async (req: Request, res: Response) => {
           message: "Could not upload the file: " + req.file.originalname,
         });
       }
+});
+
+router.put("/:id", async (req: Request, res: Response) => {
+    try {
+        const idTicket = req.params.id;
+
+        const orderItem = await LotteryOrdersModel.findAll({
+            where: {
+                ticketId: idTicket,
+                custody: {
+                    [Op.gt]: 0
+                }
+            }
+        });
+        orderItem.forEach((e) => {
+            e.custody = 0;
+            e.save();
+        });
+        res.send(orderItem);
+    } catch (error) {
+        res.send({
+            status: false, 
+            message: "can\'t upload image with ID: "+ req.params.id
+        });   
+    }
 });
 
 export default router;
