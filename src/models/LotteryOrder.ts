@@ -1,5 +1,6 @@
 import { DataTypes, Model, ModelScopeOptions, Op } from "sequelize";
 import sequelize from "@database/connection";
+import { UpdateUserReward } from "./User";
 
 interface LotteryOrdersInterface {
     id: number;
@@ -7,7 +8,7 @@ interface LotteryOrdersInterface {
     userId: number;
     type: string;
     roundId: string;
-    orderDetail: string;    
+    orderDetail: string;
     orderStatus: string;
     resultDetail: string;
     resultStatus: string;
@@ -63,6 +64,7 @@ class LotteryOrdersModel extends Model<LotteryOrdersInterface> implements Lotter
         DRAWNED: "ĐÃ XỔ VÉ",
         DELAY: "Chờ Xổ"
     };
+    static readonly LIMIT_MONEY_REWARD = 10000000; 
 }
 
 const LotteryOrdersDefine = {
@@ -95,11 +97,11 @@ const LotteryOrdersDefine = {
     resultStatus: {
         type: DataTypes.STRING,
     },
-    received : {
+    received: {
         type: DataTypes.BIGINT,
         defaultValue: 0
     },
-    custody : {
+    custody: {
         type: DataTypes.BIGINT,
         defaultValue: 0
     },
@@ -125,8 +127,68 @@ LotteryOrdersModel.init(LotteryOrdersDefine, {
     sequelize,
 });
 
+const getRewardReceived = async (orderId: number) => {
+    try {
+        const received = await LotteryOrdersModel.findOne({
+            where: { id: orderId },
+            attributes: ["received"]
+        });
+
+        if (received !== null) {
+            return received.received;
+        } else {
+            return null;
+        }
+    } catch (e) {
+        console.log(e.message);
+        return null;
+    }
+};
+
+const UpdateUserReceived = async (orderId: number, reward: number) => {
+    const OrderData = await LotteryOrdersModel.findByPk(orderId);
+    if (!OrderData) throw new Error("Not found Order");
+    OrderData.received = OrderData.received + reward;
+    await OrderData.save();
+    await OrderData.reload();
+};
+
+const UpdateUserCustody = async (orderId: number, reward: number) => {
+    const OrderData = await LotteryOrdersModel.findByPk(orderId);
+    if (!OrderData) throw new Error("Not found Order");
+    OrderData.custody = OrderData.custody + reward;
+    await OrderData.save();
+    await OrderData.reload();
+};
+
+const SymtemSetReward = async (orderId: number, userId: number, reward: number) => {
+    const limitReceved: number = LotteryOrdersModel.LIMIT_MONEY_REWARD;
+
+    const checkRewardReceived = await getRewardReceived(orderId); // lấy ra số tiền mà user đã nhận
+    if(checkRewardReceived <= limitReceved) {   // nếu tiền đã nhận nhở hơn hoặc bằng ngưỡng
+        const sumReward = checkRewardReceived + reward;       // tính tổng tiền đã nhận và tiền sắp được nhận
+        if(sumReward > limitReceved) {  // nếu tổng tiền đã nhận và tiền sắp được nhận lớn hơn ngưỡng
+            const moneyMinus = limitReceved - checkRewardReceived; // số tiền cần thêm cho user
+            reward = reward - moneyMinus; // set lại số tiền sắp được nhận
+            await UpdateUserReceived(orderId, moneyMinus);      // cộng tiền đã nhận cho user
+            await UpdateUserCustody(orderId, reward);  // tạm giữ tiền thưởng còn lại của user
+            await UpdateUserReward(userId, moneyMinus);    // cộng tiền vào tài khoản cho user                               
+        }else { // nếu tổng tiền đã nhận và tiền sắp được nhận nhỏ hơn ngưỡng
+            await UpdateUserReceived(orderId, reward);      // cộng tiền đã nhận cho user
+            await UpdateUserReward(userId, reward); // cộng tiền đã nhận cho user
+        }
+    }else { // nếu tiền đã nhận đã lớn hơn ngưỡng
+        await UpdateUserCustody(orderId, reward);  // tạm giữ tiền thưởng user
+    }
+
+};
+
 
 export {
-    LotteryOrdersInterface, 
-    LotteryOrdersModel
+    LotteryOrdersInterface,
+    LotteryOrdersModel,
+    getRewardReceived,
+    UpdateUserReceived,
+    UpdateUserCustody,
+    SymtemSetReward
 };

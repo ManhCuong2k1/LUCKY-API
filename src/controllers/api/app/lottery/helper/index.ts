@@ -1,9 +1,17 @@
 const arrayStringToNumber = (obj: any) => {
-    return obj.map((i: any) => Number(i));
+    try {
+        return obj.map((i: any) => Number(i));
+    }catch (e) {
+        console.log(e.message);
+    }
 };  
 
 const arrNumberToString = (obj: any) => {
-    return obj.map((i: any) => i.toString());
+    try {
+        return obj.map((i: any) => i.toString());
+    }catch (e) {
+        console.log(e.message);
+    }
 };
 
 const sortRounds = (arr: any) => {

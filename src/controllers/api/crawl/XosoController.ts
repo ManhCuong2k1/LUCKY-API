@@ -2,7 +2,8 @@ import express, { Response, Request } from "express";
 import Crawl from "./Crawl";
 import helper from "@controllers/api/helper/helper";
 import updateTicket from "../app/lottery/updateresult";
-import { LotteryResultsInterface, LotteryResultsModel } from "@models/LotteryResults";
+import updateLoto from "../app/lottery/updateresultloto";
+import { LotteryResultsModel } from "@models/LotteryResults";
 import moment from "moment-timezone";
 
 const router = express.Router();
@@ -99,20 +100,10 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
             }
             break;
 
-        case "max4d":
-            try {
-                const crawling = await Crawl.XosoMax4dData();
-                return res.send(crawling);
-            } catch (e) {
-                res.status(401).send({
-                    code: e.message
-                });
-            }
-            break;
-
         case "mienbac":
             try {
                 const crawling = await Crawl.XosoMienBac();
+                const updateData = updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.KIENTHIET, crawling.data);
                 return res.send(crawling);
             } catch (e) {
                 res.status(401).send({
@@ -124,6 +115,7 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
         case "6x36":
             try {
                 const crawling = await Crawl.Xoso6x36();
+                const updateData = updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.COMPUTE636, crawling.data);
                 return res.send(crawling);
             } catch (e) {
                 res.status(401).send({
@@ -418,11 +410,11 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                 let runTimecomputer636: any = moment().tz("Asia/Ho_Chi_Minh");
                 let nextTimecompute636: any;
 
-                if(currentTimecompute636.format("dddd") == "Wednesday" || currentTimecompute636.format("dddd") == "Friday") {
+                if(currentTimecompute636.format("dddd") == "Wednesday" || currentTimecompute636.format("dddd") == "Saturday") {
                     if(currentTimecompute636.format("H") >= 18) {
                         for(let loopTimecompute636 = 1; loopTimecompute636 <= 10 ;loopTimecompute636++) {
                             runTimecomputer636 = moment(runTimecomputer636).format("dddd");
-                            if(runTimecomputer636 == "Wednesday" || runTimecomputer636 == "Friday") {
+                            if(runTimecomputer636 == "Wednesday" || runTimecomputer636 == "Saturday") {
                                 nextTimecompute636 = moment(new Date(moment(runTimecomputer636).format("YYYY/MM/DD") + " 18:00")).tz("Asia/Ho_Chi_Minh").format("X");
                                 break;
                             }else {
@@ -435,7 +427,7 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                 }else {
                     for(let loopTimecompute636 = 1; loopTimecompute636 <= 10 ;loopTimecompute636++) {
                         runTimecomputer636 = moment(runTimecomputer636).format("dddd");
-                        if(runTimecomputer636 == "Wednesday" || runTimecomputer636 == "Friday") {
+                        if(runTimecomputer636 == "Wednesday" || runTimecomputer636 == "Saturday") {
                             nextTimecompute636 = moment(new Date(moment(runTimecomputer636).format("YYYY/MM/DD") + " 18:00")).tz("Asia/Ho_Chi_Minh").format("X");
                             break;
                         }else {
@@ -571,6 +563,7 @@ router.get("/results/:type", async (req: Request, res: Response) => {
 
 router.get("/guild/:type", (req, res) => {
     try {
+        console.log(moment());
         res.sendFile(process.cwd() + "/public/views/guild/" + req.params.type + ".html");
     } catch (error) {
         res.send("ERROR");

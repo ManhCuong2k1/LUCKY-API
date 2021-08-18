@@ -122,7 +122,16 @@ LotteryTicketModel.init(LotteryTicketDefine, {
 });
 
 
+const UpdateTicketReward = async (ticketId: number, reward: number) => {
+    const ticketData = await LotteryTicketModel.findByPk(ticketId);
+    if (!ticketData) throw new Error("Not found Ticket");
+    ticketData.totalreward = ticketData.totalreward + reward;
+    await ticketData.save();
+    await ticketData.reload();
+  };
+
 export {
     LotteryTicketInterface,
-    LotteryTicketModel
+    LotteryTicketModel,
+    UpdateTicketReward
 };

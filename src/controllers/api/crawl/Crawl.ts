@@ -694,7 +694,8 @@ const getKenoCurrentRound = async () => {
 const XosoMienBac = async () => {
   try {
 
-    const today = moment().format("YYYY-MM-DD");
+    //const today = moment().format("YYYY-MM-DD");
+    const today = "2021-08-17";
     const roundId = moment().format("YYYYMMDD");
     const currentDate = moment().format("DD/MM/YYYYY");
     const options = {
@@ -847,9 +848,10 @@ const Xoso6x36 = async () => {
     const TimeOfData = dataResp.termDate.split("/");
     const TimeMomentInput = TimeOfData[1] + "-" + TimeOfData[0] + "-" + TimeOfData[2];
     
-    const roundId = moment(TimeMomentInput).format("YYYYMMDD");
+
+    const roundId = moment(new Date(TimeMomentInput)).format("YYYYMMDD");
     const result = dataResp.result.split(",");
-    const date = moment(TimeMomentInput).format("DD/MM/YYYY");
+    const date = moment(new Date(TimeMomentInput)).format("DD/MM/YYYY");
 
     const LotteryCheckExits = await LotteryResultsCheck(LotteryResultsModel.GAME_ENUM.COMPUTE636, roundId);
 
@@ -867,7 +869,11 @@ const Xoso6x36 = async () => {
 
     return {
       status: true,
-      data: dataResp,
+      data: {
+        round: roundId,
+        result,
+        date
+      },
       message: "Success"
     };
 

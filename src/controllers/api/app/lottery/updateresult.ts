@@ -1,17 +1,18 @@
-import { LotteryOrdersModel } from "@models/LotteryOrder";
-import { LotteryTicketModel } from "@models/LotteryTicket";
-import { UserModel } from "@models/User";
-import LotteryHelper from "./helper";
+import helper from "@controllers/api/helper/helper";
+import { LotteryOrdersModel, SymtemSetReward } from "@models/LotteryOrder";
+import { UpdateTicketReward } from "@models/LotteryTicket";
 import { UserHistoryModel, UserHistoryAdd } from "@models/LotteryUserHistory";
 import { LotteryNotifyModel, UserNotifyAdd } from "@models/LotteryNotify";
-import helper from "@controllers/api/helper/helper";
+import { LotteryResultsModel } from "@models/LotteryResults";
+import LotteryHelper from "./helper";
 
 const updateResult = async (game: string, data: any) => {
 
     let status: boolean = true, message: any, dataUpdate: any = null, dataUpdateChanLe: any = null;
 
+
     switch (game) {
-        case "keno":
+        case LotteryResultsModel.GAME_ENUM.KENO:
             try {
                 const OrderItem = await LotteryOrdersModel.findAll({
                     where: {
@@ -28,189 +29,174 @@ const updateResult = async (game: string, data: any) => {
 
                         // ĐẶT SỐ TRUYỀN THỐNG KENO
                         case "basic":
-                            dataUpdate = {}, dataUpdate.data = [], dataUpdate.result = {};
-                            let isWin: boolean = false, updateReward: number = 0;
+                            try {
 
-                            for (const i of orderDetail.data) {
+                                dataUpdate = {}, dataUpdate.data = [], dataUpdate.result = {};
+                                let isWin: boolean = false, updateReward: number = 0;
 
-                                const arrBet = LotteryHelper.arrayStringToNumber(i.number);
-                                const arrResult = LotteryHelper.arrayStringToNumber(data.result.pop());
 
-                                const checkSame = LotteryHelper.checkSame(arrBet, arrResult);
+                                for (const i of orderDetail.data) {
 
-                                let reward = LotteryHelper.getRewardKeno(arrBet.length, checkSame.length);
-                                reward = reward * (i.price / 10000);
+                                    const arrBet = LotteryHelper.arrayStringToNumber(i.number);
+                                    const arrResult = LotteryHelper.arrayStringToNumber(data.result);
 
-                                dataUpdate["data"].push({
-                                    number: checkSame,
-                                    reward: reward
-                                });
+                                    const checkSame = LotteryHelper.checkSame(arrBet, arrResult);
 
-                                if (reward > 0) {
-                                    isWin = true;
-                                    updateReward = updateReward + reward;
+                                    let reward = LotteryHelper.getRewardKeno(arrBet.length, checkSame.length);
+                                    reward = reward * (i.price / 10000);
 
-                                    const ticketData = await LotteryTicketModel.findByPk(orderData.ticketId);
-                                    if (!ticketData) throw new Error("Not found Ticket");
-                                    ticketData.totalreward = ticketData.totalreward + updateReward;
-                                    await ticketData.save();
-                                    await ticketData.reload();
+                                    dataUpdate["data"].push({
+                                        number: checkSame,
+                                        reward: reward
+                                    });
 
-                                    const UserData = await UserModel.findOne({ where: { id: orderData.userId } });
-                                    if (!UserData) throw new Error("Not found user");
-                                    UserData.totalReward = UserData.totalReward + updateReward;
-                                    await UserData.save();
-                                    await UserData.reload();
+                                    if (reward > 0) {
+                                        isWin = true;
+                                        updateReward = updateReward + reward;
+                                    }
+
                                 }
 
+                                if (isWin) await SymtemSetReward(orderData.id, orderData.userId, updateReward);
+                                await UpdateTicketReward(orderData.ticketId, updateReward); // cộng vào tổng thưởng của ticket
+
+                                dataUpdate.result.iswin = isWin, dataUpdate.result.totalreward = updateReward;
+
+                                const orderUpdate = await LotteryOrdersModel.findOne({ where: { id: orderData.id } });
+                                orderUpdate.orderStatus = LotteryOrdersModel.ORDERSTATUS_ENUM.DRAWNED;
+                                orderUpdate.resultDetail = JSON.stringify(dataUpdate);
+                                orderUpdate.resultStatus = (isWin) ? LotteryOrdersModel.RESULTSTATUS_ENUM.WINNED : LotteryOrdersModel.RESULTSTATUS_ENUM.DRAWNED;
+                                await orderUpdate.save();
+                                await orderUpdate.reload();
+
+                                if (isWin) {
+                                    UserNotifyAdd(
+                                        orderUpdate.userId,
+                                        LotteryNotifyModel.NOTIFY_SLUG_ENUM.KENO,
+                                        LotteryNotifyModel.NOTIFY_NAME_ENUM.KENO,
+                                        "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + "."
+                                    );
+                                    UserHistoryAdd(
+                                        orderData.userId,
+                                        UserHistoryModel.ACTION_SLUG_ENUM.USER_REWARD,
+                                        UserHistoryModel.ACTION_NAME_ENUM.USER_REWARD,
+                                        "Trúng " + helper.numberformat(updateReward) + "đ vé Keno " + orderData.ticketId + "."
+                                    );
+                                }
+                            } catch (error) {
+                                console.log(error.message);
                             }
-
-                            dataUpdate.result.iswin = isWin, dataUpdate.result.totalreward = updateReward;
-
-                            const orderUpdate = await LotteryOrdersModel.findOne({ where: { id: orderData.id } });
-                            orderUpdate.orderStatus = LotteryOrdersModel.ORDERSTATUS_ENUM.DRAWNED;
-                            orderUpdate.resultDetail = JSON.stringify(dataUpdate);
-                            orderUpdate.resultStatus = (isWin) ? LotteryOrdersModel.RESULTSTATUS_ENUM.WINNED : LotteryOrdersModel.RESULTSTATUS_ENUM.DRAWNED;
-                            await orderUpdate.save();
-                            await orderUpdate.reload();
-
-                            if (isWin) {
-                                UserNotifyAdd(
-                                    orderUpdate.userId,
-                                    LotteryNotifyModel.NOTIFY_SLUG_ENUM.KENO,
-                                    LotteryNotifyModel.NOTIFY_NAME_ENUM.KENO,
-                                    "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + "."
-                                );
-                                UserHistoryAdd(
-                                    orderData.userId,
-                                    UserHistoryModel.ACTION_SLUG_ENUM.USER_REWARD,
-                                    UserHistoryModel.ACTION_NAME_ENUM.USER_REWARD,
-                                    "Trúng " + helper.numberformat(updateReward) + "đ vé Keno " + orderData.ticketId + "."
-                                );
-                            }
-
                             break;
 
 
                         // CHẴN LẺ KENO
                         case "chanle_lonnho":
+                            try {
+                                dataUpdateChanLe = {}, dataUpdateChanLe.data = [], dataUpdateChanLe.result = {};
+                                let isWinChanLe: boolean = false;
+                                let updateRewardChanLe: number = 0;
 
-                            dataUpdateChanLe = {}, dataUpdateChanLe.data = [], dataUpdateChanLe.result = {};
-                            let isWinChanLe: boolean = false;
-                            let updateRewardChanLe: number = 0;
+                                const chan = data.total.chan, le = data.total.le, lon = data.total.lon, nho = data.total.nho;
 
-                            const chan = data.total.chan, le = data.total.le, lon = data.total.lon, nho = data.total.nho;
-
-                            for (const i of orderDetail.data) {
-
-
-                                let reward: number = 0;
-
-                                if (data.total) {
-
-                                    switch (i.select) {
-
-                                        case "chanle_chansm":
-                                            reward = (chan == 11 || chan == 12) ? 20000 : 0;
-                                            break;
-
-                                        case "chanle_lesm":
-                                            reward = (le == 11 || le == 12) ? 20000 : 0;
-                                            break;
-
-                                        case "chanle_chanlg":
-                                            reward = (chan == 13 || chan == 14) ? 40000 : (chan >= 15) ? 200000 : 0;
-                                            break;
-
-                                        case "chanle_lelg":
-                                            reward = (le == 13 || le == 14) ? 40000 : (le >= 15) ? 200000 : 0;
-                                            break;
-
-                                        case "chanle_hoa":
-                                            reward = (chan == 10 || le == 10) ? 20000 : 0;
-                                            break;
-
-                                        case "lonnho_nho":
-                                            reward = (nho == 11 || nho == 12) ? 10000 : (nho >= 13) ? 26000 : 0;
-                                            break;
-
-                                        case "lonnho_hoa":
-                                            reward = (nho == 10 || lon == 10) ? 26000 : 0;
-                                            break;
-
-                                        case "lonnho_lon":
-                                            reward = (lon == 11 && lon == 12) ? 10000 : (lon >= 13) ? 26000 : 0;
-                                            break;
-
-                                    }
-
-                                    reward = reward * (i.price / 10000);
-
-                                    dataUpdateChanLe["data"].push({
-                                        select: (reward > 0) ? i.select : "",
-                                        reward: reward
-                                    });
-
-                                    if (reward > 0) {
-                                        isWinChanLe = true;
-                                        updateRewardChanLe = updateRewardChanLe + reward;
+                                for (const i of orderDetail.data) {
 
 
-                                        const ticketData = await LotteryTicketModel.findByPk(orderData.ticketId);
-                                        if (!ticketData) throw new Error("Not found Ticket");
-                                        ticketData.totalreward = ticketData.totalreward + updateReward;
-                                        await ticketData.save();
-                                        await ticketData.reload();
+                                    let reward: number = 0;
 
-                                        const UserData = await UserModel.findOne({ where: { id: orderData.userId } });
-                                        if (!UserData) throw new Error("Not found user");
-                                        UserData.totalReward = UserData.totalReward + reward;
+                                    if (data.total) {
 
-                                        console.log(UserData.totalReward + " VND");
+                                        switch (i.select) {
 
-                                        await UserData.save();
-                                        await UserData.reload();
+                                            case "chanle_chansm":
+                                                reward = (chan == 11 || chan == 12) ? 20000 : 0;
+                                                break;
+
+                                            case "chanle_lesm":
+                                                reward = (le == 11 || le == 12) ? 20000 : 0;
+                                                break;
+
+                                            case "chanle_chanlg":
+                                                reward = (chan == 13 || chan == 14) ? 40000 : (chan >= 15) ? 200000 : 0;
+                                                break;
+
+                                            case "chanle_lelg":
+                                                reward = (le == 13 || le == 14) ? 40000 : (le >= 15) ? 200000 : 0;
+                                                break;
+
+                                            case "chanle_hoa":
+                                                reward = (chan == 10 || le == 10) ? 20000 : 0;
+                                                break;
+
+                                            case "lonnho_nho":
+                                                reward = (nho == 11 || nho == 12) ? 10000 : (nho >= 13) ? 26000 : 0;
+                                                break;
+
+                                            case "lonnho_hoa":
+                                                reward = (nho == 10 || lon == 10) ? 26000 : 0;
+                                                break;
+
+                                            case "lonnho_lon":
+                                                reward = (lon == 11 && lon == 12) ? 10000 : (lon >= 13) ? 26000 : 0;
+                                                break;
+
+                                        }
+
+                                        reward = reward * (i.price / 10000);
+
+                                        dataUpdateChanLe["data"].push({
+                                            select: (reward > 0) ? i.select : "",
+                                            reward: reward
+                                        });
+
+                                        if (reward > 0) {
+                                            isWinChanLe = true;
+                                            updateRewardChanLe = updateRewardChanLe + reward;
+                                        }
+
                                     }
 
                                 }
 
+                                if (isWinChanLe) await SymtemSetReward(orderData.id, orderData.userId, updateRewardChanLe);
+                                await UpdateTicketReward(orderData.ticketId, updateRewardChanLe); // cộng vào tổng thưởng của ticket
+
+                                dataUpdateChanLe.result.iswin = isWinChanLe, dataUpdateChanLe.result.totalreward = updateRewardChanLe;
+
+                                const orderUpdateChanle = await LotteryOrdersModel.findOne({ where: { id: orderData.id } });
+                                orderUpdateChanle.orderStatus = LotteryOrdersModel.ORDERSTATUS_ENUM.DRAWNED;
+                                orderUpdateChanle.resultDetail = JSON.stringify(dataUpdateChanLe);
+                                orderUpdateChanle.resultStatus = (isWinChanLe) ? LotteryOrdersModel.RESULTSTATUS_ENUM.WINNED : LotteryOrdersModel.RESULTSTATUS_ENUM.DRAWNED;
+                                await orderUpdateChanle.save();
+                                await orderUpdateChanle.reload();
+
+                                if (isWinChanLe) {
+                                    await UserNotifyAdd(
+                                        orderData.userId,
+                                        LotteryNotifyModel.NOTIFY_SLUG_ENUM.KENO,
+                                        LotteryNotifyModel.NOTIFY_NAME_ENUM.KENO,
+                                        "Bạn đã trúng " + helper.numberformat(updateRewardChanLe) + "đ vé " + orderData.ticketId + "."
+                                    );
+                                    await UserHistoryAdd(
+                                        orderData.userId,
+                                        UserHistoryModel.ACTION_SLUG_ENUM.USER_REWARD,
+                                        UserHistoryModel.ACTION_NAME_ENUM.USER_REWARD,
+                                        "Trúng " + helper.numberformat(updateRewardChanLe) + "đ vé Keno " + orderData.ticketId + "."
+                                    );
+                                }
+                            } catch (error) {
+                                console.log(error.message);
                             }
-
-                            dataUpdateChanLe.result.iswin = isWinChanLe, dataUpdateChanLe.result.totalreward = updateRewardChanLe;
-
-                            const orderUpdateChanle = await LotteryOrdersModel.findOne({ where: { id: orderData.id } });
-                            orderUpdateChanle.orderStatus = LotteryOrdersModel.ORDERSTATUS_ENUM.DRAWNED;
-                            orderUpdateChanle.resultDetail = JSON.stringify(dataUpdateChanLe);
-                            orderUpdateChanle.resultStatus = (isWinChanLe) ? LotteryOrdersModel.RESULTSTATUS_ENUM.WINNED : LotteryOrdersModel.RESULTSTATUS_ENUM.DRAWNED;
-                            await orderUpdateChanle.save();
-                            await orderUpdateChanle.reload();
-
-                            if (isWinChanLe) {
-                                await UserNotifyAdd(
-                                    orderData.userId,
-                                    LotteryNotifyModel.NOTIFY_SLUG_ENUM.KENO,
-                                    LotteryNotifyModel.NOTIFY_NAME_ENUM.KENO,
-                                    "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + "."
-                                );
-                                await UserHistoryAdd(
-                                    orderData.userId,
-                                    UserHistoryModel.ACTION_SLUG_ENUM.USER_REWARD,
-                                    UserHistoryModel.ACTION_NAME_ENUM.USER_REWARD,
-                                    "Trúng " + helper.numberformat(updateReward) + "đ vé Keno " + orderData.ticketId + "."
-                                );
-                            }
-
                             break;
                     }
                 });
 
             } catch (error) {
-                status = false, message = error;
+                status = false, message = error.message;
             }
 
             break;
 
-        case "power":
+        case LotteryResultsModel.GAME_ENUM.POWER:
             try {
 
                 const OrderItem = await LotteryOrdersModel.findAll({
@@ -246,20 +232,11 @@ const updateResult = async (game: string, data: any) => {
                         if (reward > 0) {
                             isWin = true;
                             updateReward = updateReward + reward;
-
-                            const ticketData = await LotteryTicketModel.findByPk(orderData.ticketId);
-                            if (!ticketData) throw new Error("Not found Ticket");
-                            ticketData.totalreward = ticketData.totalreward + updateReward;
-                            await ticketData.save();
-                            await ticketData.reload();
-
-                            const UserData = await UserModel.findOne({ where: { id: orderData.userId } });
-                            if (!UserData) throw new Error("Not found user");
-                            UserData.totalReward = UserData.totalReward + updateReward;
-                            await UserData.save();
-                            await UserData.reload();
                         }
                     };
+
+                    if (isWin) await SymtemSetReward(orderData.id, orderData.userId, updateReward);
+                    await UpdateTicketReward(orderData.ticketId, updateReward); // cộng vào tổng thưởng của ticket  
 
                     dataUpdate.result.iswin = isWin, dataUpdate.result.totalreward = updateReward;
 
@@ -288,11 +265,11 @@ const updateResult = async (game: string, data: any) => {
                 });
 
             } catch (error) {
-                status = false, message = error;
+                status = false, message = error.message;
             }
             break;
 
-        case "mega":
+        case LotteryResultsModel.GAME_ENUM.MEGA:
             try {
 
                 const OrderItem = await LotteryOrdersModel.findAll({
@@ -302,8 +279,6 @@ const updateResult = async (game: string, data: any) => {
                         orderStatus: LotteryOrdersModel.ORDERSTATUS_ENUM.PRINTED
                     }
                 });
-
-
 
                 OrderItem.forEach(async (orderData: any) => {
                     const orderDetail = JSON.parse(orderData.orderDetail);
@@ -328,20 +303,11 @@ const updateResult = async (game: string, data: any) => {
                         if (reward > 0) {
                             isWin = true;
                             updateReward = updateReward + reward;
-
-                            const ticketData = await LotteryTicketModel.findByPk(orderData.ticketId);
-                            if (!ticketData) throw new Error("Not found Ticket");
-                            ticketData.totalreward = ticketData.totalreward + updateReward;
-                            await ticketData.save();
-                            await ticketData.reload();
-
-                            const UserData = await UserModel.findOne({ where: { id: orderData.userId } });
-                            if (!UserData) throw new Error("Not found user");
-                            UserData.totalReward = UserData.totalReward + updateReward;
-                            await UserData.save();
-                            await UserData.reload();
                         }
                     };
+
+                    if (isWin) await SymtemSetReward(orderData.id, orderData.userId, updateReward);
+                    await UpdateTicketReward(orderData.ticketId, updateReward); // cộng vào tổng thưởng của ticket  
 
                     dataUpdate.result.iswin = isWin, dataUpdate.result.totalreward = updateReward;
 
@@ -359,7 +325,7 @@ const updateResult = async (game: string, data: any) => {
                             LotteryNotifyModel.NOTIFY_NAME_ENUM.MEGA,
                             "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + "."
                         );
-                        await  UserHistoryAdd(
+                        await UserHistoryAdd(
                             orderData.userId,
                             UserHistoryModel.ACTION_SLUG_ENUM.USER_REWARD,
                             UserHistoryModel.ACTION_NAME_ENUM.USER_REWARD,
@@ -371,11 +337,11 @@ const updateResult = async (game: string, data: any) => {
                 });
 
             } catch (error) {
-                status = false, message = error;
+                status = false, message = error.message;
             }
             break;
 
-        case "max3d":
+        case LotteryResultsModel.GAME_ENUM.MAX3D:
             try {
 
                 const OrderItem = await LotteryOrdersModel.findAll({
@@ -419,18 +385,6 @@ const updateResult = async (game: string, data: any) => {
                         if (rewardGiaiNhat > 0) {
                             isWin = true;
                             updateReward = updateReward + rewardGiaiNhat;
-
-                            const ticketData = await LotteryTicketModel.findByPk(orderData.ticketId);
-                            if (!ticketData) throw new Error("Not found Ticket");
-                            ticketData.totalreward = ticketData.totalreward + updateReward;
-                            await ticketData.save();
-                            await ticketData.reload();
-
-                            const UserData = await UserModel.findOne({ where: { id: orderData.userId } });
-                            if (!UserData) throw new Error("Not found user");
-                            UserData.totalReward = UserData.totalReward + updateReward;
-                            await UserData.save();
-                            await UserData.reload();
                         }
 
 
@@ -449,18 +403,6 @@ const updateResult = async (game: string, data: any) => {
                         if (rewardGiaiNhi > 0) {
                             isWin = true;
                             updateReward = updateReward + rewardGiaiNhi;
-
-                            const ticketData = await LotteryTicketModel.findByPk(orderData.ticketId);
-                            if (!ticketData) throw new Error("Not found Ticket");
-                            ticketData.totalreward = ticketData.totalreward + updateReward;
-                            await ticketData.save();
-                            await ticketData.reload();
-
-                            const UserData = await UserModel.findOne({ where: { id: orderData.userId } });
-                            if (!UserData) throw new Error("Not found user");
-                            UserData.totalReward = UserData.totalReward + updateReward;
-                            await UserData.save();
-                            await UserData.reload();
                         }
 
                         // GIAI BA 
@@ -478,18 +420,6 @@ const updateResult = async (game: string, data: any) => {
                         if (rewardGiaiBa > 0) {
                             isWin = true;
                             updateReward = updateReward + rewardGiaiBa;
-
-                            const ticketData = await LotteryTicketModel.findByPk(orderData.ticketId);
-                            if (!ticketData) throw new Error("Not found Ticket");
-                            ticketData.totalreward = ticketData.totalreward + updateReward;
-                            await ticketData.save();
-                            await ticketData.reload();
-
-                            const UserData = await UserModel.findOne({ where: { id: orderData.userId } });
-                            if (!UserData) throw new Error("Not found user");
-                            UserData.totalReward = UserData.totalReward + updateReward;
-                            await UserData.save();
-                            await UserData.reload();
                         }
 
 
@@ -508,21 +438,14 @@ const updateResult = async (game: string, data: any) => {
                         if (rewardGiaiKhuyenKhich > 0) {
                             isWin = true;
                             updateReward = updateReward + rewardGiaiKhuyenKhich;
-
-                            const ticketData = await LotteryTicketModel.findByPk(orderData.ticketId);
-                            if (!ticketData) throw new Error("Not found Ticket");
-                            ticketData.totalreward = ticketData.totalreward + updateReward;
-                            await ticketData.save();
-                            await ticketData.reload();
-
-                            const UserData = await UserModel.findOne({ where: { id: orderData.userId } });
-                            if (!UserData) throw new Error("Not found user");
-                            UserData.totalReward = UserData.totalReward + updateReward;
-                            await UserData.save();
-                            await UserData.reload();
                         }
 
                     };
+
+
+                    if (isWin) await SymtemSetReward(orderData.id, orderData.userId, updateReward);
+                    await UpdateTicketReward(orderData.ticketId, updateReward); // cộng vào tổng thưởng của ticket  
+
 
                     dataUpdate.result.iswin = isWin, dataUpdate.result.totalreward = updateReward;
 
@@ -551,12 +474,12 @@ const updateResult = async (game: string, data: any) => {
                 });
 
             } catch (error) {
-                status = false, message = error;
+                status = false, message = error.message;
             }
             break;
 
 
-        case "max3dplus":
+        case LotteryResultsModel.GAME_ENUM.MAX3DPLUS:
             try {
 
                 const OrderItem = await LotteryOrdersModel.findAll({
@@ -600,18 +523,6 @@ const updateResult = async (game: string, data: any) => {
                         if (rewardGiaiNhat > 0) {
                             isWin = true;
                             updateReward = updateReward + rewardGiaiNhat;
-
-                            const ticketData = await LotteryTicketModel.findByPk(orderData.ticketId);
-                            if (!ticketData) throw new Error("Not found Ticket");
-                            ticketData.totalreward = ticketData.totalreward + updateReward;
-                            await ticketData.save();
-                            await ticketData.reload();
-
-                            const UserData = await UserModel.findOne({ where: { id: orderData.userId } });
-                            if (!UserData) throw new Error("Not found user");
-                            UserData.totalReward = UserData.totalReward + updateReward;
-                            await UserData.save();
-                            await UserData.reload();
                         }
 
 
@@ -630,18 +541,6 @@ const updateResult = async (game: string, data: any) => {
                         if (rewardGiaiNhi > 0) {
                             isWin = true;
                             updateReward = updateReward + rewardGiaiNhi;
-
-                            const ticketData = await LotteryTicketModel.findByPk(orderData.ticketId);
-                            if (!ticketData) throw new Error("Not found Ticket");
-                            ticketData.totalreward = ticketData.totalreward + updateReward;
-                            await ticketData.save();
-                            await ticketData.reload();
-
-                            const UserData = await UserModel.findOne({ where: { id: orderData.userId } });
-                            if (!UserData) throw new Error("Not found user");
-                            UserData.totalReward = UserData.totalReward + updateReward;
-                            await UserData.save();
-                            await UserData.reload();
                         }
 
                         // GIAI BA 
@@ -659,18 +558,6 @@ const updateResult = async (game: string, data: any) => {
                         if (rewardGiaiBa > 0) {
                             isWin = true;
                             updateReward = updateReward + rewardGiaiBa;
-
-                            const ticketData = await LotteryTicketModel.findByPk(orderData.ticketId);
-                            if (!ticketData) throw new Error("Not found Ticket");
-                            ticketData.totalreward = ticketData.totalreward + updateReward;
-                            await ticketData.save();
-                            await ticketData.reload();
-
-                            const UserData = await UserModel.findOne({ where: { id: orderData.userId } });
-                            if (!UserData) throw new Error("Not found user");
-                            UserData.totalReward = UserData.totalReward + updateReward;
-                            await UserData.save();
-                            await UserData.reload();
                         }
 
 
@@ -689,22 +576,12 @@ const updateResult = async (game: string, data: any) => {
                         if (rewardGiaiKhuyenKhich > 0) {
                             isWin = true;
                             updateReward = updateReward + rewardGiaiKhuyenKhich;
-
-                            const ticketData = await LotteryTicketModel.findByPk(orderData.ticketId);
-                            if (!ticketData) throw new Error("Not found Ticket");
-                            ticketData.totalreward = ticketData.totalreward + updateReward;
-                            await ticketData.save();
-                            await ticketData.reload();
-
-                            const UserData = await UserModel.findOne({ where: { id: orderData.userId } });
-                            if (!UserData) throw new Error("Not found user");
-                            UserData.totalReward = UserData.totalReward + updateReward;
-                            await UserData.save();
-                            await UserData.reload();
                         }
 
                     };
 
+                    if (isWin) await SymtemSetReward(orderData.id, orderData.userId, updateReward);
+                    await UpdateTicketReward(orderData.ticketId, updateReward); // cộng vào tổng thưởng của ticket  
 
                     dataUpdate.result.iswin = isWin, dataUpdate.result.totalreward = updateReward;
 
@@ -734,12 +611,12 @@ const updateResult = async (game: string, data: any) => {
                 });
 
             } catch (error) {
-                status = false, message = error;
+                status = false, message = error.message;
             }
             break;
 
 
-        case "max4d":
+        case LotteryResultsModel.GAME_ENUM.MAX4D:
             try {
 
                 const OrderItem = await LotteryOrdersModel.findAll({
@@ -785,18 +662,6 @@ const updateResult = async (game: string, data: any) => {
                                     if (rewardGiaiNhat > 0) {
                                         isWin = true;
                                         updateReward = updateReward + rewardGiaiNhat;
-
-                                        const ticketData = await LotteryTicketModel.findByPk(orderData.ticketId);
-                                        if (!ticketData) throw new Error("Not found Ticket");
-                                        ticketData.totalreward = ticketData.totalreward + updateReward;
-                                        await ticketData.save();
-                                        await ticketData.reload();
-
-                                        const UserData = await UserModel.findOne({ where: { id: orderData.userId } });
-                                        if (!UserData) throw new Error("Not found user");
-                                        UserData.totalReward = UserData.totalReward + updateReward;
-                                        await UserData.save();
-                                        await UserData.reload();
                                     }
                                 }
 
@@ -817,18 +682,6 @@ const updateResult = async (game: string, data: any) => {
                                     if (rewardGiaiNhi > 0) {
                                         isWin = true;
                                         updateReward = updateReward + rewardGiaiNhi;
-
-                                        const ticketData = await LotteryTicketModel.findByPk(orderData.ticketId);
-                                        if (!ticketData) throw new Error("Not found Ticket");
-                                        ticketData.totalreward = ticketData.totalreward + updateReward;
-                                        await ticketData.save();
-                                        await ticketData.reload();
-
-                                        const UserData = await UserModel.findOne({ where: { id: orderData.userId } });
-                                        if (!UserData) throw new Error("Not found user");
-                                        UserData.totalReward = UserData.totalReward + updateReward;
-                                        await UserData.save();
-                                        await UserData.reload();
                                     }
                                 }
 
@@ -849,18 +702,6 @@ const updateResult = async (game: string, data: any) => {
                                     if (rewardGiaiBa > 0) {
                                         isWin = true;
                                         updateReward = updateReward + rewardGiaiBa;
-
-                                        const ticketData = await LotteryTicketModel.findByPk(orderData.ticketId);
-                                        if (!ticketData) throw new Error("Not found Ticket");
-                                        ticketData.totalreward = ticketData.totalreward + updateReward;
-                                        await ticketData.save();
-                                        await ticketData.reload();
-
-                                        const UserData = await UserModel.findOne({ where: { id: orderData.userId } });
-                                        if (!UserData) throw new Error("Not found user");
-                                        UserData.totalReward = UserData.totalReward + updateReward;
-                                        await UserData.save();
-                                        await UserData.reload();
                                     }
                                 }
 
@@ -881,18 +722,6 @@ const updateResult = async (game: string, data: any) => {
                                     if (rewardKK1 > 0) {
                                         isWin = true;
                                         updateReward = updateReward + rewardKK1;
-
-                                        const ticketData = await LotteryTicketModel.findByPk(orderData.ticketId);
-                                        if (!ticketData) throw new Error("Not found Ticket");
-                                        ticketData.totalreward = ticketData.totalreward + updateReward;
-                                        await ticketData.save();
-                                        await ticketData.reload();
-
-                                        const UserData = await UserModel.findOne({ where: { id: orderData.userId } });
-                                        if (!UserData) throw new Error("Not found user");
-                                        UserData.totalReward = UserData.totalReward + updateReward;
-                                        await UserData.save();
-                                        await UserData.reload();
                                     }
                                 }
 
@@ -912,20 +741,12 @@ const updateResult = async (game: string, data: any) => {
                                     if (rewardKK2 > 0) {
                                         isWin = true;
                                         updateReward = updateReward + rewardKK2;
-
-                                        const ticketData = await LotteryTicketModel.findByPk(orderData.ticketId);
-                                        if (!ticketData) throw new Error("Not found Ticket");
-                                        ticketData.totalreward = ticketData.totalreward + updateReward;
-                                        await ticketData.save();
-                                        await ticketData.reload();
-
-                                        const UserData = await UserModel.findOne({ where: { id: orderData.userId } });
-                                        if (!UserData) throw new Error("Not found user");
-                                        UserData.totalReward = UserData.totalReward + updateReward;
-                                        await UserData.save();
-                                        await UserData.reload();
                                     }
                                 }
+
+                                if (isWin) await SymtemSetReward(orderData.id, orderData.userId, updateReward);
+                                await UpdateTicketReward(orderData.ticketId, updateReward); // cộng vào tổng thưởng của ticket 
+
 
                                 dataUpdate.result.iswin = isWin, dataUpdate.result.totalreward = updateReward;
 
@@ -954,8 +775,6 @@ const updateResult = async (game: string, data: any) => {
                                 break;
 
 
-
-
                             // ĐẶT TỔ HỢP
                             case "tohop":
                                 // code Tổ hợp 
@@ -971,7 +790,7 @@ const updateResult = async (game: string, data: any) => {
 
 
             } catch (error) {
-                status = false, message = error;
+                status = false, message = error.message;
             }
 
             break;

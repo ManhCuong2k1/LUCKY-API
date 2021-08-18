@@ -7,6 +7,7 @@ import { LotteryOrdersModel } from "@models/LotteryOrder";
 import { UserHistoryModel, UserHistoryAdd } from "@models/LotteryUserHistory";
 
 import { UserModel } from "@models/User";
+import moment from "moment";
 const router = Router();
 
 
@@ -124,15 +125,6 @@ router.post("/", async (req: Request, res: Response) => {
                 if (isActiveOrder636) { // kiểm tra đơn hàng có thể order trong thời gian cho phép hay không
 
                     let timeOrder: any = helper.timeStamp();
-
-                    if (currentTime636.getHours() >= 19) {
-                        timeOrder = helper.addMinuteToTime(helper.timeConverter(timeOrder), 1440); // add 1 day
-                    } else {
-                        timeOrder = helper.timeConverter(timeOrder);
-                    }
-
-                    let roundOrder: any = helper.timeConverterNoChar(timeOrder);// gán round hiện tại = ngày hôm nay
-                    let isFirst = true;
                     let totalPrice = 0;
                     let fee = 0;
 
@@ -164,14 +156,39 @@ router.post("/", async (req: Request, res: Response) => {
                             moreDetail: "Đại lý giữ hộ vé"
                         };
                         const creatTicket = await LotteryTicketModel.create(dataTicket);
-
+    
+                        let roundOrder;
+                        let timeRunning: any;
+                        let timeToday: any = moment().tz("Asia/Ho_Chi_Minh");
 
                         // order
                         for (let i = 1; i <= Number(body.preriod); i++) {
 
-                            if (isFirst == false) {
-                                timeOrder = helper.addMinuteToTime(timeOrder, 1440);
-                                roundOrder = helper.timeConverterNoChar(timeOrder);
+                            if (currentTime636.getHours() >= 19) {
+                                timeToday = moment(timeToday).add(1, "d");
+                                for (let i = 0; i <= 10;i++) {
+                                    timeRunning = moment(timeToday).format("dddd");
+                                    if(timeRunning == "Wednesday" || timeRunning == "Saturday") {
+                                        roundOrder = moment(timeToday).format("YYYYMMDD");
+                                        timeOrder = moment(timeToday).format("YYYY-MM-DD 18:15");
+                                        timeToday = moment(timeToday).add(1, "d");
+                                        break;
+                                    }else {
+                                        timeToday = moment(timeToday).add(1, "d");
+                                    }
+                                }
+                            }else {
+                                for (let i = 0; i <= 10;i++) {
+                                    timeRunning = moment(timeToday).format("dddd");
+                                    if(timeRunning == "Wednesday" || timeRunning == "Saturday") {
+                                        roundOrder = moment(timeToday).format("YYYYMMDD");
+                                        timeOrder = moment(timeToday).format("YYYY-MM-DD 18:15:0");
+                                        timeToday = moment(timeToday).add(1, "d");
+                                        break;
+                                    }else {
+                                        timeToday = moment(timeToday).add(1, "d");
+                                    }
+                                }
                             }
 
                             dataImport = {
@@ -185,12 +202,12 @@ router.post("/", async (req: Request, res: Response) => {
                                     totalprice: orderPrice
                                 }),
                                 orderStatus: LotteryOrdersModel.ORDERSTATUS_ENUM.DELAY,
-                                resultStatus: LotteryOrdersModel.RESULTSTATUS_ENUM.DELAY + " " + helper.getDate(timeOrder) + " 18:15:0",
-                                finishTime: helper.getDate(timeOrder) + " 18:15:0",
+                                resultStatus: LotteryOrdersModel.RESULTSTATUS_ENUM.DELAY + " " + timeOrder,
+                                finishTime: timeOrder,
                                 moreDetail: "Đại lý giữ hộ vé"
                             };
 
-                            isFirst = false;
+
                             status = true, message = "Đặt Vé Thành Công!";
 
                             const dbExecQuery = (dataImport !== null) ? await LotteryOrdersModel.create(dataImport) : "";

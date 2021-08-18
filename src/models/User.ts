@@ -41,6 +41,9 @@ interface UserInterface {
 }
 
 class UserModel extends Model<UserInterface> implements UserInterface {
+  static UpdateReward() {
+      throw new Error("Method not implemented.");
+  }
   static generateOtpCode() {
     throw new Error("Method not implemented.");
   }
@@ -335,6 +338,16 @@ const findPhone = async (phone: string) => {
   }
 };
 
+
+const UpdateUserReward = async (userId: number, reward: number) => {
+  const UserData = await UserModel.findOne({ where: { id: userId } });
+  if (!UserData) throw new Error("Not found user");
+  UserData.totalReward = UserData.totalReward + reward;
+  await UserData.save();
+  await UserData.reload();
+};
+
+
 export {
   UserModel,
   UserInterface,
@@ -345,5 +358,6 @@ export {
   PostUserOtp,
   findCredentials,
   findCredentialAdmin,
-  findPhone
+  findPhone,
+  UpdateUserReward
 };

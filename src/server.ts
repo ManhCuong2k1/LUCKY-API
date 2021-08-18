@@ -1,6 +1,5 @@
 require("module-alias/register");
 import errorHandler from "errorhandler";
-
 import app from "./app";
 import config from "./config";
 
