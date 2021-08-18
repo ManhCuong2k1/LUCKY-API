@@ -563,7 +563,6 @@ router.get("/results/:type", async (req: Request, res: Response) => {
 
 router.get("/guild/:type", (req, res) => {
     try {
-        console.log(moment());
         res.sendFile(process.cwd() + "/public/views/guild/" + req.params.type + ".html");
     } catch (error) {
         res.send("ERROR");
