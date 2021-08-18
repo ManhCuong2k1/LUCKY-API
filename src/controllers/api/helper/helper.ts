@@ -1,7 +1,9 @@
 import moment from "moment";
+moment.tz.setDefault("Asia/Ho_Chi_Minh");
+
 
 const timeStamp = () => {
-    return Math.floor(Date.now() / 1000);
+    return moment().unix();
 };
 
 const timeConverter = (timestamp: number) => {
@@ -19,7 +21,6 @@ const timeConverterNoChar = (string: string) => {
       console.log(e.message);
     }
 };
-  
 
 const getDate = (string: string) => {
     try {
@@ -30,15 +31,12 @@ const getDate = (string: string) => {
       }
 };
 
-
 const getTime = (timeStamp: any) => {
-    // chuỗi timestamp không nhân với 1000 
     return new Date(timeStamp * 1000);
 };
 
 const addMinuteToTime = (time: any, minutes: number) => {
     const parseTime = new Date(time);
-
     let timeStamp = parseTime.setTime(parseTime.getTime() + (minutes * 60 * 1000));
         timeStamp = timeStamp / 1000;
     return timeConverter(timeStamp);

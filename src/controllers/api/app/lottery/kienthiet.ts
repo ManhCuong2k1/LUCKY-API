@@ -101,8 +101,8 @@ router.post("/orders", async (req: Request, res: Response) => {
                     totalPriceToClient = priceOrder + fee;
 
                     if (user.totalCoin >= totalPriceToClient) {
-
-                        const dateQuery = moment(body.date).format("DD-MM-YYYY"); // 13-08-2021
+                                // 2021-08-18
+                        const dateQuery = moment(body.date).format("YYYY-MM-DD"); // 13-08-2021
                         const roundId = moment(body.date).format("YYYYMMDD"); // 20210813
 
                         for (const orders of body.data) {
