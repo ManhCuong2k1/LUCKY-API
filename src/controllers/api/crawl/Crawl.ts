@@ -694,8 +694,8 @@ const getKenoCurrentRound = async () => {
 const XosoMienBac = async () => {
   try {
 
-    //const today = moment().format("YYYY-MM-DD");
-    const today = "2021-08-17";
+    const today = moment().format("YYYY-MM-DD");
+    //const today = "2021-08-17";
     const roundId = moment().format("YYYYMMDD");
     const currentDate = moment().format("DD/MM/YYYYY");
     const options = {
