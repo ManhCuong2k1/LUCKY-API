@@ -59,7 +59,7 @@ router.get("/staff", authAdmin, async (req: Request, res: Response) => {
     const where: any = Object.assign({},
       status === null ? null : { status },
       searchKey === null ? null : { name: { [Op.like]: `%${searchKey.trim()}%` } },
-      fromDate && toDate ? { createdAt: { [Op.between]: [moment(fromDate).startOf("day").subtract(8, "hours"), moment(toDate).endOf("day").subtract(8, "hours")] } } : null,
+      fromDate && toDate ? { createdAt: { [Op.between]: [moment(fromDate).startOf("day"), moment(toDate).endOf("day")] } } : null,
       {role : {[Op.or] : ["employe","admin"]}},
     );
 
