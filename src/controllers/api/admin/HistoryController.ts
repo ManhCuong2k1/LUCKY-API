@@ -32,7 +32,7 @@ router.get("/", async (req: Request, res: Response) => {
             where,
             include: {
                 model: UserModel,
-                attributes: ["username", "phone"],
+                attributes: ["name", "phone"],
                 as: "user",
                 where: whereUser,
             },
