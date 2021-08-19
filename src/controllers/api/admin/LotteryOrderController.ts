@@ -310,6 +310,7 @@ router.post("/:id/images", async (req: Request, res: Response) => {
             });
             ticketItem.orderStatus = await LotteryTicketModel.TICKET_ENUM.PRINTED;
             ticketItem.resultDetail = await LotteryTicketModel.RESULTSTATUS_ENUM.DRAWNED;
+            ticketItem.employeStatus = await LotteryTicketModel.EMPLOYESTATUS_ENUM.RECEIVED;
             
             await ticketItem.save();
             
