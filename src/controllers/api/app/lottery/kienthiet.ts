@@ -70,7 +70,7 @@ router.post("/orders", async (req: Request, res: Response) => {
         const body = req.body;
         let status = true, message, dataImport: any = null;
         const orderDetail: any[] = [];
-        const numberPrice = 5000;
+        const numberPrice = 10000;
         let isCreateTicket: boolean = false;
         let fee = Number(await getSettings("ticket_storage_fee"));
         let feeReal = Number(await getSettings("ticket_storage_fee"));
