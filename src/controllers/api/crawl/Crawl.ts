@@ -1,10 +1,8 @@
 import helper from "./Helper";
 import request from "request-promise";
-import axios from "axios";
 import { LotteryResultsModel, LotteryResultsCheck } from "@models/LotteryResults";
 import moment from "moment-timezone";
 moment.tz.setDefault("Asia/Ho_Chi_Minh");
-import { split } from "lodash";
 
 
 const XosoGetNextTime = async (type: string) => {

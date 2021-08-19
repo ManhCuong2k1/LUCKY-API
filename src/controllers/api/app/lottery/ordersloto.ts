@@ -2,6 +2,7 @@ import { Request, Response, Router } from "express";
 import helper from "@controllers/api/helper/helper";
 import LotteryHelper from "./helper";
 import Crawl from "../../crawl/Crawl";
+import { getSettings } from "@models/LotterySettings";
 import { LotteryTicketModel } from "@models/LotteryTicket";
 import { LotteryOrdersModel } from "@models/LotteryOrder";
 import { UserHistoryModel, UserHistoryAdd } from "@models/LotteryUserHistory";
@@ -40,7 +41,7 @@ router.post("/", async (req: Request, res: Response) => {
                     let roundOrder: any = helper.timeConverterNoChar(timeOrder);// gán round hiện tại = ngày hôm nay
                     let isFirst = true;
                     let totalPrice = 0;
-                    let fee = 0;
+                    let fee = Number(await getSettings("ticket_storage_fee"));;
 
                     // tính tiền 1 đơn
                     body.data.forEach((data: any) => {
@@ -127,7 +128,7 @@ router.post("/", async (req: Request, res: Response) => {
 
                     let timeOrder: any = helper.timeStamp();
                     let totalPrice = 0;
-                    let fee = 0;
+                    let fee = Number(await getSettings("ticket_storage_fee"));
 
                     // tính tiền 1 đơn
                     body.data.forEach((data: any) => {
@@ -248,7 +249,7 @@ router.post("/", async (req: Request, res: Response) => {
                     let roundOrder: any = helper.timeConverterNoChar(timeOrder);// gán round hiện tại = ngày hôm nay
                     let isFirst = true;
                     let totalPrice = 0;
-                    let fee = 0;
+                    let fee = Number(await getSettings("ticket_storage_fee"));
 
                     // tính tiền 1 đơn
                     body.data.forEach((data: any) => {
@@ -346,7 +347,7 @@ router.post("/", async (req: Request, res: Response) => {
                     let roundOrder: any = helper.timeConverterNoChar(timeOrder);// gán round hiện tại = ngày hôm nay
                     let isFirst = true;
                     let totalPrice = 0;
-                    let fee = 0;
+                    let fee = Number(await getSettings("ticket_storage_fee"));
 
                     // tính tiền 1 đơn
                     body.data.forEach((data: any) => {
@@ -443,7 +444,7 @@ router.post("/", async (req: Request, res: Response) => {
                     let roundOrder: any = helper.timeConverterNoChar(timeOrder);// gán round hiện tại = ngày hôm nay
                     let isFirst = true;
                     let totalPrice = 0;
-                    let fee = 0;
+                    let fee = Number(await getSettings("ticket_storage_fee"));
 
                     // tính tiền 1 đơn
                     body.data.forEach((data: any) => {
@@ -538,7 +539,7 @@ router.post("/", async (req: Request, res: Response) => {
                     let roundOrder: any = helper.timeConverterNoChar(timeOrder);// gán round hiện tại = ngày hôm nay
                     let isFirst = true;
                     let totalPrice = 0;
-                    let fee = 0;
+                    let fee = Number(await getSettings("ticket_storage_fee"));
 
                     // tính tiền 1 đơn
                     body.data.forEach((data: any) => {
@@ -634,7 +635,7 @@ router.post("/", async (req: Request, res: Response) => {
                     let roundOrder: any = helper.timeConverterNoChar(timeOrder);// gán round hiện tại = ngày hôm nay
                     let isFirst = true;
                     let totalPrice = 0;
-                    let fee = 0;
+                    let fee = Number(await getSettings("ticket_storage_fee"));
 
                     // tính tiền 1 đơn
                     body.data.forEach((data: any) => {

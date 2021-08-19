@@ -2,8 +2,8 @@
 
 import express, { Response, Request, Router } from "express";
 import dotenv from "dotenv";
-import { BannerInterface, Banner } from "@models/Banner";
-import { getSettings, SettingsInterface, SettingsModel } from "@models/LotterySettings";
+import { Banner } from "@models/Banner";
+import { getSettings } from "@models/LotterySettings";
 
 
 dotenv.config();

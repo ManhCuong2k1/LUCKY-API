@@ -7,6 +7,7 @@ import { LotteryOrdersModel } from "@models/LotteryOrder";
 import { UserHistoryModel, UserHistoryAdd } from "@models/LotteryUserHistory";
 
 import { UserModel } from "@models/User";
+import { getSettings } from "@models/LotterySettings";
 const router = Router();
 
 
@@ -35,7 +36,7 @@ router.post("/", async (req: Request, res: Response) => {
                     let roundOrder = Number(currentRound.data.current_round);
                     let isFirst = true;
                     let totalPrice = 0;
-                    let fee = 0;
+                    let fee = Number(await getSettings("ticket_storage_fee"));
 
                     // tính tiền 1 đơn
                     body.data.forEach((data: any) => {
@@ -192,7 +193,7 @@ router.post("/", async (req: Request, res: Response) => {
 
 
                 let totalPrice = 0;
-                let fee = 0;
+                let fee = Number(await getSettings("ticket_storage_fee"));
 
                 body.data.forEach((data: any) => {
                     totalPrice = totalPrice + priceOneList;
@@ -307,7 +308,7 @@ router.post("/", async (req: Request, res: Response) => {
 
                 
                 let totalPriceMega = 0;
-                let feeMega = 0;
+                let feeMega = Number(await getSettings("ticket_storage_fee"));
 
                 body.data.forEach((data: any) => {
                     totalPriceMega = totalPriceMega + priceOneListMega;
@@ -379,7 +380,7 @@ router.post("/", async (req: Request, res: Response) => {
             case "max3d":
 
                 let totalPriceMax3d = 0;
-                let feeMax3d = 0;
+                let feeMax3d = Number(await getSettings("ticket_storage_fee"));
 
                 body.data.forEach((data: any) => {
                     totalPriceMax3d = totalPriceMax3d + data.price;
@@ -451,7 +452,7 @@ router.post("/", async (req: Request, res: Response) => {
             case "max3dplus":
 
                 let totalPriceMax3dPlus = 0;
-                let feeMax3dPlus = 0;
+                let feeMax3dPlus = Number(await getSettings("ticket_storage_fee"));
 
                 body.data.forEach((data: any) => {
                     totalPriceMax3dPlus = totalPriceMax3dPlus + data.price;
@@ -522,7 +523,7 @@ router.post("/", async (req: Request, res: Response) => {
             case "max4d":
 
                 let totalPriceMax4d = 0;
-                let feeMax4d = 0;
+                let feeMax4d = Number(await getSettings("ticket_storage_fee"));
 
                 body.data.forEach((data: any) => {
                     totalPriceMax4d = totalPriceMax4d + data.price;

@@ -2,10 +2,11 @@ import { Request, Response, Router } from "express";
 import moment from "moment-timezone";
 moment.tz.setDefault("Asia/Ho_Chi_Minh");
 import helper from "@controllers/api/helper/helper";
+import { UserHistoryModel, UserHistoryAdd } from "@models/LotteryUserHistory";
 import { LotteryNumbersModel, getNumbers, getOneNumber } from "@models/LotteryNumbers";
+import { getSettings } from "@models/LotterySettings";
 import { LotteryTicketModel } from "@models/LotteryTicket";
 import { LotteryOrdersModel } from "@models/LotteryOrder";
-import { UserHistoryModel, UserHistoryAdd } from "@models/LotteryUserHistory";
 import { UserModel } from "@models/User";
 
 const router = Router();
@@ -71,7 +72,8 @@ router.post("/orders", async (req: Request, res: Response) => {
         const orderDetail: any[] = [];
         const numberPrice = 5000;
         let isCreateTicket: boolean = false;
-        let fee = 0;
+        let fee = Number(await getSettings("ticket_storage_fee"));
+        let feeReal = Number(await getSettings("ticket_storage_fee"));
         let totalPriceToClient = 0;
         let totalPrice = 0;
 
@@ -103,7 +105,7 @@ router.post("/orders", async (req: Request, res: Response) => {
 
                     if (user.totalCoin >= totalPriceToClient) {
                                 // 2021-08-18
-                        const dateQuery = moment(body.date).format("YYYY-MM-DD"); // 13-08-2021
+                        const dateQuery = moment(body.date).format("DD-MM-YYYY"); // 13-08-2021
                         const roundId = moment(body.date).format("YYYYMMDD"); // 20210813
 
                         for (const orders of body.data) {
@@ -170,6 +172,8 @@ router.post("/orders", async (req: Request, res: Response) => {
 
                             (dataImport !== null) ? await UserHistoryAdd(user.id, UserHistoryModel.ACTION_SLUG_ENUM.BUY_TICKET, UserHistoryModel.ACTION_NAME_ENUM.BUY_TICKET, "Mua vé số Kiến Thiết Hết " + helper.numberformat(totalPrice) + " VND") : "";
 
+                            feeReal = (feeReal * totalPrice) / 100;
+                            totalPrice = totalPrice + feeReal;
 
                             const UserData = await UserModel.findOne({ where: { id: user.id } });
                             if (!UserData) throw new Error("Not found user");
