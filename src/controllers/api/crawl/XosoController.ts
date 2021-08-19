@@ -436,9 +436,9 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                     }
                 }
 
-                let timeSet:any = moment(nextTimecompute636);
-                timeSet.set('hour', 18);
-                timeSet.set('minute', 15);
+                let timeSet: any = moment(nextTimecompute636);
+                timeSet.set("hour", 18);
+                timeSet.set("minute", 15);
                 timeSet = moment(timeSet).format("X");
 
                 const roundIdcompute636 = moment(Number(timeSet) * 1000).format("YYYYMMDD");

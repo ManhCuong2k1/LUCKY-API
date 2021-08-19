@@ -25,17 +25,17 @@ router.get("/getnumbers", async (req: Request, res: Response) => {
 
         if (isActiveOrder) {
             currentDate = moment().add(1, "d");
-            dateOrder = moment().add(1, "d").format("DD-MM-YYYY");
+            dateOrder = moment().add(1, "d").format("YYYY-MM-DD");
             timeQuery = moment().add(1, "d").format("YYYY-MM-DD");
         } else {
             currentDate = moment();
-            dateOrder = moment().format("DD-MM-YYYY");
+            dateOrder = moment().format("YYYY-MM-DD");
             timeQuery = moment().format("YYYY-MM-DD");
         }
 
         for (let i = 1; i <= loop; i++) {
             if (i != 1) {
-                dateOrder = moment(currentDate).add(1, "d").format("DD-MM-YYYY");
+                dateOrder = moment(currentDate).add(1, "d").format("YYYY-MM-DD");
                 timeQuery = moment(currentDate).add(1, "d").format("YYYY-MM-DD");
                 currentDate = moment(currentDate).add(1, "d");
             }
