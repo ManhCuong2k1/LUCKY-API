@@ -11,7 +11,7 @@ import path from "path";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "./swagger/swaggerJsDoc";
 import strongParams from "./middleware/parameters";
-import moment from "moment";
+import moment from "moment-timezone";
 moment.tz.setDefault("Asia/Ho_Chi_Minh");
 
 
