@@ -404,15 +404,16 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
             break;
 
             case "compute636":
-                const currentTimecompute636: any = moment().tz("Asia/Ho_Chi_Minh");
-                let runTimecomputer636: any = moment().tz("Asia/Ho_Chi_Minh");
+                const currentTimecompute636: any = moment();
+                let checkTimecomputer636: any = moment();
+                let runTimecomputer636: any = moment();
                 let nextTimecompute636: any;
 
                 if(currentTimecompute636.format("dddd") == "Wednesday" || currentTimecompute636.format("dddd") == "Saturday") {
                     if(currentTimecompute636.format("H") >= 18) {
                         for(let loopTimecompute636 = 1; loopTimecompute636 <= 10 ;loopTimecompute636++) {
-                            runTimecomputer636 = moment(runTimecomputer636).format("dddd");
-                            if(runTimecomputer636 == "Wednesday" || runTimecomputer636 == "Saturday") {
+                            checkTimecomputer636 = moment(runTimecomputer636).format("dddd");
+                            if(checkTimecomputer636 == "Wednesday" || checkTimecomputer636 == "Saturday") {
                                 nextTimecompute636 = moment(new Date(moment(runTimecomputer636).format("YYYY/MM/DD") + " 18:00")).tz("Asia/Ho_Chi_Minh").format("X");
                                 break;
                             }else {
@@ -424,8 +425,9 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                     }
                 }else {
                     for(let loopTimecompute636 = 1; loopTimecompute636 <= 10 ;loopTimecompute636++) {
-                        runTimecomputer636 = moment(runTimecomputer636).format("dddd");
-                        if(runTimecomputer636 == "Wednesday" || runTimecomputer636 == "Saturday") {
+                        checkTimecomputer636 = moment(runTimecomputer636).format("dddd");
+                        
+                        if(checkTimecomputer636 == "Wednesday" || checkTimecomputer636 == "Saturday") {
                             nextTimecompute636 = moment(new Date(moment(runTimecomputer636).format("YYYY/MM/DD") + " 18:00")).tz("Asia/Ho_Chi_Minh").format("X");
                             break;
                         }else {
