@@ -34,7 +34,7 @@ router.get("/vietlott", async (req: Request, res: Response) => {
         const where: any = Object.assign({},
             type === null ? null : { type },
             orderStatus === null ? null : orderStatus === "drawned" ? { resultDetail: "ĐÃ XỔ VÉ" } : orderStatus === "winned" ? { resultDetail: "TRÚNG GIẢI" } : { orderStatus },
-            fromDate && toDate ? { createdAt: { [Op.between]: [moment(fromDate).startOf("day").subtract(8, "hours"), moment(toDate).endOf("day").subtract(8, "hours")] } } : null
+            fromDate && toDate ? { createdAt: { [Op.between]: [moment(fromDate).startOf("day"), moment(toDate).endOf("day")] } } : null
         );
         const whereUser: any = Object.assign({},
             searchKey === null ? null : { phone: { [Op.like]: `%${searchKey.trim()}%` } },
@@ -112,7 +112,7 @@ router.get("/computer", async (req: Request, res: Response) => {
         const where: any = Object.assign({},
             type === null ? null : { type },
             orderStatus === null ? null : orderStatus === "drawned" ? { resultDetail: "ĐÃ XỔ VÉ" } : orderStatus === "winned" ? { resultDetail: "TRÚNG GIẢI" } : { orderStatus },
-            fromDate && toDate ? { createdAt: { [Op.between]: [moment(fromDate).startOf("day").subtract(8, "hours"), moment(toDate).endOf("day").subtract(8, "hours")] } } : null
+            fromDate && toDate ? { createdAt: { [Op.between]: [moment(fromDate).startOf("day"), moment(toDate).endOf("day")] } } : null
         );
         const whereUser: any = Object.assign({},
             searchKey === null ? null : { phone: { [Op.like]: `%${searchKey.trim()}%` } },
@@ -190,7 +190,7 @@ router.get("/construction", async (req: Request, res: Response) => {
         const where: any = Object.assign({},
             type === null ? null : { type },
             orderStatus === null ? null : orderStatus === "drawned" ? { resultDetail: "ĐÃ XỔ VÉ" } : orderStatus === "winned" ? { resultDetail: "TRÚNG GIẢI" } : { orderStatus },
-            fromDate && toDate ? { createdAt: { [Op.between]: [moment(fromDate).startOf("day").subtract(8, "hours"), moment(toDate).endOf("day").subtract(8, "hours")] } } : null
+            fromDate && toDate ? { createdAt: { [Op.between]: [moment(fromDate).startOf("day"), moment(toDate).endOf("day")] } } : null
         );
         const whereUser: any = Object.assign({},
             searchKey === null ? null : { phone: { [Op.like]: `%${searchKey.trim()}%` } },
@@ -310,6 +310,7 @@ router.post("/:id/images", async (req: Request, res: Response) => {
             });
             ticketItem.orderStatus = await LotteryTicketModel.TICKET_ENUM.PRINTED;
             ticketItem.resultDetail = await LotteryTicketModel.RESULTSTATUS_ENUM.DRAWNED;
+            ticketItem.employeStatus = await LotteryTicketModel.EMPLOYESTATUS_ENUM.RECEIVED;
             
             await ticketItem.save();
             

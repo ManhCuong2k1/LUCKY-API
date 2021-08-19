@@ -19,7 +19,7 @@ router.get("/", async (req: Request, res: Response) => {
 
         const where: any = Object.assign({},
             searchKey === null ? null : { date: { [Op.like]: `%${searchKey.trim()}%` } },
-            fromDate && toDate ? { createdAt: { [Op.between]: [moment(fromDate).startOf("day").subtract(8, "hours"), moment(toDate).endOf("day").subtract(8, "hours")] } } : null
+            fromDate && toDate ? { createdAt: { [Op.between]: [moment(fromDate).startOf("day"), moment(toDate).endOf("day")] } } : null
         );
 
         const { rows, count } = await LotteryStoragesModel.findAndCountAll({
