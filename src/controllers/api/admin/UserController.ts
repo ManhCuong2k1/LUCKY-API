@@ -5,6 +5,7 @@ import { excludeFields } from "@util/convert";
 import { GridInterface } from "@models/Transformers/Grid";
 import { authAdmin, authEmploye } from "../../../middleware/auth";
 import moment from "moment-timezone";
+moment.tz.setDefault("Asia/Ho_Chi_Minh");
 import { Op } from "sequelize";
 const router = express.Router();
 

@@ -4,6 +4,7 @@ import { LotteryExchangesModel } from "@models/LotteryExchanges";
 
 import { Router, Request, Response } from "express";
 import moment from "moment-timezone";
+moment.tz.setDefault("Asia/Ho_Chi_Minh");
 import { col, fn, Op } from "sequelize";
 const router = Router();
 

@@ -3,6 +3,7 @@ import { UserModel } from "@models/User";
 import { UserHistoryModel } from "@models/LotteryUserHistory";
 import { GridInterface } from "@models/Transformers/Grid";
 import moment from "moment-timezone";
+moment.tz.setDefault("Asia/Ho_Chi_Minh");
 import { Op } from "sequelize";
 
 const router = express.Router();

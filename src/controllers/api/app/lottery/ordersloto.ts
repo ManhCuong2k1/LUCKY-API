@@ -7,7 +7,8 @@ import { LotteryOrdersModel } from "@models/LotteryOrder";
 import { UserHistoryModel, UserHistoryAdd } from "@models/LotteryUserHistory";
 
 import { UserModel } from "@models/User";
-import moment from "moment";
+import moment from "moment-timezone";
+moment.tz.setDefault("Asia/Ho_Chi_Minh");
 const router = Router();
 
 

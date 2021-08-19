@@ -3,6 +3,7 @@ import { LotteryStoragesModel } from "@models/LotteryStorage";
 import { GridInterface } from "@models/Transformers/Grid";
 import { Op } from "sequelize";
 import moment from "moment-timezone";
+moment.tz.setDefault("Asia/Ho_Chi_Minh");
 const router = Router();
 
 

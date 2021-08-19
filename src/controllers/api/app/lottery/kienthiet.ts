@@ -1,5 +1,6 @@
 import { Request, Response, Router } from "express";
-import moment from "moment";
+import moment from "moment-timezone";
+moment.tz.setDefault("Asia/Ho_Chi_Minh");
 import helper from "@controllers/api/helper/helper";
 import { LotteryNumbersModel, getNumbers, getOneNumber } from "@models/LotteryNumbers";
 import { LotteryTicketModel } from "@models/LotteryTicket";

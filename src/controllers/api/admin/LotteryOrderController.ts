@@ -8,6 +8,7 @@ import { LotteryStoragesModel } from "@models/LotteryStorage";
 import { GridInterface } from "@models/Transformers/Grid";
 import { col, fn, Op } from "sequelize";
 import moment from "moment-timezone";
+moment.tz.setDefault("Asia/Ho_Chi_Minh");
 import { uploadFile } from "../../../middleware/file";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const readXlsxFile = require("read-excel-file/node");
