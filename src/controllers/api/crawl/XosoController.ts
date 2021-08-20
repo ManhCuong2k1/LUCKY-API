@@ -387,26 +387,25 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                 break;
 
             case "kienthiet":
-                let nowtime: any = moment();
-                let currentTimekienthiet = moment();
-                currentTimekienthiet.set('hour', 18);
-                currentTimekienthiet.set('minute', 30);      
+                const nowtime: any = moment();
+                const currentTimekienthiet = moment();
+                currentTimekienthiet.set("hour", 18);
+                currentTimekienthiet.set("minute", 30);      
                 let tomorowTimekienthiet: any;
 
 
                 if (nowtime.format("H") >= 18) {
                     tomorowTimekienthiet = moment(currentTimekienthiet);
-                    tomorowTimekienthiet.set('hour', 18);
-                    tomorowTimekienthiet.set('minute', 30);
+                    tomorowTimekienthiet.set("hour", 18);
+                    tomorowTimekienthiet.set("minute", 30);
                     tomorowTimekienthiet.add(1, "d").format("X");
                 } else {
                     tomorowTimekienthiet = moment(nowtime);
-                    tomorowTimekienthiet.set('hour', 18);
-                    tomorowTimekienthiet.set('minute', 30);
+                    tomorowTimekienthiet.set("hour", 18);
+                    tomorowTimekienthiet.set("minute", 30);
                     tomorowTimekienthiet = tomorowTimekienthiet.format("X");
                 }
                 
-
                 const roundIdkienthiet = moment(Number(tomorowTimekienthiet) * 1000).format("YYYYMMDD");
 
                 const dataExportKienThiet: any = {
@@ -472,15 +471,22 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                 break;
 
             case "compute123":
-                const nowtimecompute123: any = moment().tz("Asia/Ho_Chi_Minh");
-                const currentTimecompute123 = moment().format("YYYY-MM-DD");
+                const nowtimecompute123: any = moment();
+                const currentTimecompute123 = moment();
+                currentTimecompute123.set("hour", 18);
+                currentTimecompute123.set("minute", 30);      
                 let tomorowTimecompute123: any;
 
-
                 if (nowtimecompute123.format("H") >= 18) {
-                    tomorowTimecompute123 = moment(currentTimecompute123 + " 18:00").add(1, "d").tz("Asia/Ho_Chi_Minh").format("X");
+                    tomorowTimecompute123 = moment(currentTimecompute123);
+                    tomorowTimecompute123.set("hour", 18);
+                    tomorowTimecompute123.set("minute", 30);
+                    tomorowTimecompute123.add(1, "d").format("X");
                 } else {
-                    tomorowTimecompute123 = moment(new Date(moment(nowtimecompute123).format("YYYY/MM/DD") + " 18:00")).tz("Asia/Ho_Chi_Minh").format("X");
+                    tomorowTimecompute123 = moment(currentTimecompute123);
+                    tomorowTimecompute123.set("hour", 18);
+                    tomorowTimecompute123.set("minute", 30);
+                    tomorowTimecompute123 = tomorowTimecompute123.format("X");
                 }
 
                 const roundIdcompute123 = moment(Number(tomorowTimecompute123) * 1000).format("YYYYMMDD");

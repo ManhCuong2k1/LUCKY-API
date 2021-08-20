@@ -23,7 +23,7 @@ router.get("/getnumbers", async (req: Request, res: Response) => {
         const loop = 5;
         const dataExport: any[] = [];
 
-        if (isActiveOrder) {
+        if (Number(moment().format("H")) >= 16) {
             currentDate = moment().add(1, "d");
             dateOrder = moment().add(1, "d").format("DD-MM-YYYY");
             timeQuery = moment().add(1, "d").format("DD-MM-YYYY");
@@ -102,14 +102,14 @@ router.post("/orders", async (req: Request, res: Response) => {
                     totalPriceToClient = priceOrder + fee;
 
                     if (user.totalCoin >= totalPriceToClient) {
-                                // 2021-08-18
+                        // 2021-08-18
                         const dateQuery = moment(body.date).format("DD-MM-YYYY"); // 13-08-2021
                         const roundId = moment(body.date).format("YYYYMMDD"); // 20210813
 
                         for (const orders of body.data) {
                             const numberDB = await getOneNumber(orders.number, dateQuery, LotteryNumbersModel.STATUS_ENUM.TRUE);
 
-                            if(numberDB != null) {
+                            if (numberDB != null) {
                                 if (numberDB.total > 0) {
                                     isCreateTicket = true;
                                     let setTotalDB: number = 0; // set số lượng sẽ trừ đi vào db lúc order
@@ -131,8 +131,8 @@ router.post("/orders", async (req: Request, res: Response) => {
 
                                 } else {
                                     console.log("ĐÃ HẾT SỐ " + orders.number + " NÊN KHÔNG THỂ MUA...");
-                                }                                
-                            }else {
+                                }
+                            } else {
                                 console.log("SỐ " + orders.number + " KHÔNG TỒN TẠI.");
                             }
                         }
