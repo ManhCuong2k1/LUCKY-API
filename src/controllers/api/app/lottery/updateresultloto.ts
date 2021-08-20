@@ -46,7 +46,7 @@ const updateResultLoto = async (game: string, data: any) => {
                             const arrBet = LotteryHelper.arrayStringToNumber(i.number);
                             const arrResult = LotteryHelper.arrayStringToNumber(data.result);
                             const checkSame = LotteryHelper.checkSame(arrBet, arrResult);
-                            let reward = LotteryHelper.getRewardCompute636(checkSame.length);
+                            const reward = LotteryHelper.getRewardCompute636(checkSame.length);
                             dataUpdate["data"].push({
                                 number: checkSame,
                                 reward: reward
@@ -113,7 +113,7 @@ const updateResultLoto = async (game: string, data: any) => {
 
                     for (const i of orderDetail.data) {
                         try {
-                            let dataNumber: any[] = [];
+                            const dataNumber: any[] = [];
                             const number = i.number;
                             // Bo so thu 1
                             isWinNum1 = (Number(number[0]) == Number(data.result[0])) ? true : false;
@@ -142,7 +142,7 @@ const updateResultLoto = async (game: string, data: any) => {
                                 }
                             }
 
-                            let reward = Number(i.price) * capsonhan;
+                            const reward = Number(i.price) * capsonhan;
                             if (reward > 0) updateReward = updateReward + reward;
 
                             if (isWin == true) {
@@ -215,12 +215,12 @@ const updateResultLoto = async (game: string, data: any) => {
 
                     for (const i of orderDetail.data) {
                         try {
-                            let dataNumber: any[] = [];
+                            const dataNumber: any[] = [];
                             const number = i.number;
                             const numberOrder = number[0] + number[1];
 
-                            let giaidb = data.result.giaidacbiet.slice(-2);
-                            let giainhat = data.result.giainhat.slice(-2);
+                            const giaidb = data.result.giaidacbiet.slice(-2);
+                            const giainhat = data.result.giainhat.slice(-2);
 
                             isWinDB = (numberOrder == giaidb) ? true : false;
                             isWinGN = (numberOrder == giainhat) ? true : false;
@@ -240,7 +240,7 @@ const updateResultLoto = async (game: string, data: any) => {
                             }
 
 
-                            let reward = Number(i.price) * capsonhan;
+                            const reward = Number(i.price) * capsonhan;
 
                             if (reward > 0) updateReward = updateReward + reward;
 
@@ -311,19 +311,19 @@ const updateResultLoto = async (game: string, data: any) => {
                 OrderItem.forEach(async (orderData: any) => {
                     const orderDetail = JSON.parse(orderData.orderDetail);
                     dataUpdate = {}, dataUpdate.data = [], dataUpdate.result = {};
-                    let isWin: boolean = false, updateReward: number = 0;
-                    let isWinDB: boolean = false, isWinGN: boolean = false;
-                    let capsonhan: number = 0;
+                    const isWin: boolean = false, updateReward: number = 0;
+                    const isWinDB: boolean = false, isWinGN: boolean = false;
+                    const capsonhan: number = 0;
 
                     for (const i of orderDetail.data) {
                         try {
-                            let dataNumber: any[] = [];
+                            const dataNumber: any[] = [];
                             const number = i.number;
                             const numberOrder = number[0] + number[1] + number[2];
 
-                            let giaidb = data.result.giaidacbiet.slice(-3);
-                            let giainhat = data.result.giainhat.slice(-3);
-                            let giaisau = data.result.giaisau;
+                            const giaidb = data.result.giaidacbiet.slice(-3);
+                            const giainhat = data.result.giainhat.slice(-3);
+                            const giaisau = data.result.giaisau;
 
 
                             console.log(giaisau);

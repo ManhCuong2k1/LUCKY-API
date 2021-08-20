@@ -16,8 +16,7 @@ router.get("/getnumbers", async (req: Request, res: Response) => {
 
     try {
 
-        const currentTime = helper.getTime(helper.timeStamp());
-        const isActiveOrder = (currentTime.getHours() < 16 || currentTime.getHours() >= 19) ? true : false;
+        const isActiveOrder = (Number(moment().format("H")) < 16 || Number(moment().format("H")) >= 19) ? true : false;
         let currentDate;
         let timeQuery;
         let dateOrder;

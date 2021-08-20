@@ -387,16 +387,25 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                 break;
 
             case "kienthiet":
-                const nowtime: any = moment().tz("Asia/Ho_Chi_Minh");
-                const currentTimekienthiet = moment().format("YYYY-MM-DD");
+                let nowtime: any = moment();
+                let currentTimekienthiet = moment();
+                currentTimekienthiet.set('hour', 18);
+                currentTimekienthiet.set('minute', 30);      
                 let tomorowTimekienthiet: any;
 
 
                 if (nowtime.format("H") >= 18) {
-                    tomorowTimekienthiet = moment(currentTimekienthiet + " 18:30").add(1, "d").tz("Asia/Ho_Chi_Minh").format("X");
+                    tomorowTimekienthiet = moment(currentTimekienthiet);
+                    tomorowTimekienthiet.set('hour', 18);
+                    tomorowTimekienthiet.set('minute', 30);
+                    tomorowTimekienthiet.add(1, "d").format("X");
                 } else {
-                    tomorowTimekienthiet = moment(new Date(moment(nowtime).format("YYYY/MM/DD") + " 18:30")).tz("Asia/Ho_Chi_Minh").format("X");
+                    tomorowTimekienthiet = moment(nowtime);
+                    tomorowTimekienthiet.set('hour', 18);
+                    tomorowTimekienthiet.set('minute', 30);
+                    tomorowTimekienthiet = tomorowTimekienthiet.format("X");
                 }
+                
 
                 const roundIdkienthiet = moment(Number(tomorowTimekienthiet) * 1000).format("YYYYMMDD");
 
