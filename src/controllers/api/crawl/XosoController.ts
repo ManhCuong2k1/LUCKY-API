@@ -100,7 +100,7 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
             }
             break;
 
-        case "mienbac":
+        case "xsmb":
             try {
                 const crawling = await Crawl.XosoMienBac();
                 const updateData = updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.KIENTHIET, crawling.data);
@@ -112,28 +112,6 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
             }
             break;
 
-        case "6x36":
-            try {
-                const crawling = await Crawl.Xoso6x36();
-                const updateData = updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.COMPUTE636, crawling.data);
-                return res.send(crawling);
-            } catch (e) {
-                res.status(401).send({
-                    code: e.message
-                });
-            }
-            break;
-
-        case "dientoan123":
-            try {
-                const crawling = await Crawl.DienToan123();
-                return res.send(crawling);
-            } catch (e) {
-                res.status(401).send({
-                    code: e.message
-                });
-            }
-            break;
 
         case "ketqualoto":
             try {
@@ -146,6 +124,36 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
             }
             break;
 
+        case "compute":
+            try {
+                const DienToan123 = await Crawl.DienToan123();
+                updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.COMPUTE123, DienToan123.data);
+                const Xoso6x36 = await Crawl.Xoso6x36();
+                updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.COMPUTE636, Xoso6x36.data);
+                return res.json({
+                    status: true,
+                    message: "TASK SUCCESS!"
+                });
+            } catch (e) {
+                res.status(401).send({
+                    code: e.message
+                });
+            }
+            break;
+
+        case "loto":
+            try {
+                const crawling = await Crawl.XosoMienBac();
+                updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.LOTO2, crawling.data);
+                updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.LOTO3, crawling.data);
+                updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.LOTO5, crawling.data);
+                return res.send(crawling);
+            } catch (e) {
+                res.status(401).send({
+                    code: e.message
+                });
+            }
+            break;
 
         default:
             res.status(403).send("403");

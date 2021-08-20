@@ -117,6 +117,14 @@ const getRewardMega = (level: number, same: number) => {
     return arrReward[level][same];
 };
 
+
+const getRewardCompute636 = (same: number) => {
+    const arrReward = [0, 0, 0, 15000, 100000, 1800000, 1000000000];
+    return arrReward[same];
+};
+
+
+
 export default {
     arrayStringToNumber,
     arrNumberToString,
@@ -125,5 +133,6 @@ export default {
     removeFirstChar,
     getRewardKeno,
     getRewardPower,
-    getRewardMega
+    getRewardMega,
+    getRewardCompute636
 };

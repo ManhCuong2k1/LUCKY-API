@@ -693,8 +693,8 @@ const getKenoCurrentRound = async () => {
 const XosoMienBac = async () => {
   try {
 
-    const today = moment().format("YYYY-MM-DD");
-    //const today = "2021-08-17";
+    //const today = moment().format("YYYY-MM-DD");
+    const today = "2021-08-19";
     const roundId = moment().format("YYYYMMDD");
     const currentDate = moment().format("DD/MM/YYYYY");
     const options = {
@@ -719,21 +719,25 @@ const XosoMienBac = async () => {
       let html;
       let arrNumber;
       const dataXoso: any = {};
-      dataXoso["giaidacbiet"] = [];
-      dataXoso["giainhat"] = [];
-      dataXoso["giainhi"] = [];
-      dataXoso["giaiba"] = [];
-      dataXoso["giaitu"] = [];
-      dataXoso["giainam"] = [];
-      dataXoso["giaisau"] = [];
-      dataXoso["giaibay"] = [];
+
+      dataXoso["date"] = today;
+      dataXoso["round"] = moment(today).format("YYYYMMDD");
+      dataXoso["result"] = {};
+      dataXoso["result"]["giaidacbiet"] = [];
+      dataXoso["result"]["giainhat"] = [];
+      dataXoso["result"]["giainhi"] = [];
+      dataXoso["result"]["giaiba"] = [];
+      dataXoso["result"]["giaitu"] = [];
+      dataXoso["result"]["giainam"] = [];
+      dataXoso["result"]["giaisau"] = [];
+      dataXoso["result"]["giaibay"] = [];
 
 
       // lấy nội dung giải db trong bảng
       html = helper.cutstring(tableResult, "<tbody>", "</tbody>");
-      dataXoso["giaidacbiet"] = helper.cutstring(html, "f3b\" colspan=\"12\">", "</td>");
+      dataXoso["result"]["giaidacbiet"] = helper.cutstring(html, "f3b\" colspan=\"12\">", "</td>");
       // lấy nội dung giải nhat trong bảng
-      dataXoso["giainhat"] = helper.cutstring(html, "f2\" colspan=\"12\">", "</td>");
+      dataXoso["result"]["giainhat"] = helper.cutstring(html, "f2\" colspan=\"12\">", "</td>");
 
       // lấy nội dung giải nhi trong bảng
       html = helper.cutstring(html, "<h3>Giải Nhì</h3>", "</tr>");
@@ -742,7 +746,7 @@ const XosoMienBac = async () => {
       html = helper.replaceString(html, "\n", "");
       html = html.substring(1);
       arrNumber = html.split(",");
-      dataXoso["giainhi"] = arrNumber;
+      dataXoso["result"]["giainhi"] = arrNumber;
 
       // lấy nội dung giải ba trong bảng
       html = helper.cutstring(tableResult, "<tbody>", "</tbody>");
@@ -754,7 +758,7 @@ const XosoMienBac = async () => {
       html = helper.replaceString(html, "\n", "");
       html = html.substring(1);
       arrNumber = html.split(",");
-      dataXoso["giaiba"] = arrNumber;
+      dataXoso["result"]["giaiba"] = arrNumber;
 
       // lấy nội dung giải tu trong bảng
       html = helper.cutstring(tableResult, "<tbody>", "</tbody>");
@@ -764,7 +768,7 @@ const XosoMienBac = async () => {
       html = helper.replaceString(html, "\n", "");
       html = html.substring(1);
       arrNumber = html.split(",");
-      dataXoso["giaitu"] = arrNumber;
+      dataXoso["result"]["giaitu"] = arrNumber;
 
       // lấy nội dung giải nam trong bảng
       html = helper.cutstring(tableResult, "<tbody>", "</tbody>");
@@ -776,7 +780,7 @@ const XosoMienBac = async () => {
       html = helper.replaceString(html, "\n", "");
       html = html.substring(1);
       arrNumber = html.split(",");
-      dataXoso["giainam"] = arrNumber;
+      dataXoso["result"]["giainam"] = arrNumber;
 
       // lấy nội dung giải sau trong bảng
       html = helper.cutstring(tableResult, "<tbody>", "</tbody>");
@@ -786,7 +790,7 @@ const XosoMienBac = async () => {
       html = helper.replaceString(html, "\n", "");
       html = html.substring(1);
       arrNumber = html.split(",");
-      dataXoso["giaisau"] = arrNumber;
+      dataXoso["result"]["giaisau"] = arrNumber;
 
       // lấy nội dung giải bay trong bảng
       html = helper.cutstring(tableResult, "<tbody>", "</tbody>");
@@ -796,7 +800,7 @@ const XosoMienBac = async () => {
       html = helper.replaceString(html, "\n", "");
       html = html.substring(1);
       arrNumber = html.split(",");
-      dataXoso["giaibay"] = arrNumber;
+      dataXoso["result"]["giaibay"] = arrNumber;
       
 
       const LotteryCheckExits = await LotteryResultsCheck(LotteryResultsModel.GAME_ENUM.XOSOMIENBAC, roundId);
@@ -902,9 +906,9 @@ const DienToan123 = async () => {
     const TimeOfData = dataResp.termDate.split("/");
     const TimeMomentInput = TimeOfData[1] + "-" + TimeOfData[0] + "-" + TimeOfData[2];
     
-    const roundId = moment(TimeMomentInput).format("YYYYMMDD");
+    const roundId = TimeOfData[2]+ TimeOfData[1] + TimeOfData[0];
     const result = dataResp.result.split(",");
-    const date = moment(TimeMomentInput).format("DD/MM/YYYY");
+    const date = moment(new Date(TimeMomentInput)).format("DD/MM/YYYY");
 
     const LotteryCheckExits = await LotteryResultsCheck(LotteryResultsModel.GAME_ENUM.COMPUTE123, roundId);
 
@@ -922,7 +926,11 @@ const DienToan123 = async () => {
     
     return {
       status: true,
-      data: dataResp,
+      data: {
+        round: roundId,
+        date,
+        result
+      },
       message: "Success"
     };
 

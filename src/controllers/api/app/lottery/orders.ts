@@ -1,6 +1,8 @@
 import { Request, Response, Router } from "express";
 import helper from "@controllers/api/helper/helper";
 import LotteryHelper from "./helper";
+import moment from "moment";
+moment.tz.setDefault("Asia/Ho_Chi_Minh");
 import Crawl from "../../crawl/Crawl";
 import { LotteryTicketModel } from "@models/LotteryTicket";
 import { LotteryOrdersModel } from "@models/LotteryOrder";
@@ -22,9 +24,10 @@ router.post("/", async (req: Request, res: Response) => {
         switch (body.game) { // kiểm tra user order game nào
             case "keno":
 
-                const currentTime = helper.getTime(helper.timeStamp());
-                const checkTimeStart = (currentTime.getHours() >= 6) ? true : false; // start if time >= 6h AM
-                const checkTimeStop = (currentTime.getHours() < 22) ? true : false; // stop if time < 22h PM
+                const checkTimeStart = (Number(moment().format("H")) >= 8) ? true : false; // start if time >= 6h AM
+                const checkTimeStop = (Number(moment().format("H")) < 22) ? true : false; // stop if time < 22h PM
+
+
                 const isActiveOrder = (checkTimeStart && checkTimeStop) ? true : false;
 
 

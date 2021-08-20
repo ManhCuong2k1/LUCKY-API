@@ -17,7 +17,7 @@ router.get("/getnumbers", async (req: Request, res: Response) => {
     try {
 
         const currentTime = helper.getTime(helper.timeStamp());
-        const isActiveOrder = (currentTime.getHours() >= 17) ? true : false;
+        const isActiveOrder = (currentTime.getHours() < 16 || currentTime.getHours() >= 19) ? true : false;
         let currentDate;
         let timeQuery;
         let dateOrder;
@@ -78,14 +78,13 @@ router.post("/orders", async (req: Request, res: Response) => {
         let totalPrice = 0;
 
 
-        const currentTime = helper.getTime(helper.timeStamp());
-        const isActiveOrder = (currentTime.getHours() != 18) ? true : false;
+        const isActiveOrder = (Number(moment().format("H")) < 16 || Number(moment().format("H")) >= 19) ? true : false;
 
         if (isActiveOrder) { // kiểm tra đơn hàng có thể order trong thời gian cho phép hay không
 
             let timeOrder: any = helper.timeStamp();
 
-            if (currentTime.getHours() >= 19) {
+            if (Number(moment().format("H")) >= 19) {
                 timeOrder = helper.addMinuteToTime(helper.timeConverter(timeOrder), 1440); // add 1 day
             } else {
                 timeOrder = helper.timeConverter(timeOrder);
