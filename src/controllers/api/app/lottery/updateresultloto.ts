@@ -28,7 +28,7 @@ const updateResultLoto = async (game: string, data: any) => {
                 OrderItem.forEach(async (orderData: any) => {
                     const orderDetail = JSON.parse(orderData.orderDetail);
                     dataUpdate = {}, dataUpdate.data = [], dataUpdate.result = {};
-                    let isWin: boolean = false, updateReward: number = 0;
+                    const isWin: boolean = false, updateReward: number = 0;
 
                     for await (const i of orderDetail.data) {
                         try {
@@ -667,7 +667,7 @@ const updateResultLoto = async (game: string, data: any) => {
                     } catch (err) {
                         console.log(err.message);
                     }
-                }
+                };
 
                 const processLoto3 = async (item: any) => {
                     try {
@@ -762,7 +762,7 @@ const updateResultLoto = async (game: string, data: any) => {
                     } catch (err) {
                         console.log(err.message);
                     }
-                }
+                };
 
                 const processLoto4 = async (item: any) => {
                     try {
@@ -892,7 +892,7 @@ const updateResultLoto = async (game: string, data: any) => {
                     } catch (err) {
                         console.log(err.message);
                     }
-                }
+                };
 
 
 
