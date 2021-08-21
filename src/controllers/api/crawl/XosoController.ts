@@ -492,21 +492,25 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                     tomorowTimecompute123 = moment(currentTimecompute123);
                     tomorowTimecompute123.set("hour", 18);
                     tomorowTimecompute123.set("minute", 30);
+                    tomorowTimecompute123.set("second", 0);
+                    tomorowTimecompute123.set("millisecond", 0);
                     tomorowTimecompute123.add(1, "d").format("X");
                 } else {
                     tomorowTimecompute123 = moment(currentTimecompute123);
                     tomorowTimecompute123.set("hour", 18);
                     tomorowTimecompute123.set("minute", 30);
+                    tomorowTimecompute123.set("second", 0);
+                    tomorowTimecompute123.set("millisecond", 0);
                     tomorowTimecompute123 = tomorowTimecompute123.format("X");
                 }
 
-                const roundIdcompute123 = moment(Number(tomorowTimecompute123) * 1000).format("YYYYMMDD");
+                const roundIdcompute123 = moment(tomorowTimecompute123).format("YYYYMMDD");
 
                 res.json({
                     status: true,
                     data: {
                         current_round: roundIdcompute123, // eslint-disable-line
-                        finish_time: tomorowTimecompute123 * 1000 // eslint-disable-line
+                        finish_time: Number(moment(tomorowTimecompute123).format("X")) * 1000 // eslint-disable-line
                     },
                     message: "success"
                 });
