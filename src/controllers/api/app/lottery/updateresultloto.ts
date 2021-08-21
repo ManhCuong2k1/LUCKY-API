@@ -572,7 +572,7 @@ const updateResultLoto = async (game: string, data: any) => {
                     }
                 });
 
-                console.log(OrderItem)
+                console.log(OrderItem);
 
 
 

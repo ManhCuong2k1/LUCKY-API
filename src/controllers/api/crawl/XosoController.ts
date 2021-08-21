@@ -397,23 +397,21 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                 currentTimekienthiet.set("minute", 30);
                 let tomorowTimekienthiet: any;
 
-
                 if (nowtime.format("H") >= 18) {
                     tomorowTimekienthiet = moment(currentTimekienthiet);
                     tomorowTimekienthiet.set("hour", 18);
                     tomorowTimekienthiet.set("minute", 30);
                     tomorowTimekienthiet.set("second", 0);
                     tomorowTimekienthiet.set("millisecond", 0);
-                    tomorowTimekienthiet.add(1, "d").format("X");
+                    tomorowTimekienthiet.add(1, "d");
                 } else {
                     tomorowTimekienthiet = moment(nowtime);
                     tomorowTimekienthiet.set("hour", 18);
                     tomorowTimekienthiet.set("minute", 30);
                     tomorowTimekienthiet.set("second", 0);
                     tomorowTimekienthiet.set("millisecond", 0);
-                    tomorowTimekienthiet = tomorowTimekienthiet.format("X");
+                    tomorowTimekienthiet = tomorowTimekienthiet;
                 }
-
 
                 const roundIdkienthiet = moment(tomorowTimekienthiet).format("YYYYMMDD");
 
@@ -495,14 +493,14 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                     tomorowTimecompute123.set("minute", 30);
                     tomorowTimecompute123.set("second", 0);
                     tomorowTimecompute123.set("millisecond", 0);
-                    tomorowTimecompute123.add(1, "d").format("X");
+                    tomorowTimecompute123.add(1, "d");
                 } else {
                     tomorowTimecompute123 = moment(currentTimecompute123);
                     tomorowTimecompute123.set("hour", 18);
                     tomorowTimecompute123.set("minute", 30);
                     tomorowTimecompute123.set("second", 0);
                     tomorowTimecompute123.set("millisecond", 0);
-                    tomorowTimecompute123 = tomorowTimecompute123.format("X");
+                    tomorowTimecompute123 = tomorowTimecompute123;
                 }
 
                 const roundIdcompute123 = moment(tomorowTimecompute123).format("YYYYMMDD");
