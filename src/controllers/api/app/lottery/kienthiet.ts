@@ -102,10 +102,10 @@ router.post("/orders", async (req: Request, res: Response) => {
                     totalPriceToClient = priceOrder + fee;
 
                     if (user.totalCoin >= totalPriceToClient) {
-                        let parseDate: any = body.date.split('-');
+                        let parseDate: any = body.date.split("-");
                             parseDate = parseDate[2] + "-" + parseDate[1] + "-" + parseDate[0];
                         const dateQuery = moment(parseDate).format("DD-MM-YYYY");
-                        const roundId = moment(body.date).format("YYYYMMDD");
+                        const roundId = moment(parseDate).format("YYYYMMDD");
 
                         for (const orders of body.data) {
                             const numberDB = await getOneNumber(orders.number, dateQuery, LotteryNumbersModel.STATUS_ENUM.TRUE);
