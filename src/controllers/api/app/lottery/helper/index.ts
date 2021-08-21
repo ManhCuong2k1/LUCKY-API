@@ -40,6 +40,16 @@ const checkSame = (arrBet: any, arrResult: any) => {
     return arrExport;
 };
 
+const countSame = (item: any, array: any) => {
+    const arrExport = [];
+    for (const i of array) {
+      if(item == i) {
+        arrExport.push(i);
+      }
+    }
+    return arrExport.length;
+};
+
 const removeFirstChar = (arr: any, length: number) => {
     const arrExport = [];
     for (const i of arr) {
@@ -119,7 +129,7 @@ const getRewardMega = (level: number, same: number) => {
 
 
 const getRewardCompute636 = (same: number) => {
-    const arrReward = [0, 0, 0, 15000, 100000, 1800000, 1000000000];
+    const arrReward = [0, 0, 0, 15000, 100000, 1800000, 1500000000];
     return arrReward[same];
 };
 
@@ -130,6 +140,7 @@ export default {
     arrNumberToString,
     sortRounds,
     checkSame,
+    countSame,
     removeFirstChar,
     getRewardKeno,
     getRewardPower,

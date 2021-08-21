@@ -8,12 +8,13 @@ import LotteryHelper from "./helper";
 
 const updateResult = async (game: string, data: any) => {
 
-    let status: boolean = true, message: any, dataUpdate: any = null, dataUpdateChanLe: any = null;
+    let status: boolean = true, message: any;
 
 
     switch (game) {
         case LotteryResultsModel.GAME_ENUM.KENO:
             try {
+                let  dataUpdate: any = null, dataUpdateChanLe: any = null;
                 const OrderItem = await LotteryOrdersModel.findAll({
                     where: {
                         type: game,
@@ -35,7 +36,7 @@ const updateResult = async (game: string, data: any) => {
                                 let isWin: boolean = false, updateReward: number = 0;
 
 
-                                for (const i of orderDetail.data) {
+                                for await (const i of orderDetail.data) {
 
                                     const arrBet = LotteryHelper.arrayStringToNumber(i.number);
                                     const arrResult = LotteryHelper.arrayStringToNumber(data.result);
@@ -98,7 +99,7 @@ const updateResult = async (game: string, data: any) => {
 
                                 const chan = data.total.chan, le = data.total.le, lon = data.total.lon, nho = data.total.nho;
 
-                                for (const i of orderDetail.data) {
+                                for await (const i of orderDetail.data) {
 
 
                                     let reward: number = 0;
@@ -198,7 +199,7 @@ const updateResult = async (game: string, data: any) => {
 
         case LotteryResultsModel.GAME_ENUM.POWER:
             try {
-
+                let  dataUpdate: any = null;
                 const OrderItem = await LotteryOrdersModel.findAll({
                     where: {
                         type: game,
@@ -214,7 +215,7 @@ const updateResult = async (game: string, data: any) => {
                     dataUpdate = {}, dataUpdate.data = [], dataUpdate.result = {};
                     let isWin: boolean = false, updateReward: number = 0;
 
-                    for (const i of orderDetail.data) {
+                    for await (const i of orderDetail.data) {
 
                         const arrBet = LotteryHelper.arrayStringToNumber(i.number);
                         const arrResult = LotteryHelper.arrayStringToNumber(data.result);
@@ -271,7 +272,7 @@ const updateResult = async (game: string, data: any) => {
 
         case LotteryResultsModel.GAME_ENUM.MEGA:
             try {
-
+                let  dataUpdate: any = null;
                 const OrderItem = await LotteryOrdersModel.findAll({
                     where: {
                         type: game,
@@ -285,7 +286,7 @@ const updateResult = async (game: string, data: any) => {
                     dataUpdate = {}, dataUpdate.data = [], dataUpdate.result = {};
                     let isWin: boolean = false, updateReward: number = 0;
 
-                    for (const i of orderDetail.data) {
+                    for await (const i of orderDetail.data) {
 
                         const arrBet = LotteryHelper.arrayStringToNumber(i.number);
                         const arrResult = LotteryHelper.arrayStringToNumber(data.result);
@@ -343,7 +344,7 @@ const updateResult = async (game: string, data: any) => {
 
         case LotteryResultsModel.GAME_ENUM.MAX3D:
             try {
-
+                let  dataUpdate: any = null;
                 const OrderItem = await LotteryOrdersModel.findAll({
                     where: {
                         type: game,
@@ -364,7 +365,7 @@ const updateResult = async (game: string, data: any) => {
                     let isWin: boolean = false, updateReward: number = 0;
 
 
-                    for (const i of orderDetail.data) {
+                    for await (const i of orderDetail.data) {
 
 
                         const arrBet = LotteryHelper.arrayStringToNumber(i.number);
@@ -481,7 +482,7 @@ const updateResult = async (game: string, data: any) => {
 
         case LotteryResultsModel.GAME_ENUM.MAX3DPLUS:
             try {
-
+                let  dataUpdate: any = null;
                 const OrderItem = await LotteryOrdersModel.findAll({
                     where: {
                         type: game,
@@ -502,7 +503,7 @@ const updateResult = async (game: string, data: any) => {
                     let isWin: boolean = false, updateReward: number = 0;
 
 
-                    for (const i of orderDetail.data) {
+                    for await (const i of orderDetail.data) {
 
 
                         const arrBet = LotteryHelper.arrayStringToNumber(i.number);
@@ -618,7 +619,7 @@ const updateResult = async (game: string, data: any) => {
 
         case LotteryResultsModel.GAME_ENUM.MAX4D:
             try {
-
+                let  dataUpdate: any = null;
                 const OrderItem = await LotteryOrdersModel.findAll({
                     where: {
                         type: game,
@@ -639,7 +640,7 @@ const updateResult = async (game: string, data: any) => {
                         dataUpdate.result = {};
                     let isWin: boolean = false, updateReward: number = 0;
 
-                    for (const i of orderDetail.data) {
+                    for await (const i of orderDetail.data) {
                         switch (orderDetail.childgame) {
 
                             // ĐẶT SỐ TRUYỀN THỐNG MAX4D

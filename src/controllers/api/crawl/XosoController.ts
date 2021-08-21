@@ -112,18 +112,6 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
             }
             break;
 
-
-        case "ketqualoto":
-            try {
-                const crawling = await Crawl.LotoCrawl();
-                return res.send(crawling);
-            } catch (e) {
-                res.status(401).send({
-                    code: e.message
-                });
-            }
-            break;
-
         case "compute":
             try {
                 const DienToan123 = await Crawl.DienToan123();
@@ -150,8 +138,10 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
                 updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.LOTO2, crawling.data);
                 updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.LOTO3, crawling.data);
                 updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.LOTO5, crawling.data);
-                updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.LOTO234, crawling.data);
-                return res.send(crawling);
+
+                const lotoResult = await Crawl.LotoCrawl();
+                updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.LOTO234, lotoResult.data);
+                return res.send(lotoResult);
             } catch (e) {
                 res.status(401).send({
                     code: e.message

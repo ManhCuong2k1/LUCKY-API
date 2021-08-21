@@ -11,22 +11,12 @@ import LotteryHelper from "./helper";
 
 const updateResultLoto = async (game: string, data: any) => {
 
-    let status: boolean = true, message: any, dataUpdate: any = null;
+    let status: boolean = true, message: any;
 
     switch (game) {
         case LotteryResultsModel.GAME_ENUM.KIENTHIET:
             try {
-
-
-            } catch (error) {
-                status = false, message = error.message;
-            }
-            break;
-
-
-        case LotteryResultsModel.GAME_ENUM.COMPUTE636:
-            try {
-
+                let dataUpdate: any = null;
                 const OrderItem = await LotteryOrdersModel.findAll({
                     where: {
                         type: game,
@@ -40,7 +30,41 @@ const updateResultLoto = async (game: string, data: any) => {
                     dataUpdate = {}, dataUpdate.data = [], dataUpdate.result = {};
                     let isWin: boolean = false, updateReward: number = 0;
 
-                    for (const i of orderDetail.data) {
+                    for await (const i of orderDetail.data) {
+                        try {
+                            
+                        } catch (error) {
+                            console.log(error.message);
+                        }
+                    }
+
+
+                    
+                });
+
+            } catch (error) {
+                status = false, message = error.message;
+            }
+            break;
+
+
+        case LotteryResultsModel.GAME_ENUM.COMPUTE636:
+            try {
+                let dataUpdate: any = null;
+                const OrderItem = await LotteryOrdersModel.findAll({
+                    where: {
+                        type: game,
+                        roundId: data.round,
+                        orderStatus: LotteryOrdersModel.ORDERSTATUS_ENUM.PRINTED
+                    }
+                });
+
+                OrderItem.forEach(async (orderData: any) => {
+                    const orderDetail = JSON.parse(orderData.orderDetail);
+                    dataUpdate = {}, dataUpdate.data = [], dataUpdate.result = {};
+                    let isWin: boolean = false, updateReward: number = 0;
+
+                    for await (const i of orderDetail.data) {
 
                         try {
                             const arrBet = LotteryHelper.arrayStringToNumber(i.number);
@@ -96,6 +120,7 @@ const updateResultLoto = async (game: string, data: any) => {
 
         case LotteryResultsModel.GAME_ENUM.COMPUTE123:
             try {
+                let dataUpdate: any = null;
                 const OrderItem = await LotteryOrdersModel.findAll({
                     where: {
                         type: game,
@@ -111,7 +136,7 @@ const updateResultLoto = async (game: string, data: any) => {
                     let isWinNum1: boolean = false, isWinNum2: boolean = false, isWinNum3: boolean = false;
                     let capsonhan: number = 0;
 
-                    for (const i of orderDetail.data) {
+                    for await (const i of orderDetail.data) {
                         try {
                             const dataNumber: any[] = [];
                             const number = i.number;
@@ -198,6 +223,7 @@ const updateResultLoto = async (game: string, data: any) => {
 
         case LotteryResultsModel.GAME_ENUM.LOTO2:
             try {
+                let dataUpdate: any = null;
                 const OrderItem = await LotteryOrdersModel.findAll({
                     where: {
                         type: game,
@@ -213,7 +239,7 @@ const updateResultLoto = async (game: string, data: any) => {
                     let isWinDB: boolean = false, isWinGN: boolean = false;
                     let capsonhan: number = 0;
 
-                    for (const i of orderDetail.data) {
+                    for await (const i of orderDetail.data) {
                         try {
                             const dataNumber: any[] = [];
                             const number = i.number;
@@ -300,6 +326,7 @@ const updateResultLoto = async (game: string, data: any) => {
 
         case LotteryResultsModel.GAME_ENUM.LOTO3:
             try {
+                let dataUpdate: any = null;
                 const OrderItem = await LotteryOrdersModel.findAll({
                     where: {
                         type: game,
@@ -316,7 +343,7 @@ const updateResultLoto = async (game: string, data: any) => {
                         isWin2soDB: boolean = false, isWin2soGN: boolean = false, isWinGiaisau: boolean = false;
                     let capsonhan: number = 0;
 
-                    for (const i of orderDetail.data) {
+                    for await (const i of orderDetail.data) {
                         try {
                             const dataNumber: any[] = [];
                             const number = i.number;
@@ -425,6 +452,7 @@ const updateResultLoto = async (game: string, data: any) => {
 
         case LotteryResultsModel.GAME_ENUM.LOTO5:
             try {
+                let dataUpdate: any = null;
                 const OrderItem = await LotteryOrdersModel.findAll({
                     where: {
                         type: game,
@@ -442,7 +470,7 @@ const updateResultLoto = async (game: string, data: any) => {
                         isWinGS: boolean = false, isWinGBay: boolean = false, isWinKk: boolean = false;
                     let capsonhan: number = 0;
 
-                    for (const i of orderDetail.data) {
+                    for await (const i of orderDetail.data) {
                         try {
                             const dataNumber: any[] = [];
                             const number = i.number;
@@ -503,7 +531,7 @@ const updateResultLoto = async (game: string, data: any) => {
                                                                 capsonhan = 0;
                                                             }
 
-                                                        
+
                             if (capsonhan > 0) isWin = true;
                             const reward = Number(i.price) * capsonhan;
                             if (reward > 0) updateReward = updateReward + reward;
@@ -563,8 +591,312 @@ const updateResultLoto = async (game: string, data: any) => {
 
         case LotteryResultsModel.GAME_ENUM.LOTO234:
             try {
-                
-                const OrderItem = await LotteryOrdersModel.findAll({
+                let dataUpdate: any = null;
+                const processLoto2 = async (item: any) => {
+                    try {
+                        const orderDetail = JSON.parse(item.orderDetail);
+                        dataUpdate = {}, dataUpdate.data = [], dataUpdate.result = {};
+                        let isWin: boolean = false, updateReward: number = 0;
+                        let capsonhan: number = 0;
+
+
+                        for await (const i of orderDetail.data) {
+                            try {
+                                const dataNumber: any[] = [];
+                                const number = i.number;
+                                const countNumber1 = LotteryHelper.countSame(number[0], data.result);
+                                const countNumber2 = LotteryHelper.countSame(number[1], data.result);
+
+                                if (countNumber1 >= 2 && countNumber2 >= 2) {
+                                    capsonhan = 15;
+                                } else if (countNumber1 >= 1 && countNumber2 >= 1) {
+                                    capsonhan = 10;
+                                } else if (countNumber1 >= 2 || countNumber2 >= 2) {
+                                    capsonhan = 1;
+                                } else {
+                                    capsonhan = 0;
+                                }
+
+                                if (capsonhan > 0) isWin = true;
+                                const reward = Number(i.price) * capsonhan;
+                                if (reward > 0) updateReward = updateReward + reward;
+
+                                if (isWin == true) {
+                                    if (reward > 0) {
+                                        dataNumber.push(number[0]);
+                                        dataNumber.push(number[1]);
+                                        if (dataNumber.length > 0) {
+                                            dataUpdate["data"].push({
+                                                number: dataNumber,
+                                                reward: reward
+                                            });
+                                        }
+                                    }
+                                }
+
+                            } catch (error) {
+                                console.log(error.message);
+                            }
+                        }
+
+                        if (isWin) await SymtemSetReward(item.id, item.userId, updateReward);
+                        await UpdateTicketReward(item.ticketId, updateReward); // cộng vào tổng thưởng của ticket
+                        dataUpdate.result.iswin = isWin, dataUpdate.result.totalreward = updateReward;
+                        const orderUpdate = await LotteryOrdersModel.findOne({ where: { id: item.id } });
+                        orderUpdate.orderStatus = LotteryOrdersModel.ORDERSTATUS_ENUM.DRAWNED;
+                        orderUpdate.resultDetail = JSON.stringify(dataUpdate);
+                        orderUpdate.resultStatus = (isWin) ? LotteryOrdersModel.RESULTSTATUS_ENUM.WINNED : LotteryOrdersModel.RESULTSTATUS_ENUM.DRAWNED;
+                        await orderUpdate.save();
+                        await orderUpdate.reload();
+
+                        if (isWin) {
+                            UserNotifyAdd(
+                                orderUpdate.userId,
+                                LotteryNotifyModel.NOTIFY_SLUG_ENUM.LOTO234,
+                                LotteryNotifyModel.NOTIFY_NAME_ENUM.LOTO234,
+                                "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + item.ticketId + "."
+                            );
+                            UserHistoryAdd(
+                                item.userId,
+                                UserHistoryModel.ACTION_SLUG_ENUM.USER_REWARD,
+                                UserHistoryModel.ACTION_NAME_ENUM.USER_REWARD,
+                                "Trúng " + helper.numberformat(updateReward) + "đ vé Loto 2 Cặp Số " + item.ticketId + "."
+                            );
+                        }
+
+                    } catch (err) {
+                        console.log(err.message);
+                    }
+                }
+
+                const processLoto3 = async (item: any) => {
+                    try {
+                        let dataUpdate: any = null;
+                        const orderDetail = JSON.parse(item.orderDetail);
+                        dataUpdate = {}, dataUpdate.data = [], dataUpdate.result = {};
+                        let isWin: boolean = false, updateReward: number = 0;
+                        let capsonhan: number = 0;
+
+
+                        for await (const i of orderDetail.data) {
+                            try {
+                                const dataNumber: any[] = [];
+                                const number = i.number;
+                                const countNumber1 = LotteryHelper.countSame(number[0], data.result);
+                                const countNumber2 = LotteryHelper.countSame(number[1], data.result);
+                                const countNumber3 = LotteryHelper.countSame(number[2], data.result);
+
+                                if (countNumber1 >= 2 && countNumber2 >= 2 && countNumber3 >= 2) {
+                                    capsonhan = 60;
+                                } else if (countNumber1 >= 1 && countNumber2 >= 1 && countNumber3 >= 1) {
+                                    capsonhan = 45;
+                                } else if (
+                                    countNumber1 >= 2 && countNumber2 >= 2 ||
+                                    countNumber1 >= 2 && countNumber3 >= 2 ||
+                                    countNumber2 >= 2 && countNumber1 >= 2 ||
+                                    countNumber2 >= 2 && countNumber3 >= 2 ||
+                                    countNumber3 >= 2 && countNumber1 >= 2 ||
+                                    countNumber3 >= 2 && countNumber2 >= 2
+                                ) {
+                                    capsonhan = 10;
+                                } else if (
+                                    countNumber1 >= 1 && countNumber2 >= 2 ||
+                                    countNumber1 >= 1 && countNumber3 >= 2 ||
+                                    countNumber2 >= 1 && countNumber1 >= 2 ||
+                                    countNumber2 >= 1 && countNumber3 >= 2 ||
+                                    countNumber3 >= 1 && countNumber1 >= 2 ||
+                                    countNumber3 >= 1 && countNumber2 >= 2
+                                ) {
+                                    capsonhan = 2;
+                                } else {
+                                    capsonhan = 0;
+                                }
+
+                                if (capsonhan > 0) isWin = true;
+                                const reward = Number(i.price) * capsonhan;
+                                if (reward > 0) updateReward = updateReward + reward;
+
+                                if (isWin == true) {
+                                    if (reward > 0) {
+                                        dataNumber.push(number[0]);
+                                        dataNumber.push(number[1]);
+                                        dataNumber.push(number[2]);
+                                        if (dataNumber.length > 0) {
+                                            dataUpdate["data"].push({
+                                                number: dataNumber,
+                                                reward: reward
+                                            });
+                                        }
+                                    }
+                                }
+
+                            } catch (error) {
+                                console.log(error.message);
+                            }
+                        }
+
+                        if (isWin) await SymtemSetReward(item.id, item.userId, updateReward);
+                        await UpdateTicketReward(item.ticketId, updateReward); // cộng vào tổng thưởng của ticket
+                        dataUpdate.result.iswin = isWin, dataUpdate.result.totalreward = updateReward;
+                        const orderUpdate = await LotteryOrdersModel.findOne({ where: { id: item.id } });
+                        orderUpdate.orderStatus = LotteryOrdersModel.ORDERSTATUS_ENUM.DRAWNED;
+                        orderUpdate.resultDetail = JSON.stringify(dataUpdate);
+                        orderUpdate.resultStatus = (isWin) ? LotteryOrdersModel.RESULTSTATUS_ENUM.WINNED : LotteryOrdersModel.RESULTSTATUS_ENUM.DRAWNED;
+                        await orderUpdate.save();
+                        await orderUpdate.reload();
+
+                        if (isWin) {
+                            UserNotifyAdd(
+                                orderUpdate.userId,
+                                LotteryNotifyModel.NOTIFY_SLUG_ENUM.LOTO234,
+                                LotteryNotifyModel.NOTIFY_NAME_ENUM.LOTO234,
+                                "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + item.ticketId + "."
+                            );
+                            UserHistoryAdd(
+                                item.userId,
+                                UserHistoryModel.ACTION_SLUG_ENUM.USER_REWARD,
+                                UserHistoryModel.ACTION_NAME_ENUM.USER_REWARD,
+                                "Trúng " + helper.numberformat(updateReward) + "đ vé Loto 3 Cặp Số " + item.ticketId + "."
+                            );
+                        }
+                    } catch (err) {
+                        console.log(err.message);
+                    }
+                }
+
+                const processLoto4 = async (item: any) => {
+                    try {
+                        let dataUpdate: any = null;
+                        const orderDetail = JSON.parse(item.orderDetail);
+                        dataUpdate = {}, dataUpdate.data = [], dataUpdate.result = {};
+                        let isWin: boolean = false, updateReward: number = 0;
+                        let capsonhan: number = 0;
+
+
+                        for await (const i of orderDetail.data) {
+                            try {
+                                const dataNumber: any[] = [];
+                                const number = i.number;
+                                const countNumber1 = LotteryHelper.countSame(number[0], data.result);
+                                const countNumber2 = LotteryHelper.countSame(number[1], data.result);
+                                const countNumber3 = LotteryHelper.countSame(number[2], data.result);
+                                const countNumber4 = LotteryHelper.countSame(number[3], data.result);
+
+                                if (countNumber1 >= 2 && countNumber2 >= 2 && countNumber3 >= 2 && countNumber4 >= 2) {
+                                    capsonhan = 1000;
+                                } else if (countNumber1 >= 1 && countNumber2 >= 1 && countNumber3 >= 1 && countNumber4 >= 1) {
+                                    capsonhan = 110;
+                                } else if (
+                                    countNumber1 >= 2 && countNumber2 >= 2 && countNumber3 >= 2 ||
+                                    countNumber1 >= 2 && countNumber2 >= 2 && countNumber4 >= 2 ||
+                                    countNumber1 >= 2 && countNumber3 >= 2 && countNumber2 >= 2 ||
+                                    countNumber1 >= 2 && countNumber3 >= 2 && countNumber4 >= 2 ||
+                                    countNumber1 >= 2 && countNumber4 >= 2 && countNumber2 >= 2 ||
+                                    countNumber1 >= 2 && countNumber4 >= 2 && countNumber3 >= 2
+                                ) {
+                                    capsonhan = 30;
+                                } else if (
+                                    countNumber1 >= 1 && countNumber2 >= 2 && countNumber3 >= 2 ||
+                                    countNumber1 >= 1 && countNumber2 >= 2 && countNumber4 >= 2 ||
+                                    countNumber1 >= 1 && countNumber3 >= 2 && countNumber2 >= 2 ||
+                                    countNumber1 >= 1 && countNumber3 >= 2 && countNumber4 >= 2 ||
+                                    countNumber1 >= 1 && countNumber4 >= 2 && countNumber2 >= 2 ||
+                                    countNumber1 >= 1 && countNumber4 >= 2 && countNumber3 >= 2 ||
+                                    countNumber1 >= 2 && countNumber2 >= 1 && countNumber3 >= 2 ||
+                                    countNumber1 >= 2 && countNumber2 >= 1 && countNumber4 >= 2 ||
+                                    countNumber1 >= 2 && countNumber3 >= 1 && countNumber2 >= 2 ||
+                                    countNumber1 >= 2 && countNumber3 >= 1 && countNumber4 >= 2 ||
+                                    countNumber1 >= 2 && countNumber4 >= 1 && countNumber2 >= 2 ||
+                                    countNumber1 >= 2 && countNumber4 >= 1 && countNumber3 >= 2 ||
+                                    countNumber1 >= 2 && countNumber2 >= 2 && countNumber3 >= 1 ||
+                                    countNumber1 >= 2 && countNumber2 >= 2 && countNumber4 >= 1 ||
+                                    countNumber1 >= 2 && countNumber3 >= 2 && countNumber2 >= 1 ||
+                                    countNumber1 >= 2 && countNumber3 >= 2 && countNumber4 >= 1 ||
+                                    countNumber1 >= 2 && countNumber4 >= 2 && countNumber2 >= 1 ||
+                                    countNumber1 >= 2 && countNumber4 >= 2 && countNumber3 >= 1
+                                ) {
+                                    capsonhan = 15;
+                                } else if(
+                                    countNumber1 >= 1 && countNumber2 >= 1 && countNumber3 >= 2 ||
+                                    countNumber1 >= 1 && countNumber2 >= 1 && countNumber4 >= 2 ||
+                                    countNumber1 >= 1 && countNumber3 >= 1 && countNumber2 >= 2 ||
+                                    countNumber1 >= 1 && countNumber3 >= 1 && countNumber4 >= 2 ||
+                                    countNumber1 >= 1 && countNumber4 >= 1 && countNumber2 >= 2 ||
+                                    countNumber1 >= 1 && countNumber4 >= 1 && countNumber3 >= 2 ||
+                                    countNumber1 >= 2 && countNumber2 >= 1 && countNumber3 >= 1 ||
+                                    countNumber1 >= 2 && countNumber2 >= 1 && countNumber4 >= 1 ||
+                                    countNumber1 >= 2 && countNumber3 >= 1 && countNumber2 >= 1 ||
+                                    countNumber1 >= 2 && countNumber3 >= 1 && countNumber4 >= 1 ||
+                                    countNumber1 >= 2 && countNumber4 >= 1 && countNumber2 >= 1 ||
+                                    countNumber1 >= 2 && countNumber4 >= 1 && countNumber3 >= 1 ||
+                                    countNumber1 >= 1 && countNumber2 >= 2 && countNumber3 >= 1 ||
+                                    countNumber1 >= 1 && countNumber2 >= 2 && countNumber4 >= 1 ||
+                                    countNumber1 >= 1 && countNumber3 >= 2 && countNumber2 >= 1 ||
+                                    countNumber1 >= 1 && countNumber3 >= 2 && countNumber4 >= 1 ||
+                                    countNumber1 >= 1 && countNumber4 >= 2 && countNumber2 >= 1 ||
+                                    countNumber1 >= 1 && countNumber4 >= 2 && countNumber3 >= 1
+                                ) {
+                                    capsonhan = 5;
+                                } else {
+                                    capsonhan = 0;
+                                }
+
+                                if (capsonhan > 0) isWin = true;
+                                const reward = Number(i.price) * capsonhan;
+                                if (reward > 0) updateReward = updateReward + reward;
+
+                                if (isWin == true) {
+                                    if (reward > 0) {
+                                        dataNumber.push(number[0]);
+                                        dataNumber.push(number[1]);
+                                        dataNumber.push(number[2]);
+                                        dataNumber.push(number[3]);
+                                        if (dataNumber.length > 0) {
+                                            dataUpdate["data"].push({
+                                                number: dataNumber,
+                                                reward: reward
+                                            });
+                                        }
+                                    }
+                                }
+
+                            } catch (error) {
+                                console.log(error.message);
+                            }
+                        }
+
+                        if (isWin) await SymtemSetReward(item.id, item.userId, updateReward);
+                        await UpdateTicketReward(item.ticketId, updateReward); // cộng vào tổng thưởng của ticket
+                        dataUpdate.result.iswin = isWin, dataUpdate.result.totalreward = updateReward;
+                        const orderUpdate = await LotteryOrdersModel.findOne({ where: { id: item.id } });
+                        orderUpdate.orderStatus = LotteryOrdersModel.ORDERSTATUS_ENUM.DRAWNED;
+                        orderUpdate.resultDetail = JSON.stringify(dataUpdate);
+                        orderUpdate.resultStatus = (isWin) ? LotteryOrdersModel.RESULTSTATUS_ENUM.WINNED : LotteryOrdersModel.RESULTSTATUS_ENUM.DRAWNED;
+                        await orderUpdate.save();
+                        await orderUpdate.reload();
+
+                        if (isWin) {
+                            UserNotifyAdd(
+                                orderUpdate.userId,
+                                LotteryNotifyModel.NOTIFY_SLUG_ENUM.LOTO234,
+                                LotteryNotifyModel.NOTIFY_NAME_ENUM.LOTO234,
+                                "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + item.ticketId + "."
+                            );
+                            UserHistoryAdd(
+                                item.userId,
+                                UserHistoryModel.ACTION_SLUG_ENUM.USER_REWARD,
+                                UserHistoryModel.ACTION_NAME_ENUM.USER_REWARD,
+                                "Trúng " + helper.numberformat(updateReward) + "đ vé Loto 4 Cặp Số " + item.ticketId + "."
+                            );
+                        }
+                    } catch (err) {
+                        console.log(err.message);
+                    }
+                }
+
+
+
+                const findAllItem = await LotteryOrdersModel.findAll({
                     where: {
                         type: game,
                         roundId: data.round,
@@ -572,10 +904,16 @@ const updateResultLoto = async (game: string, data: any) => {
                     }
                 });
 
-                console.log(OrderItem);
-
-
-
+                findAllItem.forEach(async (item: any) => {
+                    try {
+                        const ObjItem = JSON.parse(item.orderDetail);
+                        (Number(ObjItem.level == 2)) ? await processLoto2(item) : "";
+                        (Number(ObjItem.level == 3)) ? await processLoto3(item) : "";
+                        (Number(ObjItem.level == 4)) ? await processLoto4(item) : "";
+                    } catch (error) {
+                        console.log(error.message);
+                    }
+                });
 
             } catch (error) {
                 status = false, message = error.message;

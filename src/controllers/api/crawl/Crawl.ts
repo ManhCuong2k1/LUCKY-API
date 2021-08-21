@@ -958,15 +958,15 @@ const LotoCrawl = async () => {
     dataResp = JSON.parse(dataResp);
     dataResp = dataResp[0];
 
-    const today = moment().format("YYYY-MM-DD");
-    const roundId = moment().format("YYYYMMDD");
+    //const today = moment().format("YYYY-MM-DD");
+    //const roundId = moment().format("YYYYMMDD");
+    const today = "2021-08-21";
+    const roundId = moment().format("20210821");
     const date = moment().format("DD/MM/YYYY");
 
 
     if(dataResp[0] == today) {
-
       const dataExport: any[] = [];
-
       for (const number of dataResp[1]) {
         const numberLastChar = number.slice(-2);;
         if(numberLastChar >= 2) {
@@ -990,7 +990,11 @@ const LotoCrawl = async () => {
 
       return {
         status: true,
-        data: dataExport,
+        data: {
+          date,
+          round: roundId,
+          result: dataExport
+        },
         message: "Success"
       };
     }else {
