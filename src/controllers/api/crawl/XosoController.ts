@@ -419,8 +419,8 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                 const dataExportKienThiet: any = {
                     status: true,
                     data: {
-                        current_round: roundIdkienthiet,
-                        finish_time: Number(moment(tomorowTimekienthiet).format("X")) * 1000
+                        current_round: roundIdkienthiet, // eslint-disable-line
+                        finish_time: Number(moment(tomorowTimekienthiet).format("X")) * 1000 // eslint-disable-line
                     },
                     message: "success"
                 };
@@ -435,6 +435,7 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
 
                 if (currentTimecompute636.format("dddd") == "Wednesday" || currentTimecompute636.format("dddd") == "Saturday") {
                     if (currentTimecompute636.format("H") >= 18) {
+                        runTimecomputer636.add(1, "d");
                         for (let loopTimecompute636 = 1; loopTimecompute636 <= 10; loopTimecompute636++) {
                             checkTimecomputer636 = moment(runTimecomputer636).format("dddd");
                             if (checkTimecomputer636 == "Wednesday" || checkTimecomputer636 == "Saturday") {
@@ -450,7 +451,6 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                 } else {
                     for (let loopTimecompute636 = 1; loopTimecompute636 <= 10; loopTimecompute636++) {
                         checkTimecomputer636 = moment(runTimecomputer636).format("dddd");
-
                         if (checkTimecomputer636 == "Wednesday" || checkTimecomputer636 == "Saturday") {
                             nextTimecompute636 = runTimecomputer636.format("YYYY-MM-DD");
                             break;
@@ -463,6 +463,9 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                 let timeSet: any = moment(nextTimecompute636);
                 timeSet.set("hour", 18);
                 timeSet.set("minute", 15);
+                timeSet.set("second", 0);
+                timeSet.set("millisecond", 0);
+
                 timeSet = moment(timeSet).format("X");
 
                 const roundIdcompute636 = moment(Number(timeSet) * 1000).format("YYYYMMDD");
