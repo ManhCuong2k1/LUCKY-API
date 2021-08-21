@@ -393,7 +393,7 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                 const nowtime: any = moment();
                 const currentTimekienthiet = moment();
                 currentTimekienthiet.set("hour", 18);
-                currentTimekienthiet.set("minute", 30);      
+                currentTimekienthiet.set("minute", 30);
                 let tomorowTimekienthiet: any;
 
 
@@ -401,21 +401,26 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                     tomorowTimekienthiet = moment(currentTimekienthiet);
                     tomorowTimekienthiet.set("hour", 18);
                     tomorowTimekienthiet.set("minute", 30);
+                    tomorowTimekienthiet.set('second', 0);
+                    tomorowTimekienthiet.set('millisecond', 0);
                     tomorowTimekienthiet.add(1, "d").format("X");
                 } else {
                     tomorowTimekienthiet = moment(nowtime);
                     tomorowTimekienthiet.set("hour", 18);
                     tomorowTimekienthiet.set("minute", 30);
+                    tomorowTimekienthiet.set('second', 0);
+                    tomorowTimekienthiet.set('millisecond', 0);
                     tomorowTimekienthiet = tomorowTimekienthiet.format("X");
                 }
-                
-                const roundIdkienthiet = moment(Number(tomorowTimekienthiet) * 1000).format("YYYYMMDD");
+
+
+                const roundIdkienthiet = moment(tomorowTimekienthiet).format("YYYYMMDD");
 
                 const dataExportKienThiet: any = {
                     status: true,
                     data: {
-                        current_round: roundIdkienthiet, // eslint-disable-line
-                        finish_time: tomorowTimekienthiet * 1000 // eslint-disable-line
+                        current_round: roundIdkienthiet,
+                        finish_time: Number(moment(tomorowTimekienthiet).format("X")) * 1000
                     },
                     message: "success"
                 };
@@ -477,7 +482,7 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                 const nowtimecompute123: any = moment();
                 const currentTimecompute123 = moment();
                 currentTimecompute123.set("hour", 18);
-                currentTimecompute123.set("minute", 30);      
+                currentTimecompute123.set("minute", 30);
                 let tomorowTimecompute123: any;
 
                 if (nowtimecompute123.format("H") >= 18) {
