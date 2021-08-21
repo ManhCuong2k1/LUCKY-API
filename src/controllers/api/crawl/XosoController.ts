@@ -401,15 +401,15 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                     tomorowTimekienthiet = moment(currentTimekienthiet);
                     tomorowTimekienthiet.set("hour", 18);
                     tomorowTimekienthiet.set("minute", 30);
-                    tomorowTimekienthiet.set('second', 0);
-                    tomorowTimekienthiet.set('millisecond', 0);
+                    tomorowTimekienthiet.set("second", 0);
+                    tomorowTimekienthiet.set("millisecond", 0);
                     tomorowTimekienthiet.add(1, "d").format("X");
                 } else {
                     tomorowTimekienthiet = moment(nowtime);
                     tomorowTimekienthiet.set("hour", 18);
                     tomorowTimekienthiet.set("minute", 30);
-                    tomorowTimekienthiet.set('second', 0);
-                    tomorowTimekienthiet.set('millisecond', 0);
+                    tomorowTimekienthiet.set("second", 0);
+                    tomorowTimekienthiet.set("millisecond", 0);
                     tomorowTimekienthiet = tomorowTimekienthiet.format("X");
                 }
 
