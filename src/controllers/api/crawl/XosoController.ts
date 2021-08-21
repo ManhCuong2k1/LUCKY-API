@@ -132,7 +132,10 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
                 updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.COMPUTE636, Xoso6x36.data);
                 return res.json({
                     status: true,
-                    message: "TASK SUCCESS!"
+                    data: {
+                        dientoan636: Xoso6x36.data,
+                        dientoan123: DienToan123.data
+                    }
                 });
             } catch (e) {
                 res.status(401).send({
