@@ -561,8 +561,22 @@ const updateResultLoto = async (game: string, data: any) => {
 
             break;
 
-        case "":
+        case LotteryResultsModel.GAME_ENUM.LOTO234:
             try {
+                
+                const OrderItem = await LotteryOrdersModel.findAll({
+                    where: {
+                        type: game,
+                        roundId: data.round,
+                        orderStatus: LotteryOrdersModel.ORDERSTATUS_ENUM.PRINTED
+                    }
+                });
+
+                console.log(OrderItem)
+
+
+
+
             } catch (error) {
                 status = false, message = error.message;
             }

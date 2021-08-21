@@ -24,22 +24,26 @@ router.post("/", async (req: Request, res: Response) => {
         switch (body.game) { // kiểm tra user order game nào
             case "compute123":
 
-                const currentTime = helper.getTime(helper.timeStamp());
-                const isActiveOrder = (currentTime.getHours() != 18) ? true : false;
+                const currentTime = moment();
+                currentTime.set("hour", 18);
+                currentTime.set("minute", 30);
+                currentTime.set("second", 0);
+                currentTime.set("millisecond", 0);
+                const nowtime: any = moment();
+                const isActiveOrder = (nowtime.format("H") != 18) ? true : false;
 
 
                 if (isActiveOrder) { // kiểm tra đơn hàng có thể order trong thời gian cho phép hay không
 
-                    let timeOrder: any = helper.timeStamp();
+                    let timeOrder: any = moment();
 
-                    if (currentTime.getHours() >= 19) {
-                        timeOrder = helper.addMinuteToTime(helper.timeConverter(timeOrder), 1440); // add 1 day
+                    if (nowtime.format("H") >= 19) {
+                        timeOrder = currentTime.add(1, "d");
                     } else {
-                        timeOrder = helper.timeConverter(timeOrder);
+                        timeOrder = currentTime;
                     }
 
-                    let roundOrder: any = helper.timeConverterNoChar(timeOrder);// gán round hiện tại = ngày hôm nay
-                    let isFirst = true;
+                    let roundOrder: any = moment(timeOrder).format("YYYYMMDD");// gán round hiện tại = ngày hôm nay
                     let totalPrice = 0;
                     let fee = Number(await getSettings("ticket_storage_fee"));;
 
@@ -77,9 +81,9 @@ router.post("/", async (req: Request, res: Response) => {
                         // order
                         for (let i = 1; i <= Number(body.preriod); i++) {
 
-                            if (isFirst == false) {
-                                timeOrder = helper.addMinuteToTime(timeOrder, 1440);
-                                roundOrder = helper.timeConverterNoChar(timeOrder);
+                            if(i != 1) {
+                                timeOrder = timeOrder.add(1, "d");
+                                roundOrder = moment(timeOrder).format("YYYYMMDD");
                             }
 
                             dataImport = {
@@ -98,7 +102,6 @@ router.post("/", async (req: Request, res: Response) => {
                                 moreDetail: "Đại lý giữ hộ vé"
                             };
 
-                            isFirst = false;
                             status = true, message = "Đặt Vé Thành Công!";
 
                             (dataImport !== null) ? await LotteryOrdersModel.create(dataImport) : "";
@@ -158,7 +161,7 @@ router.post("/", async (req: Request, res: Response) => {
                             moreDetail: "Đại lý giữ hộ vé"
                         };
                         const creatTicket = await LotteryTicketModel.create(dataTicket);
-    
+
                         let roundOrder;
                         let timeRunning: any;
                         let timeToday: any = moment().tz("Asia/Ho_Chi_Minh");
@@ -168,26 +171,26 @@ router.post("/", async (req: Request, res: Response) => {
 
                             if (currentTime636.getHours() >= 19) {
                                 timeToday = moment(timeToday).add(1, "d");
-                                for (let i = 0; i <= 10;i++) {
+                                for (let i = 0; i <= 10; i++) {
                                     timeRunning = moment(timeToday).format("dddd");
-                                    if(timeRunning == "Wednesday" || timeRunning == "Saturday") {
+                                    if (timeRunning == "Wednesday" || timeRunning == "Saturday") {
                                         roundOrder = moment(timeToday).format("YYYYMMDD");
                                         timeOrder = moment(timeToday).format("YYYY-MM-DD 18:15");
                                         timeToday = moment(timeToday).add(1, "d");
                                         break;
-                                    }else {
+                                    } else {
                                         timeToday = moment(timeToday).add(1, "d");
                                     }
                                 }
-                            }else {
-                                for (let i = 0; i <= 10;i++) {
+                            } else {
+                                for (let i = 0; i <= 10; i++) {
                                     timeRunning = moment(timeToday).format("dddd");
-                                    if(timeRunning == "Wednesday" || timeRunning == "Saturday") {
+                                    if (timeRunning == "Wednesday" || timeRunning == "Saturday") {
                                         roundOrder = moment(timeToday).format("YYYYMMDD");
                                         timeOrder = moment(timeToday).format("YYYY-MM-DD 18:15:0");
                                         timeToday = moment(timeToday).add(1, "d");
                                         break;
-                                    }else {
+                                    } else {
                                         timeToday = moment(timeToday).add(1, "d");
                                     }
                                 }
@@ -642,7 +645,7 @@ router.post("/", async (req: Request, res: Response) => {
                         totalPrice = totalPrice + data.price;
                     });
 
-            
+
                     fee = (fee * totalPrice) / 100;
 
                     const orderPrice = totalPrice; // tiền 1 đơn
