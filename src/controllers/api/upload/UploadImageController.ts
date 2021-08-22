@@ -4,7 +4,7 @@ import { saveFile } from "@util/resizeImage";
 import { LotteryImagesModel } from "@models/LotteryImages";
 import { Image } from "@models/Images";
 import { GridInterface } from "@models/Transformers/Grid";
-import { auth, authAdmin, authEmploye } from "../../../middleware/auth";
+import { authEmploye } from "../../../middleware/auth";
 
 const router = Router();
 

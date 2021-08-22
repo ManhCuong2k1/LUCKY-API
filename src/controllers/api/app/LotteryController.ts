@@ -1,5 +1,4 @@
-import { Request, Response, Router } from "express";
-
+import { Router } from "express";
 import orders from "./lottery/orders";
 import ordersloto from "./lottery/ordersloto";
 import history from "./lottery/geyhistorygame";

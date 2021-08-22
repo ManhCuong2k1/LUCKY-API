@@ -1,7 +1,5 @@
 import { Request, Response, Router } from "express";
 import helper from "@controllers/api/helper/helper";
-import LotteryHelper from "./helper";
-import Crawl from "../../crawl/Crawl";
 import { getSettings } from "@models/LotterySettings";
 import { LotteryTicketModel } from "@models/LotteryTicket";
 import { LotteryOrdersModel } from "@models/LotteryOrder";

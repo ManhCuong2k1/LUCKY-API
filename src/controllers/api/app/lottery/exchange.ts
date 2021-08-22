@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
 import { UserModel } from "@models/User";
 import { LotteryExchangesModel } from "@models/LotteryExchanges";
-import { getSettings, SettingsInterface, SettingsModel } from "@models/LotterySettings";
+import { getSettings, SettingsModel } from "@models/LotterySettings";
 import { UserHistoryAdd, UserHistoryModel } from "@models/LotteryUserHistory";
 import helper from "@controllers/api/helper/helper";
 

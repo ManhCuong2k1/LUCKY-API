@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
 
-import express, { Response, Request, Router } from "express";
+import { Response, Request, Router } from "express";
 import dotenv from "dotenv";
 import { Banner } from "@models/Banner";
 import { getSettings } from "@models/LotterySettings";

@@ -7,7 +7,6 @@ import Crawl from "../../crawl/Crawl";
 import { LotteryTicketModel } from "@models/LotteryTicket";
 import { LotteryOrdersModel } from "@models/LotteryOrder";
 import { UserHistoryModel, UserHistoryAdd } from "@models/LotteryUserHistory";
-
 import { UserModel } from "@models/User";
 import { getSettings } from "@models/LotterySettings";
 const router = Router();

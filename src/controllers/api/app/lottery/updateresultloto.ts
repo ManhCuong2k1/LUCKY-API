@@ -1,9 +1,8 @@
 import helper from "@controllers/api/helper/helper";
-import { LotteryOrdersModel, getRewardReceived, UpdateUserReceived, UpdateUserCustody, SymtemSetReward } from "@models/LotteryOrder";
-import { LotteryTicketModel, UpdateTicketReward } from "@models/LotteryTicket";
+import { LotteryOrdersModel, SymtemSetReward } from "@models/LotteryOrder";
+import { UpdateTicketReward } from "@models/LotteryTicket";
 import { UserHistoryModel, UserHistoryAdd } from "@models/LotteryUserHistory";
 import { LotteryNotifyModel, UserNotifyAdd } from "@models/LotteryNotify";
-import { UserModel, UpdateUserReward } from "@models/User";
 import { LotteryResultsModel } from "@models/LotteryResults";
 import LotteryHelper from "./helper";
 

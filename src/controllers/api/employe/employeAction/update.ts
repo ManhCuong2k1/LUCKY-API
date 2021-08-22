@@ -1,11 +1,9 @@
 import { Request, Response, Router } from "express";
 import upload from "@middleware/upload";
 import { saveFile } from "@util/resizeImage";
-import FormData from "form-data";
 import { LotteryTicketModel } from "@models/LotteryTicket";
 import { LotteryOrdersModel } from "@models/LotteryOrder";
 import { LotteryImagesModel } from "@models/LotteryImages";
-import axios from "axios";
 
 
 

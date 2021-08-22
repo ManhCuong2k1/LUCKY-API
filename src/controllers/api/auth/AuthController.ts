@@ -2,7 +2,7 @@ import { ValidationError, ValidationErrorItem } from "sequelize";
 import express, { Response, Request } from "express";
 import { generateAuthToken, findCredentials, findCredentialAdmin, UserModel, findPhone, UserInterface, generateOtpCode, generateString, PostUserOtp, generateUsername } from "@models/User";
 import { sendSuccess, sendError } from "@util/response";
-import { auth, authAdmin, authEmploye } from "@middleware/auth";
+import { auth, authEmploye } from "@middleware/auth";
 import { encryptPassword } from "@util/md5password";
 import isEmpty from "lodash.isempty";
 

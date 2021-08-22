@@ -4,7 +4,7 @@ import AuthController from "./auth/AuthController";
 import AdminController from "./admin/AdminController";
 import UploadController from "./upload/UploadImageController";
 import AppController from "./app/AppController";
-import { auth, authAdmin, authEmploye } from "../../middleware/auth";
+import { auth, authEmploye } from "../../middleware/auth";
 
 import XosoController from "./crawl/XosoController";
 import EmployeController from "./employe";

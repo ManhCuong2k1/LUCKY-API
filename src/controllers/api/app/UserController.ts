@@ -1,9 +1,7 @@
 import { Request, Response, Router } from "express";
 import { UserInterface, UserModel } from "@models/User";
 import { Sequelize } from "sequelize";
-import { findCredentials } from "@models/User";
-import { encryptPassword } from "@util/md5password";
-import { LotteryNotifyModel, GetUserNotify } from "@models/LotteryNotify";
+import { GetUserNotify } from "@models/LotteryNotify";
 
 const router = Router();
 

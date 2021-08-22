@@ -1,4 +1,4 @@
-import { DataTypes, Model, ModelScopeOptions, Op } from "sequelize";
+import { DataTypes, Model} from "sequelize";
 import sequelize from "@database/connection";
 
 interface LotteryNotifyInterface {

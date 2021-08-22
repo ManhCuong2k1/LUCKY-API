@@ -2,7 +2,6 @@ import { Request, Response, Router } from "express";
 import { UserModel } from "@models/User";
 import { LotteryTicketModel } from "@models/LotteryTicket";
 import { LotteryOrdersModel } from "@models/LotteryOrder";
-import helper from "../../helper/helper";
 
 const router = Router();
 
