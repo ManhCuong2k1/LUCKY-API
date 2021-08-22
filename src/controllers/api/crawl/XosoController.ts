@@ -34,7 +34,7 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
         case "keno":
             try {
                 const crawling = await Crawl.XosoKenoData();
-                const updateData = updateTicket.updateResult(LotteryResultsModel.GAME_ENUM.KENO, crawling.data);
+                await updateTicket.updateResult(LotteryResultsModel.GAME_ENUM.KENO, crawling.data);
                 return res.send(crawling);
             } catch (e) {
                 res.status(401).send({
@@ -45,7 +45,7 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
         case "power":
             try {
                 const crawling = await Crawl.XosoPowerData();
-                const updateData = updateTicket.updateResult(LotteryResultsModel.GAME_ENUM.POWER, crawling.data);
+                await updateTicket.updateResult(LotteryResultsModel.GAME_ENUM.POWER, crawling.data);
                 return res.send(crawling);
             } catch (e) {
                 res.status(401).send({
@@ -56,7 +56,7 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
         case "mega":
             try {
                 const crawling = await Crawl.XosoMegaData();
-                const updateData = updateTicket.updateResult(LotteryResultsModel.GAME_ENUM.MEGA, crawling.data);
+                await updateTicket.updateResult(LotteryResultsModel.GAME_ENUM.MEGA, crawling.data);
                 return res.send(crawling);
             } catch (e) {
                 res.status(401).send({
@@ -67,7 +67,7 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
         case "max3d":
             try {
                 const crawling = await Crawl.XosoMax3dData();
-                const updateData = updateTicket.updateResult(LotteryResultsModel.GAME_ENUM.MAX3D, crawling.data);
+                await updateTicket.updateResult(LotteryResultsModel.GAME_ENUM.MAX3D, crawling.data);
                 return res.send(crawling);
             } catch (e) {
                 res.status(401).send({
@@ -79,7 +79,7 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
         case "max3dplus":
             try {
                 const crawling = await Crawl.XosoMax3dData();
-                const updateData = updateTicket.updateResult(LotteryResultsModel.GAME_ENUM.MAX3DPLUS, crawling.data);
+                await updateTicket.updateResult(LotteryResultsModel.GAME_ENUM.MAX3DPLUS, crawling.data);
                 return res.send(crawling);
             } catch (e) {
                 res.status(401).send({
@@ -91,7 +91,7 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
         case "max4d":
             try {
                 const crawling = await Crawl.XosoMax4dData();
-                const updateData = updateTicket.updateResult(LotteryResultsModel.GAME_ENUM.MAX4D, crawling.data);
+                await updateTicket.updateResult(LotteryResultsModel.GAME_ENUM.MAX4D, crawling.data);
                 return res.send(crawling);
             } catch (e) {
                 res.status(401).send({
@@ -103,7 +103,7 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
         case "xsmb":
             try {
                 const crawling = await Crawl.XosoMienBac();
-                const updateData = updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.KIENTHIET, crawling.data);
+                await updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.KIENTHIET, crawling.data);
                 return res.send(crawling);
             } catch (e) {
                 res.status(401).send({
@@ -115,9 +115,9 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
         case "compute":
             try {
                 const DienToan123 = await Crawl.DienToan123();
-                updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.COMPUTE123, DienToan123.data);
+                await updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.COMPUTE123, DienToan123.data);
                 const Xoso6x36 = await Crawl.Xoso6x36();
-                updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.COMPUTE636, Xoso6x36.data);
+                await updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.COMPUTE636, Xoso6x36.data);
                 return res.json({
                     status: true,
                     data: {
@@ -135,12 +135,12 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
         case "loto":
             try {
                 const crawling = await Crawl.XosoMienBac();
-                updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.LOTO2, crawling.data);
-                updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.LOTO3, crawling.data);
-                updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.LOTO5, crawling.data);
+                await updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.LOTO2, crawling.data);
+                await updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.LOTO3, crawling.data);
+                await updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.LOTO5, crawling.data);
 
                 const lotoResult = await Crawl.LotoCrawl();
-                updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.LOTO234, lotoResult.data);
+                await updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.LOTO234, lotoResult.data);
                 return res.send(lotoResult);
             } catch (e) {
                 res.status(401).send({
@@ -150,7 +150,9 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
             break;
 
         default:
-            res.status(403).send("403");
+            res.status(404).send({
+                code: "404"
+            });
             break;
     }
 });

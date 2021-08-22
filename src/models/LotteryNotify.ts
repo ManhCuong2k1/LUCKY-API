@@ -34,6 +34,7 @@ class LotteryNotifyModel extends Model<LotteryNotifyInterface> implements Lotter
         LOTO3: "loto3",
         LOTO5: "loto5",
         LOTO234: "loto234",
+        KIENTHIET: "kienthiet",
 
         RECHARGE: "rechage",
         BUY_TICKET: "buy_ticket",
@@ -54,6 +55,7 @@ class LotteryNotifyModel extends Model<LotteryNotifyInterface> implements Lotter
         LOTO3: "Loto 3 Số",
         LOTO5: "Loto 5 Số",
         LOTO234: "Loto 234",
+        KIENTHIET: "Kiến Thiết",
 
         BUY_TICKET: "Mua vé",
         RECHARGE: "Nạp tiền",
