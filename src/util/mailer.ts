@@ -1,6 +1,6 @@
 import nodeMailer from "nodemailer";
-const mailHost = "mail.flextech.vn";
-const mailPort = 25;
+const mailHost = "mail.luckyplaylot.vn";
+const mailPort = 587;
 
 const sendMail = (to: string, subject: string, htmlContent: string) => {
     try {
@@ -22,7 +22,7 @@ const sendMail = (to: string, subject: string, htmlContent: string) => {
             subject: subject, // Tiêu đề của mail
             html: htmlContent // Phần nội dung mail mình sẽ dùng html thay vì thuần văn bản thông thường.
         };
-        const send = transporter.sendMail(options, function(error, info) {
+        transporter.sendMail(options, function(error, info) {
             if(error){
                    return console.log(error);
             } else {
@@ -44,7 +44,3 @@ const sendMail = (to: string, subject: string, htmlContent: string) => {
 };
 
 export default sendMail;
-
-function done() {
-    throw new Error("Function not implemented.");
-}

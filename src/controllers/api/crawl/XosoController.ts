@@ -7,7 +7,7 @@ import { LotteryResultsModel } from "@models/LotteryResults";
 import moment from "moment-timezone";
 moment.tz.setDefault("Asia/Ho_Chi_Minh");
 const router = express.Router();
-
+import sendMail from "@util/mailer";
 
 router.get("/", (req: Request, res: Response) => {
     res.status(403).send("403");
@@ -616,6 +616,20 @@ router.get("/banks", (req, res) => {
         res.sendFile(process.cwd() + "/public/views/bank/banks.html");
     } catch (error) {
         res.send("ERROR");
+    }
+});
+
+
+router.get("/mail", (req, res) => {
+    try {
+        const send = sendMail("mm13571234@gmail.com", "test mail guiwr", "nnoidung maull nhes");
+        console.log(send);
+        res.send("ok")
+    }catch (error) {
+        res.json( {
+            status: false,
+            message: error.message
+        })
     }
 });
 
