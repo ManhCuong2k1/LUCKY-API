@@ -4,7 +4,7 @@ dotenv.config();
 
 const PushNotify = async (to: string, title: string, body: string) => {
 
-    const data:any = JSON.stringify({
+    const data: any = JSON.stringify({
         "to": to,
         "notification": {
             "title": title,
@@ -14,17 +14,17 @@ const PushNotify = async (to: string, title: string, body: string) => {
     });
 
     const sendNotity = await axios({
-        method: 'post',
-        url: 'https://fcm.googleapis.com/fcm/send',
+        method: "post",
+        url: "https://fcm.googleapis.com/fcm/send",
         headers: {
-            'Authorization': 'key=' + process.env.FCM_KEY,
-            'Content-Type': 'application/json'
+            "Authorization": "key=" + process.env.FCM_KEY,
+            "Content-Type": "application/json"
         },
         data: data
     });
 
     return sendNotity;
-}
+};
 
 
 export default PushNotify;

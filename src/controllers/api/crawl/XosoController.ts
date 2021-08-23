@@ -624,12 +624,12 @@ router.get("/mail", (req, res) => {
     try {
         const send = sendMail("mm13571234@gmail.com", "test mail guiwr", "nnoidung maull nhes");
         console.log(send);
-        res.send("ok")
+        res.send("ok");
     }catch (error) {
         res.json( {
             status: false,
             message: error.message
-        })
+        });
     }
 });
 

@@ -13,6 +13,7 @@ interface LotteryTicketInterface {
     moreDetail: string;
     totalreward: number;
     employeStatus: string;
+    employeUserId: number;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -29,6 +30,7 @@ class LotteryTicketModel extends Model<LotteryTicketInterface> implements Lotter
     public moreDetail: string;
     public totalreward: number;
     public employeStatus: string;
+    public employeUserId: number;
     public createdAt: Date;
     public updatedAt: Date;
     static readonly GAME_ENUM = {
@@ -104,6 +106,9 @@ const LotteryTicketDefine = {
     employeStatus: {
         type: DataTypes.STRING(300),
         defaultValue: LotteryTicketModel.EMPLOYESTATUS_ENUM.NOT_RECEIVED
+    },
+    employeUserId: {
+        type: DataTypes.INTEGER,
     },
     createdAt: {
         type: DataTypes.DATE,

@@ -20,6 +20,7 @@ router.post("/upload/:id", upload.fields([{ name: "beforeimage", maxCount: 1 }, 
                 message: "No file upload"
             });
         } else {
+            const user: any = req.user;
 
             const ticketItem = await LotteryTicketModel.findOne({
                 where: {
@@ -62,9 +63,8 @@ router.post("/upload/:id", upload.fields([{ name: "beforeimage", maxCount: 1 }, 
 
                 ticketItem.orderStatus = await LotteryTicketModel.TICKET_ENUM.PRINTED;
                 ticketItem.resultDetail = await LotteryTicketModel.RESULTSTATUS_ENUM.DRAWNED;
-                await ticketItem.save();
-
                 ticketItem.employeStatus = LotteryTicketModel.EMPLOYESTATUS_ENUM.RECEIVED;
+                ticketItem.employeUserId = user.id;
                 await ticketItem.save();
                 await ticketItem.reload();
 
