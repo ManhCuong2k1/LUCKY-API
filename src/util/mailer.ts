@@ -1,12 +1,12 @@
 import nodeMailer from "nodemailer";
-const mailHost = "mail.luckyplaylot.vn";
-const mailPort = 587;
+import dotenv from "dotenv";
+dotenv.config();
 
 const sendMail = (to: string, subject: string, htmlContent: string) => {
     try {
         const transporter = nodeMailer.createTransport({
-            host: mailHost,
-            port: mailPort,
+            host: process.env.MAILER_HOST,
+            port: Number(process.env.MAILER_PORT),
             secure: false,
             auth: {
                 user: process.env.MAILER_EMAIL,

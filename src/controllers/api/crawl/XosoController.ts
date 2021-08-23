@@ -139,15 +139,26 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
                 await updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.LOTO3, crawling.data);
                 await updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.LOTO5, crawling.data);
 
-                const lotoResult = await Crawl.LotoCrawl();
-                await updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.LOTO234, lotoResult.data);
-                return res.send(lotoResult);
+                return res.send(crawling);
             } catch (e) {
                 res.status(401).send({
                     code: e.message
                 });
             }
             break;
+
+            case "loto235":
+                try {
+                    const lotoResult = await Crawl.LotoCrawl();
+                    await updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.LOTO234, lotoResult.data);
+                    return res.send(lotoResult);
+                } catch (e) {
+                    res.status(401).send({
+                        code: e.message
+                    });
+                }
+                break;
+
 
         default:
             res.status(404).send({

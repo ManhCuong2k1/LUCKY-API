@@ -161,13 +161,19 @@ const UpdateUserCustody = async (orderId: number, reward: number) => {
     await OrderData.reload();
 };
 
+// tien da nhan = 7m
+// Tien sap nhan = 8m
+// limit = 10m
+
 const SymtemSetReward = async (orderId: number, userId: number, reward: number) => {
     const limitReceved: number = LotteryOrdersModel.LIMIT_MONEY_REWARD;
 
     const checkRewardReceived = await getRewardReceived(orderId); // lấy ra số tiền mà user đã nhận
     if(checkRewardReceived <= limitReceved) {   // nếu tiền đã nhận nhở hơn hoặc bằng ngưỡng
+        // check =10, reward =2 => sum =12 
         const sumReward = checkRewardReceived + reward;       // tính tổng tiền đã nhận và tiền sắp được nhận
         if(sumReward > limitReceved) {  // nếu tổng tiền đã nhận và tiền sắp được nhận lớn hơn ngưỡng
+
             const moneyMinus = limitReceved - checkRewardReceived; // số tiền cần thêm cho user
             reward = reward - moneyMinus; // set lại số tiền sắp được nhận
             await UpdateUserReceived(orderId, moneyMinus);      // cộng tiền đã nhận cho user

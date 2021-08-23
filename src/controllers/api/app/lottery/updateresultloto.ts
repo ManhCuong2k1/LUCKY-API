@@ -24,7 +24,7 @@ const updateResultLoto = async (game: string, data: any) => {
                     }
                 });
 
-                OrderItem.forEach(async (orderData: any) => {
+                for (const orderData of OrderItem) {
                     const orderDetail = JSON.parse(orderData.orderDetail);
                     dataUpdate = {}, dataUpdate.data = [], dataUpdate.result = {};
                     let isWin: boolean = false, updateReward: number = 0;
@@ -50,25 +50,25 @@ const updateResultLoto = async (game: string, data: any) => {
                             const isWinGS = (LotteryHelper.countSame(String(numberOrder3so), data.result.giaisau) > 0) ? true : false;
                             const isWinGBay = (LotteryHelper.countSame(String(numberOrder2so), data.result.giaibay) > 0) ? true : false;
 
-                            if(isWinDB == true) {
+                            if (isWinDB == true) {
                                 capsonhan = 20000;
-                            }else if(isWinGN == true) {
+                            } else if (isWinGN == true) {
                                 capsonhan = 2000;
-                            }else if(isWinGNhi == true) {
+                            } else if (isWinGNhi == true) {
                                 capsonhan = 500;
-                            }else if(isWinGBa == true) {
+                            } else if (isWinGBa == true) {
                                 capsonhan = 200;
-                            }else if(isWinGT == true) {
+                            } else if (isWinGT == true) {
                                 capsonhan = 40;
-                            }else if(isWinGNam == true) {
+                            } else if (isWinGNam == true) {
                                 capsonhan = 20;
-                            }else if(isWinGS == true) {
+                            } else if (isWinGS == true) {
                                 capsonhan = 10;
-                            }else if(isWinGBay == true) {
+                            } else if (isWinGBay == true) {
                                 capsonhan = 4;
-                            }else if(isWinKk == true) {
+                            } else if (isWinKk == true) {
                                 capsonhan = 4;
-                            }else {
+                            } else {
                                 capsonhan = 0;
                             }
 
@@ -126,7 +126,7 @@ const updateResultLoto = async (game: string, data: any) => {
                         );
                     }
 
-                });
+                };
 
             } catch (error) {
                 status = false, message = error.message;
@@ -145,7 +145,7 @@ const updateResultLoto = async (game: string, data: any) => {
                     }
                 });
 
-                OrderItem.forEach(async (orderData: any) => {
+                for (const orderData of OrderItem) {
                     const orderDetail = JSON.parse(orderData.orderDetail);
                     dataUpdate = {}, dataUpdate.data = [], dataUpdate.result = {};
                     let isWin: boolean = false, updateReward: number = 0;
@@ -197,7 +197,7 @@ const updateResultLoto = async (game: string, data: any) => {
                         );
                     }
 
-                });
+                };
 
             } catch (error) {
                 status = false, message = error.message;
@@ -215,7 +215,7 @@ const updateResultLoto = async (game: string, data: any) => {
                     }
                 });
 
-                OrderItem.forEach(async (orderData: any) => {
+                for (const orderData of OrderItem) {
                     const orderDetail = JSON.parse(orderData.orderDetail);
                     dataUpdate = {}, dataUpdate.data = [], dataUpdate.result = {};
                     let isWin: boolean = false, updateReward: number = 0;
@@ -299,7 +299,7 @@ const updateResultLoto = async (game: string, data: any) => {
                         );
                     }
 
-                });
+                };
 
             } catch (error) {
                 status = false, message = error.message;
@@ -318,7 +318,7 @@ const updateResultLoto = async (game: string, data: any) => {
                     }
                 });
 
-                OrderItem.forEach(async (orderData: any) => {
+                for (const orderData of OrderItem) {
                     const orderDetail = JSON.parse(orderData.orderDetail);
                     dataUpdate = {}, dataUpdate.data = [], dataUpdate.result = {};
                     let isWin: boolean = false, updateReward: number = 0;
@@ -400,7 +400,7 @@ const updateResultLoto = async (game: string, data: any) => {
                         );
                     }
 
-                });       
+                };
 
             } catch (error) {
                 status = false, message = error.message;
@@ -420,7 +420,8 @@ const updateResultLoto = async (game: string, data: any) => {
                     }
                 });
 
-                OrderItem.forEach(async (orderData: any) => {
+                for (const orderData of OrderItem) {
+
                     const orderDetail = JSON.parse(orderData.orderDetail);
                     dataUpdate = {}, dataUpdate.data = [], dataUpdate.result = {};
                     let isWin: boolean = false, updateReward: number = 0;
@@ -502,6 +503,7 @@ const updateResultLoto = async (game: string, data: any) => {
                         }
                     }
 
+
                     if (isWin) await SymtemSetReward(orderData.id, orderData.userId, updateReward);
                     await UpdateTicketReward(orderData.ticketId, updateReward); // cộng vào tổng thưởng của ticket
                     dataUpdate.result.iswin = isWin, dataUpdate.result.totalreward = updateReward;
@@ -527,7 +529,7 @@ const updateResultLoto = async (game: string, data: any) => {
                         );
                     }
 
-                });
+                };
 
             } catch (error) {
                 status = false, message = error.message;
@@ -546,7 +548,7 @@ const updateResultLoto = async (game: string, data: any) => {
                     }
                 });
 
-                OrderItem.forEach(async (orderData: any) => {
+                for (const orderData of OrderItem) {
                     const orderDetail = JSON.parse(orderData.orderDetail);
                     dataUpdate = {}, dataUpdate.data = [], dataUpdate.result = {};
                     let isWin: boolean = false, updateReward: number = 0;
@@ -667,7 +669,7 @@ const updateResultLoto = async (game: string, data: any) => {
                         );
                     }
 
-                });
+                };
             } catch (error) {
                 status = false, message = error.message;
             }
@@ -901,7 +903,7 @@ const updateResultLoto = async (game: string, data: any) => {
                                     countNumber1 >= 2 && countNumber4 >= 2 && countNumber3 >= 1
                                 ) {
                                     capsonhan = 15;
-                                } else if(
+                                } else if (
                                     countNumber1 >= 1 && countNumber2 >= 1 && countNumber3 >= 2 ||
                                     countNumber1 >= 1 && countNumber2 >= 1 && countNumber4 >= 2 ||
                                     countNumber1 >= 1 && countNumber3 >= 1 && countNumber2 >= 2 ||
@@ -980,7 +982,6 @@ const updateResultLoto = async (game: string, data: any) => {
                 };
 
 
-
                 const findAllItem = await LotteryOrdersModel.findAll({
                     where: {
                         type: game,
@@ -989,7 +990,7 @@ const updateResultLoto = async (game: string, data: any) => {
                     }
                 });
 
-                findAllItem.forEach(async (item: any) => {
+                for (const item of findAllItem) {
                     try {
                         const ObjItem = JSON.parse(item.orderDetail);
                         (Number(ObjItem.level == 2)) ? await processLoto2(item) : "";
@@ -998,7 +999,7 @@ const updateResultLoto = async (game: string, data: any) => {
                     } catch (error) {
                         console.log(error.message);
                     }
-                });
+                };
 
             } catch (error) {
                 status = false, message = error.message;

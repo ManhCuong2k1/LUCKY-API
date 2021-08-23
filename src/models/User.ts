@@ -42,7 +42,7 @@ interface UserInterface {
 
 class UserModel extends Model<UserInterface> implements UserInterface {
   static UpdateReward() {
-      throw new Error("Method not implemented.");
+    throw new Error("Method not implemented.");
   }
   static generateOtpCode() {
     throw new Error("Method not implemented.");
@@ -179,7 +179,7 @@ const generateString = (length: number) => {
   for (let i = length; i > 0; --i) {
     string += characters[Math.floor(Math.random() * characters.length)];
   }
-return string;
+  return string;
 };
 
 const generateOtpCode = () => {
@@ -250,7 +250,7 @@ const UserDefine = {
   isEnableReceiveEmail: { type: DataTypes.BOOLEAN, defaultValue: true },
   totalCoin: { type: DataTypes.BIGINT, defaultValue: 0 },
   totalReward: { type: DataTypes.BIGINT, defaultValue: 0 },
-  fcmtoken: { type: DataTypes.STRING},
+  fcmtoken: { type: DataTypes.STRING },
   createdAt: { type: DataTypes.DATE },
   updatedAt: { type: DataTypes.DATE },
   deletedAt: { type: DataTypes.DATE },
@@ -270,7 +270,7 @@ UserModel.init(UserDefine, {
 
 const findCredentials = async (username: string, password: string) => {
   const user = await UserModel.findOne({
-    where: { 
+    where: {
       phone: username
     },
   });
@@ -340,11 +340,12 @@ const findPhone = async (phone: string) => {
 
 
 const UpdateUserReward = async (userId: number, reward: number) => {
-  const UserData = await UserModel.findOne({ where: { id: userId } });
-  if (!UserData) throw new Error("Not found user");
-  UserData.totalReward = UserData.totalReward + reward;
-  await UserData.save();
-  await UserData.reload();
+  const user = await UserModel.findOne({ where: { id: userId } });
+  if (!user) throw new Error("Not found user");
+  user.totalReward = user.totalReward + reward;
+  await user.save();
+  await user.reload();
+
 };
 
 

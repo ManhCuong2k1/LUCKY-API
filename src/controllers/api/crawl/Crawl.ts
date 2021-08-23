@@ -960,8 +960,8 @@ const LotoCrawl = async () => {
 
     //const today = moment().format("YYYY-MM-DD");
     //const roundId = moment().format("YYYYMMDD");
-    const today = "2021-08-21";
-    const roundId = moment().format("20210821");
+    const today = "2021-08-23";
+    const roundId = moment().format("20210823");
     const date = moment().format("DD/MM/YYYY");
 
 
