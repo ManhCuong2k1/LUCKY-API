@@ -15,6 +15,7 @@ router.get("/", async (req: Request, res: Response) => {
         const cursor: number = (page - 1) * pageSize;
 
         const searchKey: string = req.query.searchKey ? req.query.searchKey.toString() : null;
+        const searchCardId: string = req.query.searchCardId ? req.query.searchCardId.toString() : null;
         const status: string = req.query.status ? req.query.status.toString() : null;
 
         const fromDate: any = req.query.fromDate || null;
@@ -27,6 +28,7 @@ router.get("/", async (req: Request, res: Response) => {
         );
         const whereUser: any = Object.assign({},
             searchKey === null ? null : { phone: { [Op.like]: `%${searchKey.trim()}%` } },
+            searchCardId === null ? null : { identify: { [Op.like]: `%${searchCardId.trim()}%` } },
         );
 
         const { rows, count } = await LotteryExchangesModel.findAndCountAll({

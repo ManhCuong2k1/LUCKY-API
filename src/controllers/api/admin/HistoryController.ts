@@ -15,6 +15,7 @@ router.get("/", async (req: Request, res: Response) => {
         const cursor: number = (page - 1) * pageSize;
 
         const searchKey: string = req.query.searchKey ? req.query.searchKey.toString() : null;
+        const searchCardId: string = req.query.searchCardId ? req.query.searchCardId.toString() : null;
         const actionSlug: string = req.query.actionSlug ? req.query.actionSlug.toString() : null;
 
         const fromDate: any = req.query.fromDate || null;
@@ -26,14 +27,15 @@ router.get("/", async (req: Request, res: Response) => {
             fromDate && toDate ? { createdAt: { [Op.between]: [moment(fromDate).startOf("day"), moment(toDate).endOf("day")] } } : null
         );
         const whereUser: any = Object.assign({},
-            searchKey === null ? null : { phone: { [Op.like]: `%${searchKey.trim()}%` } },
+            searchKey === null ? null : { name: { [Op.like]: `%${searchKey.trim()}%` } },
+            searchCardId === null ? null : { identify: { [Op.like]: `%${searchCardId.trim()}%` } },
         );
 
         const { rows, count } = await UserHistoryModel.findAndCountAll({
             where,
             include: {
                 model: UserModel,
-                attributes: ["name", "phone"],
+                attributes: ["name", "phone", "identify", "email"],
                 as: "user",
                 where: whereUser,
             },
