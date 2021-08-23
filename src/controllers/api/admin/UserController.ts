@@ -19,9 +19,11 @@ router.get("/", authAdmin, async (req: Request, res: Response) => {
     const offset: number = (page - 1) * limit;
 
     const searchKey: string = req.query.searchKey ? req.query.searchKey.toString() : null;
+    const searchCardId: string = req.query.searchCardId ? req.query.searchCardId.toString() : null;
 
     const where: any = Object.assign({},
-      searchKey === null ? null : { phone: { [Op.like]: `%${searchKey.trim()}%` } },
+      searchKey === null ? null : { name: { [Op.like]: `%${searchKey.trim()}%` } },
+      searchCardId === null ? null : { identify: { [Op.like]: `%${searchCardId.trim()}%` } },
       {role : "user"},
     );
 

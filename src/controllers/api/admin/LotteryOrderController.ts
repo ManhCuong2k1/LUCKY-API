@@ -6,14 +6,13 @@ import { LotteryTicketModel } from "@models/LotteryTicket";
 import { LotteryNumbersModel } from "@models/LotteryNumbers";
 import { LotteryStoragesModel } from "@models/LotteryStorage";
 import { GridInterface } from "@models/Transformers/Grid";
-import { col, fn, Op } from "sequelize";
+import { Op } from "sequelize";
 import moment from "moment-timezone";
 moment.tz.setDefault("Asia/Ho_Chi_Minh");
 import { uploadFile } from "../../../middleware/file";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const readXlsxFile = require("read-excel-file/node");
 import path from "path";
-import { type } from "os";
 const router = Router();
 
 // Lấy danh sách vé Vietlott
@@ -25,6 +24,7 @@ router.get("/vietlott", async (req: Request, res: Response) => {
         const cursor: number = (page - 1) * pageSize;
 
         const searchKey: string = req.query.searchKey ? req.query.searchKey.toString() : null;
+        const searchCardId: string = req.query.searchCardId ? req.query.searchCardId.toString() : null;
         const type: string = req.query.type ? req.query.type.toString() : null;
         const orderStatus: string = req.query.orderStatus ? req.query.orderStatus.toString() : null;
         const custody: string = req.query.custody ? req.query.custody.toString() : null;
@@ -38,7 +38,8 @@ router.get("/vietlott", async (req: Request, res: Response) => {
             fromDate && toDate ? { createdAt: { [Op.between]: [moment(fromDate).startOf("day"), moment(toDate).endOf("day")] } } : null
         );
         const whereUser: any = Object.assign({},
-            searchKey === null ? null : { phone: { [Op.like]: `%${searchKey.trim()}%` } },
+            searchKey === null ? null : { name: { [Op.like]: `%${searchKey.trim()}%` } },
+            searchCardId === null ? null : { identify: { [Op.like]: `%${searchCardId.trim()}%` } },
         );
 
         const whereOder: any = Object.assign({},
@@ -103,6 +104,7 @@ router.get("/computer", async (req: Request, res: Response) => {
         const cursor: number = (page - 1) * pageSize;
 
         const searchKey: string = req.query.searchKey ? req.query.searchKey.toString() : null;
+        const searchCardId: string = req.query.searchCardId ? req.query.searchCardId.toString() : null;
         const type: string = req.query.type ? req.query.type.toString() : null;
         const orderStatus: string = req.query.orderStatus ? req.query.orderStatus.toString() : null;
         const custody: string = req.query.custody ? req.query.custody.toString() : null;
@@ -116,7 +118,8 @@ router.get("/computer", async (req: Request, res: Response) => {
             fromDate && toDate ? { createdAt: { [Op.between]: [moment(fromDate).startOf("day"), moment(toDate).endOf("day")] } } : null
         );
         const whereUser: any = Object.assign({},
-            searchKey === null ? null : { phone: { [Op.like]: `%${searchKey.trim()}%` } },
+            searchKey === null ? null : { name: { [Op.like]: `%${searchKey.trim()}%` } },
+            searchCardId === null ? null : { identify: { [Op.like]: `%${searchCardId.trim()}%` } },
         );
 
         const whereOder: any = Object.assign({},
@@ -181,6 +184,7 @@ router.get("/construction", async (req: Request, res: Response) => {
         const cursor: number = (page - 1) * pageSize;
 
         const searchKey: string = req.query.searchKey ? req.query.searchKey.toString() : null;
+        const searchCardId: string = req.query.searchCardId ? req.query.searchCardId.toString() : null;
         const type: string = req.query.type ? req.query.type.toString() : null;
         const orderStatus: string = req.query.orderStatus ? req.query.orderStatus.toString() : null;
         const custody: string = req.query.custody ? req.query.custody.toString() : null;
@@ -194,7 +198,8 @@ router.get("/construction", async (req: Request, res: Response) => {
             fromDate && toDate ? { createdAt: { [Op.between]: [moment(fromDate).startOf("day"), moment(toDate).endOf("day")] } } : null
         );
         const whereUser: any = Object.assign({},
-            searchKey === null ? null : { phone: { [Op.like]: `%${searchKey.trim()}%` } },
+            searchKey === null ? null : { name: { [Op.like]: `%${searchKey.trim()}%` } },
+            searchCardId === null ? null : { identify: { [Op.like]: `%${searchCardId.trim()}%` } },
         );
 
         const whereOder: any = Object.assign({},
