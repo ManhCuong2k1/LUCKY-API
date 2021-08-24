@@ -345,7 +345,6 @@ const UpdateUserReward = async (userId: number, reward: number) => {
   user.totalReward = user.totalReward + reward;
   await user.save();
   await user.reload();
-
 };
 
 

@@ -2,7 +2,7 @@ import helper from "@controllers/api/helper/helper";
 import { LotteryOrdersModel, SymtemSetReward } from "@models/LotteryOrder";
 import { UpdateTicketReward } from "@models/LotteryTicket";
 import { UserHistoryModel, UserHistoryAdd } from "@models/LotteryUserHistory";
-import { LotteryNotifyModel, PushNotify, UserNotifyAdd } from "@models/LotteryNotify";
+import { LotteryNotifyModel, NotifyWhenLimitReward, PushNotify, UserNotifyAdd } from "@models/LotteryNotify";
 import { LotteryResultsModel } from "@models/LotteryResults";
 import LotteryHelper from "./helper";
 
@@ -101,6 +101,7 @@ const updateResultLoto = async (game: string, data: any) => {
                     }
 
                     if (isWin) await SymtemSetReward(orderData.id, orderData.userId, updateReward);
+                    if (isWin) await NotifyWhenLimitReward(orderData.userId, orderData.type, updateReward);
                     if (isWin) await PushNotify(
                         orderData.userId, 
                         "Thông Báo Trúng Thưởng", 
@@ -170,6 +171,7 @@ const updateResultLoto = async (game: string, data: any) => {
                     }
 
                     if (isWin) await SymtemSetReward(orderData.id, orderData.userId, updateReward);
+                    if (isWin) await NotifyWhenLimitReward(orderData.userId, orderData.type, updateReward);
                     if (isWin) await PushNotify(
                         orderData.userId, 
                         "Thông Báo Trúng Thưởng", 
@@ -272,6 +274,7 @@ const updateResultLoto = async (game: string, data: any) => {
                     }
 
                     if (isWin) await SymtemSetReward(orderData.id, orderData.userId, updateReward);
+                    if (isWin) await NotifyWhenLimitReward(orderData.userId, orderData.type, updateReward);
                     if (isWin) await PushNotify(
                         orderData.userId, 
                         "Thông Báo Trúng Thưởng", 
@@ -373,6 +376,7 @@ const updateResultLoto = async (game: string, data: any) => {
                     }
 
                     if (isWin) await SymtemSetReward(orderData.id, orderData.userId, updateReward);
+                    if (isWin) await NotifyWhenLimitReward(orderData.userId, orderData.type, updateReward);
                     if (isWin) await PushNotify(
                         orderData.userId, 
                         "Thông Báo Trúng Thưởng", 
@@ -501,6 +505,7 @@ const updateResultLoto = async (game: string, data: any) => {
 
 
                     if (isWin) await SymtemSetReward(orderData.id, orderData.userId, updateReward);
+                    if (isWin) await NotifyWhenLimitReward(orderData.userId, orderData.type, updateReward);
                     if (isWin) await PushNotify(
                         orderData.userId, 
                         "Thông Báo Trúng Thưởng", 
@@ -640,6 +645,7 @@ const updateResultLoto = async (game: string, data: any) => {
                     }
 
                     if (isWin) await SymtemSetReward(orderData.id, orderData.userId, updateReward);
+                    if (isWin) await NotifyWhenLimitReward(orderData.userId, orderData.type, updateReward);
                     if (isWin) await PushNotify(
                         orderData.userId, 
                         "Thông Báo Trúng Thưởng", 
@@ -721,6 +727,7 @@ const updateResultLoto = async (game: string, data: any) => {
                         }
 
                         if (isWin) await SymtemSetReward(item.id, item.userId, updateReward);
+                        if (isWin) await NotifyWhenLimitReward(item.userId, item.type, updateReward);
                         if (isWin) await PushNotify(
                             item.userId, 
                             "Thông Báo Trúng Thưởng", 
@@ -816,6 +823,7 @@ const updateResultLoto = async (game: string, data: any) => {
                         }
 
                         if (isWin) await SymtemSetReward(item.id, item.userId, updateReward);
+                        if (isWin) await NotifyWhenLimitReward(item.userId, item.type, updateReward);
                         if (isWin) await PushNotify(
                             item.userId, 
                             "Thông Báo Trúng Thưởng", 
@@ -945,6 +953,7 @@ const updateResultLoto = async (game: string, data: any) => {
                         }
 
                         if (isWin) await SymtemSetReward(item.id, item.userId, updateReward);
+                        if (isWin) await NotifyWhenLimitReward(item.userId, item.type, updateReward);
                         if (isWin) await PushNotify(
                             item.userId, 
                             "Thông Báo Trúng Thưởng", 

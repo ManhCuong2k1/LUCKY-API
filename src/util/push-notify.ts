@@ -22,9 +22,7 @@ const PushNotify = async (to: string, title: string, body: string) => {
         },
         data: data
     });
-
-    console.log(sendNotity);
-
+    
     return sendNotity;
 };
 

@@ -1,8 +1,9 @@
-import { DataTypes, Model} from "sequelize";
+import { DataTypes, Model } from "sequelize";
 import sequelize from "@database/connection";
 import { UserModel } from "@models/User";
 import SendNotify from "@util/push-notify";
-
+// import { creatLogFile, logFile, readlog } from "@util/logdata";
+import { LotteryOrdersModel } from "./LotteryOrder";
 
 interface LotteryNotifyInterface {
     id: number;
@@ -103,10 +104,70 @@ LotteryNotifyModel.init(UserHistoryDefine, {
 
 const PushNotify = async (userId: number, title: string, body: string) => {
     const user = await UserModel.findByPk(userId);
-    if(!user) throw new Error("User not found");
+    if (!user) throw new Error("User not found");
     await SendNotify(user.fcmtoken, title, body);
 };
 
+const NotifyWhenLimitReward = async (userId: number, game: string, reward: number) => {
+    try {
+
+        if (reward > 10000000) {
+
+            let gameName: string;
+            switch (game) {
+                case LotteryOrdersModel.GAME_ENUM.KENO:
+                    gameName = "KENO";
+                    break;
+                case LotteryOrdersModel.GAME_ENUM.POWER:
+                    gameName = "POWER";
+                    break;
+                case LotteryOrdersModel.GAME_ENUM.MAX3D:
+                    gameName = "MAX3D";
+                    break;
+                case LotteryOrdersModel.GAME_ENUM.MAX3DPLUS:
+                    gameName = "MAX3D PLUS";
+                    break;
+                case LotteryOrdersModel.GAME_ENUM.MAX4D:
+                    gameName = "MAX4D";
+                    break;
+                case LotteryOrdersModel.GAME_ENUM.COMPUTE123:
+                    gameName = "Điện Toán 123";
+                    break;
+                case LotteryOrdersModel.GAME_ENUM.COMPUTE636:
+                    gameName = "Điện Toán 6x36";
+                    break;
+                case LotteryOrdersModel.GAME_ENUM.THANTAI4:
+                    gameName = "Thần Tài 4";
+                    break;
+                case LotteryOrdersModel.GAME_ENUM.LOTO2:
+                    gameName = "LOTO 2 Số";
+                    break;
+                case LotteryOrdersModel.GAME_ENUM.LOTO3:
+                    gameName = "LOTO 3 Số";
+                    break;
+                case LotteryOrdersModel.GAME_ENUM.LOTO5:
+                    gameName = "LOTO 4 Số";
+                    break;
+                case LotteryOrdersModel.GAME_ENUM.LOTO234:
+                    gameName = "LOTO 235";
+                    break;
+                case LotteryOrdersModel.GAME_ENUM.KIENTHIET:
+                    gameName = "Kiến Thiết";
+                    break;
+            }
+
+            const contents = `Vé chơi ${gameName} đã trúng lớn trên 10 triệu. Liên hệ tại cửa hàng hoặc hotline để nhận thưởng!`;
+            await PushNotify(
+                userId,
+                "Thông báo trúng lớn!",
+                contents
+            );
+        }
+
+    } catch (err) {
+        console.log(err.message);
+    }
+};
 
 const UserNotifyAdd = async (userId: number, notifySlug: string, notifyName: string, detail: string) => {
     const dataAction: any = {
@@ -115,13 +176,13 @@ const UserNotifyAdd = async (userId: number, notifySlug: string, notifyName: str
         notifyName,
         detail
     };
-    const createNotify = await LotteryNotifyModel.create(dataAction);    
+    const createNotify = await LotteryNotifyModel.create(dataAction);
     return createNotify;
 };
 
 const GetUserNotify = async (userId: number, limit: number) => {
     const UserNotify = await LotteryNotifyModel.findAll({
-        where : {
+        where: {
             userId
         },
         attributes: [
@@ -132,8 +193,8 @@ const GetUserNotify = async (userId: number, limit: number) => {
             "detail",
             "createdAt"
         ],
-        order : [["id", "DESC"]],
-        limit : limit,
+        order: [["id", "DESC"]],
+        limit: limit,
     });
 
     return UserNotify;
@@ -144,6 +205,7 @@ export {
     LotteryNotifyInterface,
     LotteryNotifyModel,
     PushNotify,
+    NotifyWhenLimitReward,
     UserNotifyAdd,
     GetUserNotify
 };

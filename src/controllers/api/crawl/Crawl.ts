@@ -107,11 +107,9 @@ const XosoGetJackPot = async (type: string) => {
 };
 
 
-
 const XosoKenoData = async () => {
 
   try {
-
     // config header để vào trang kết quả keno
     const options = {
       "method": "GET",
@@ -214,8 +212,6 @@ const XosoKenoData = async () => {
 };
 
 
-
-
 const XosoPowerData = async () => {
 
   try {
@@ -283,9 +279,6 @@ const XosoPowerData = async () => {
     };
   }
 };
-
-
-
 
 const XosoMegaData = async () => {
 
@@ -537,8 +530,6 @@ const XosoMax3dData = async () => {
   }
 };
 
-
-
 const XosoMax4dData = async () => {
 
   try {
@@ -692,9 +683,7 @@ const getKenoCurrentRound = async () => {
 
 const XosoMienBac = async () => {
   try {
-
-    //const today = moment().format("YYYY-MM-DD");
-    const today = "2021-08-19";
+    const today = moment().format("YYYY-MM-DD");
     const roundId = moment().format("YYYYMMDD");
     const currentDate = moment().format("DD/MM/YYYYY");
     const options = {
@@ -958,10 +947,8 @@ const LotoCrawl = async () => {
     dataResp = JSON.parse(dataResp);
     dataResp = dataResp[0];
 
-    //const today = moment().format("YYYY-MM-DD");
-    //const roundId = moment().format("YYYYMMDD");
-    const today = "2021-08-23";
-    const roundId = moment().format("20210823");
+    const today = moment().format("YYYY-MM-DD");
+    const roundId = moment().format("YYYYMMDD");
     const date = moment().format("DD/MM/YYYY");
 
 
