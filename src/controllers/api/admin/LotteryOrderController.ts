@@ -6,7 +6,7 @@ import { LotteryTicketModel } from "@models/LotteryTicket";
 import { LotteryNumbersModel } from "@models/LotteryNumbers";
 import { LotteryStoragesModel } from "@models/LotteryStorage";
 import { GridInterface } from "@models/Transformers/Grid";
-import { Op } from "sequelize";
+import { Op, Sequelize } from "sequelize";
 import moment from "moment-timezone";
 moment.tz.setDefault("Asia/Ho_Chi_Minh");
 import { uploadFile } from "../../../middleware/file";
@@ -46,7 +46,7 @@ router.get("/vietlott", async (req: Request, res: Response) => {
             custody === null ? null : custody === "big_win" ? { custody: {[Op.gt]: 0} } : "",
         );
 
-        const { rows, count } = await LotteryTicketModel.findAndCountAll({
+        const { rows, count }: any = await LotteryTicketModel.findAndCountAll({
             where: {
                 ...where,
                 [Op.or]: [
@@ -59,6 +59,14 @@ router.get("/vietlott", async (req: Request, res: Response) => {
                 ],
 
             },
+            attributes: {
+                include: [
+                  [
+                    Sequelize.literal("(SELECT name from users where users.id = LotteryTicketModel.employeUserId)"),
+                    "name",
+                  ],
+                ],
+              },
             include: [{
                 model: UserModel,
                 as: "user",
@@ -81,6 +89,7 @@ router.get("/vietlott", async (req: Request, res: Response) => {
                 ["createdAt", "DESC"],
             ],
         });
+        
         const responseData: GridInterface<LotteryTicketModel> = {
             data: rows,
             page: page,
@@ -139,6 +148,14 @@ router.get("/computer", async (req: Request, res: Response) => {
                 ],
 
             },
+            attributes: {
+                include: [
+                  [
+                    Sequelize.literal("(SELECT name from users where users.id = LotteryTicketModel.employeUserId)"),
+                    "name",
+                  ],
+                ],
+              },
             include: [{
                 model: UserModel,
                 as: "user",
@@ -212,6 +229,14 @@ router.get("/construction", async (req: Request, res: Response) => {
                 type: LotteryTicketModel.GAME_ENUM.KIENTHIET,
 
             },
+            attributes: {
+                include: [
+                  [
+                    Sequelize.literal("(SELECT name from users where users.id = LotteryTicketModel.employeUserId)"),
+                    "name",
+                  ],
+                ],
+              },
             include: [{
                 model: UserModel,
                 as: "user",
@@ -257,6 +282,14 @@ router.get("/detail/:id", async (req: Request, res: Response) => {
             where: {
                 id: idTicket
             },
+            attributes: {
+                include: [
+                  [
+                    Sequelize.literal("(SELECT name from users where users.id = LotteryTicketModel.employeUserId)"),
+                    "name",
+                  ],
+                ],
+              },
             include: [{
                 model: UserModel,
                 as: "user",
@@ -286,6 +319,7 @@ router.post("/:id/images", async (req: Request, res: Response) => {
 
         const imageBefore = req.body.imageBefore;
         const imageAfter = req.body.imageAfter;
+        const employeId = req.body.employeId;
         
         const ticketItem = await LotteryTicketModel.findOne({ 
             where: { 
@@ -307,13 +341,14 @@ router.post("/:id/images", async (req: Request, res: Response) => {
             const objectData: any = {
                 beforeImage: imageBefore,
                 afterImage: imageAfter,
-                LotteryTicketModelId: req.params.id
+                LotteryTicketModelId: req.params.id,
             };
             await LotteryImagesModel.create(objectData);
             orderItem.forEach( async (element) => {
                 element.orderStatus = await LotteryOrdersModel.ORDERSTATUS_ENUM.PRINTED;
                 await element.save();
             });
+            ticketItem.employeUserId = employeId;
             ticketItem.orderStatus = await LotteryTicketModel.TICKET_ENUM.PRINTED;
             ticketItem.resultDetail = await LotteryTicketModel.RESULTSTATUS_ENUM.DRAWNED;
             ticketItem.employeStatus = await LotteryTicketModel.EMPLOYESTATUS_ENUM.RECEIVED;
@@ -340,6 +375,7 @@ router.put("/updateImage/:id", async (req: Request, res: Response) => {
         const idTicket = req.params.id;
         const imageBefore = req.body.imageBefore;
         const imageAfter = req.body.imageAfter;
+        const employeId = req.body.employeId;
 
         const ticketItem = await LotteryTicketModel.findOne({
             where: { 
@@ -370,6 +406,7 @@ router.put("/updateImage/:id", async (req: Request, res: Response) => {
         
         dataImage.beforeImage = imageBefore;
         dataImage.afterImage = imageAfter;
+        ticketItem.employeUserId = employeId;
         ticketItem.orderStatus = await LotteryTicketModel.TICKET_ENUM.PRINTED;
         ticketItem.resultDetail = await LotteryTicketModel.RESULTSTATUS_ENUM.DRAWNED;
         
