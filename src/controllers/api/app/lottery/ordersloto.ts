@@ -255,7 +255,6 @@ router.post("/", async (req: Request, res: Response) => {
                     }
 
                     let roundOrder: any = helper.timeConverterNoChar(timeOrder);// gán round hiện tại = ngày hôm nay
-                    let isFirst = true;
                     let totalPrice = 0;
                     let fee = Number(await getSettings("ticket_storage_fee"));
 
@@ -313,8 +312,6 @@ router.post("/", async (req: Request, res: Response) => {
                                 finishTime: moment(timeOrder).format("YYYY-MM-DD 18:15:00"),
                                 moreDetail: "Đại lý giữ hộ vé"
                             };
-
-                            isFirst = false;
                             status = true, message = "Đặt Vé Thành Công!";
 
                             const dbExecQuery = (dataImport !== null) ? await LotteryOrdersModel.create(dataImport) : "";

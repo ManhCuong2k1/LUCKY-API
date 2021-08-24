@@ -123,12 +123,6 @@ const updateResultLoto = async (game: string, data: any) => {
                             LotteryNotifyModel.NOTIFY_NAME_ENUM.KIENTHIET,
                             "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + "."
                         );
-                        UserHistoryAdd(
-                            orderData.userId,
-                            UserHistoryModel.ACTION_SLUG_ENUM.USER_REWARD,
-                            UserHistoryModel.ACTION_NAME_ENUM.USER_REWARD,
-                            "Trúng " + helper.numberformat(updateReward) + "đ vé Kiến Thiết " + orderData.ticketId + "."
-                        );
                     }
 
                 };
@@ -198,12 +192,6 @@ const updateResultLoto = async (game: string, data: any) => {
                             LotteryNotifyModel.NOTIFY_SLUG_ENUM.COMPUTE636,
                             LotteryNotifyModel.NOTIFY_NAME_ENUM.COMPUTE636,
                             "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + "."
-                        );
-                        UserHistoryAdd(
-                            orderData.userId,
-                            UserHistoryModel.ACTION_SLUG_ENUM.USER_REWARD,
-                            UserHistoryModel.ACTION_NAME_ENUM.USER_REWARD,
-                            "Trúng " + helper.numberformat(updateReward) + "đ vé Điện Toán 6x36 " + orderData.ticketId + "."
                         );
                     }
 
@@ -306,12 +294,6 @@ const updateResultLoto = async (game: string, data: any) => {
                             LotteryNotifyModel.NOTIFY_NAME_ENUM.COMPUTE123,
                             "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + "."
                         );
-                        UserHistoryAdd(
-                            orderData.userId,
-                            UserHistoryModel.ACTION_SLUG_ENUM.USER_REWARD,
-                            UserHistoryModel.ACTION_NAME_ENUM.USER_REWARD,
-                            "Trúng " + helper.numberformat(updateReward) + "đ vé Điện Toán 123 " + orderData.ticketId + "."
-                        );
                     }
 
                 };
@@ -411,12 +393,6 @@ const updateResultLoto = async (game: string, data: any) => {
                             LotteryNotifyModel.NOTIFY_SLUG_ENUM.LOTO2,
                             LotteryNotifyModel.NOTIFY_NAME_ENUM.LOTO2,
                             "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + "."
-                        );
-                        UserHistoryAdd(
-                            orderData.userId,
-                            UserHistoryModel.ACTION_SLUG_ENUM.USER_REWARD,
-                            UserHistoryModel.ACTION_NAME_ENUM.USER_REWARD,
-                            "Trúng " + helper.numberformat(updateReward) + "đ vé Loto 2 Số " + orderData.ticketId + "."
                         );
                     }
 
@@ -545,12 +521,6 @@ const updateResultLoto = async (game: string, data: any) => {
                             LotteryNotifyModel.NOTIFY_SLUG_ENUM.LOTO3,
                             LotteryNotifyModel.NOTIFY_NAME_ENUM.LOTO3,
                             "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + "."
-                        );
-                        UserHistoryAdd(
-                            orderData.userId,
-                            UserHistoryModel.ACTION_SLUG_ENUM.USER_REWARD,
-                            UserHistoryModel.ACTION_NAME_ENUM.USER_REWARD,
-                            "Trúng " + helper.numberformat(updateReward) + "đ vé Loto 3 Số " + orderData.ticketId + "."
                         );
                     }
 
@@ -691,12 +661,6 @@ const updateResultLoto = async (game: string, data: any) => {
                             LotteryNotifyModel.NOTIFY_NAME_ENUM.LOTO5,
                             "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + "."
                         );
-                        UserHistoryAdd(
-                            orderData.userId,
-                            UserHistoryModel.ACTION_SLUG_ENUM.USER_REWARD,
-                            UserHistoryModel.ACTION_NAME_ENUM.USER_REWARD,
-                            "Trúng " + helper.numberformat(updateReward) + "đ vé Loto 5 Số " + orderData.ticketId + "."
-                        );
                     }
 
                 };
@@ -777,12 +741,6 @@ const updateResultLoto = async (game: string, data: any) => {
                                 LotteryNotifyModel.NOTIFY_SLUG_ENUM.LOTO234,
                                 LotteryNotifyModel.NOTIFY_NAME_ENUM.LOTO234,
                                 "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + item.ticketId + "."
-                            );
-                            UserHistoryAdd(
-                                item.userId,
-                                UserHistoryModel.ACTION_SLUG_ENUM.USER_REWARD,
-                                UserHistoryModel.ACTION_NAME_ENUM.USER_REWARD,
-                                "Trúng " + helper.numberformat(updateReward) + "đ vé Loto 2 Cặp Số " + item.ticketId + "."
                             );
                         }
 
@@ -878,12 +836,6 @@ const updateResultLoto = async (game: string, data: any) => {
                                 LotteryNotifyModel.NOTIFY_SLUG_ENUM.LOTO234,
                                 LotteryNotifyModel.NOTIFY_NAME_ENUM.LOTO234,
                                 "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + item.ticketId + "."
-                            );
-                            UserHistoryAdd(
-                                item.userId,
-                                UserHistoryModel.ACTION_SLUG_ENUM.USER_REWARD,
-                                UserHistoryModel.ACTION_NAME_ENUM.USER_REWARD,
-                                "Trúng " + helper.numberformat(updateReward) + "đ vé Loto 3 Cặp Số " + item.ticketId + "."
                             );
                         }
                     } catch (err) {
@@ -1013,12 +965,6 @@ const updateResultLoto = async (game: string, data: any) => {
                                 LotteryNotifyModel.NOTIFY_SLUG_ENUM.LOTO234,
                                 LotteryNotifyModel.NOTIFY_NAME_ENUM.LOTO234,
                                 "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + item.ticketId + "."
-                            );
-                            UserHistoryAdd(
-                                item.userId,
-                                UserHistoryModel.ACTION_SLUG_ENUM.USER_REWARD,
-                                UserHistoryModel.ACTION_NAME_ENUM.USER_REWARD,
-                                "Trúng " + helper.numberformat(updateReward) + "đ vé Loto 4 Cặp Số " + item.ticketId + "."
                             );
                         }
                     } catch (err) {

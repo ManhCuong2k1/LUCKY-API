@@ -82,12 +82,6 @@ const updateResult = async (game: string, data: any) => {
                                         LotteryNotifyModel.NOTIFY_NAME_ENUM.KENO,
                                         "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + "."
                                     );
-                                    UserHistoryAdd(
-                                        orderData.userId,
-                                        UserHistoryModel.ACTION_SLUG_ENUM.USER_REWARD,
-                                        UserHistoryModel.ACTION_NAME_ENUM.USER_REWARD,
-                                        "Trúng " + helper.numberformat(updateReward) + "đ vé Keno " + orderData.ticketId + "."
-                                    );
                                 }
                             } catch (error) {
                                 console.log(error.message);
@@ -186,12 +180,6 @@ const updateResult = async (game: string, data: any) => {
                                         LotteryNotifyModel.NOTIFY_SLUG_ENUM.KENO,
                                         LotteryNotifyModel.NOTIFY_NAME_ENUM.KENO,
                                         "Bạn đã trúng " + helper.numberformat(updateRewardChanLe) + "đ vé " + orderData.ticketId + "."
-                                    );
-                                    await UserHistoryAdd(
-                                        orderData.userId,
-                                        UserHistoryModel.ACTION_SLUG_ENUM.USER_REWARD,
-                                        UserHistoryModel.ACTION_NAME_ENUM.USER_REWARD,
-                                        "Trúng " + helper.numberformat(updateRewardChanLe) + "đ vé Keno " + orderData.ticketId + "."
                                     );
                                 }
                             } catch (error) {
@@ -308,12 +296,6 @@ const updateResult = async (game: string, data: any) => {
                             LotteryNotifyModel.NOTIFY_NAME_ENUM.POWER,
                             "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + "."
                         );
-                        await UserHistoryAdd(
-                            orderData.userId,
-                            UserHistoryModel.ACTION_SLUG_ENUM.USER_REWARD,
-                            UserHistoryModel.ACTION_NAME_ENUM.USER_REWARD,
-                            "Trúng " + helper.numberformat(updateReward) + "đ vé Power " + orderData.ticketId + "."
-                        );
                     }
 
                 };
@@ -424,12 +406,6 @@ const updateResult = async (game: string, data: any) => {
                             LotteryNotifyModel.NOTIFY_SLUG_ENUM.MEGA,
                             LotteryNotifyModel.NOTIFY_NAME_ENUM.MEGA,
                             "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + "."
-                        );
-                        await UserHistoryAdd(
-                            orderData.userId,
-                            UserHistoryModel.ACTION_SLUG_ENUM.USER_REWARD,
-                            UserHistoryModel.ACTION_NAME_ENUM.USER_REWARD,
-                            "Trúng " + helper.numberformat(updateReward) + "đ vé Mega " + orderData.ticketId + "."
                         );
                     }
 
@@ -563,12 +539,6 @@ const updateResult = async (game: string, data: any) => {
                             LotteryNotifyModel.NOTIFY_SLUG_ENUM.MAX3D,
                             LotteryNotifyModel.NOTIFY_NAME_ENUM.MAX3D,
                             "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + "."
-                        );
-                        await UserHistoryAdd(
-                            orderData.userId,
-                            UserHistoryModel.ACTION_SLUG_ENUM.USER_REWARD,
-                            UserHistoryModel.ACTION_NAME_ENUM.USER_REWARD,
-                            "Trúng " + helper.numberformat(updateReward) + "đ vé Max3D " + orderData.ticketId + "."
                         );
                     }
 
@@ -823,12 +793,6 @@ const updateResult = async (game: string, data: any) => {
                             LotteryNotifyModel.NOTIFY_NAME_ENUM.MAX3DPLUS,
                             "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + "."
                         );
-                        await UserHistoryAdd(
-                            orderData.userId,
-                            UserHistoryModel.ACTION_SLUG_ENUM.USER_REWARD,
-                            UserHistoryModel.ACTION_NAME_ENUM.USER_REWARD,
-                            "Trúng " + helper.numberformat(updateReward) + "đ vé Max3D Plus " + orderData.ticketId + "."
-                        );
                     }
 
 
@@ -992,12 +956,6 @@ const updateResult = async (game: string, data: any) => {
                                         LotteryNotifyModel.NOTIFY_SLUG_ENUM.MAX4D,
                                         LotteryNotifyModel.NOTIFY_NAME_ENUM.MAX4D,
                                         "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + "."
-                                    );
-                                    await UserHistoryAdd(
-                                        orderData.userId,
-                                        UserHistoryModel.ACTION_SLUG_ENUM.USER_REWARD,
-                                        UserHistoryModel.ACTION_NAME_ENUM.USER_REWARD,
-                                        "Trúng " + helper.numberformat(updateReward) + "đ vé Max4D " + orderData.ticketId + "."
                                     );
                                 }
 
