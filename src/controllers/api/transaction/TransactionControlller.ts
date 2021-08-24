@@ -155,7 +155,7 @@ router.post("/endpoint/:type", async (req: Request, res: Response) => {
                             dbTransaction.detail = LotteryRechargeModel.DETAIL_ENUM.SUCCESS;
                             await dbTransaction.save();
                             await dbTransaction.reload();
-                            res.send(`<meta name="viewport" content="width=device-width, initial-scale=1.0"><center>Nạp tiền thành công. vui lòng quay trở lại App!</h1></center>`);
+                            res.send("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><center>Nạp tiền thành công. vui lòng quay trở lại App!</h1></center>");
                         } else {
                             res.json({
                                 status: false, message: "This transaction has been processed before"
@@ -271,7 +271,7 @@ router.get("/endpoint/:type", async (req: Request, res: Response) => {
                         }
 
                     } else {
-                        res.send(`<meta name="viewport" content="width=device-width, initial-scale=1.0"><center>Yêu cầu nạp tiền này đã được xử lý!</h1></center>`);
+                        res.send("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><center>Yêu cầu nạp tiền này đã được xử lý!</h1></center>");
                     }
 
                 } else {

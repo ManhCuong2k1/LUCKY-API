@@ -293,22 +293,6 @@ const updateResult = async (game: string, data: any) => {
 
                         let reward = LotteryHelper.getRewardMega(arrBet.length, checkSame.length);
                 
-                        // switch(orderDetail.level) {
-                        //     case 5:
-                        //         if(updateReward >= 390000000) updateReward = 390000000; 
-                        //     break;
-                        //     case 5:
-                        //         if(updateReward >= 390000000) updateReward = 390000000; 
-                        //     break;
-                        //     case 5:
-                        //         if(updateReward >= 390000000) updateReward = 390000000; 
-                        //     break;
-                        //     case 5:
-                        //         if(updateReward >= 390000000) updateReward = 390000000; 
-                        //     break;
-                        // }
-
-
                         reward = reward * (i.price / 10000);
 
                         dataUpdate["data"].push({
@@ -320,9 +304,47 @@ const updateResult = async (game: string, data: any) => {
                             isWin = true;
                             updateReward = updateReward + reward;
                         }
-                    };
 
-                    if(updateReward >= 12000000000) updateReward = 12000000000; 
+                        switch(orderDetail.level) {
+                            case 5:
+                                if(updateReward >= 390000000) updateReward = 390000000; 
+                            break;
+                            case 6:
+                                if(updateReward >= 12000000000) updateReward = 12000000000; 
+                            break;
+                            case 7:
+                                if(updateReward >= 60000000) updateReward = 60000000; 
+                            break;
+                            case 8:
+                                if(updateReward >= 124000000) updateReward = 124000000; 
+                            break;
+                            case 9:
+                                if(updateReward >= 194100000) updateReward = 194100000; 
+                            break;
+                            case 10:
+                                if(updateReward >= 269400000) updateReward = 269400000; 
+                            break;
+                            case 11:
+                                if(updateReward >= 351000000) updateReward = 351000000; 
+                            break;
+                            case 12:
+                                if(updateReward >= 439500000) updateReward = 439500000; 
+                            break;
+                            case 13:
+                                if(updateReward >= 535500000) updateReward = 535500000; 
+                            break;
+                            case 14:
+                                if(updateReward >= 639600000) updateReward = 639600000; 
+                            break;
+                            case 15:
+                                if(updateReward >= 752400000) updateReward = 752400000; 
+                            break;
+                            case 18:
+                                if(updateReward >= 390000000) updateReward = 1149000000; 
+                            break;
+                        }
+
+                    };
 
                     if (isWin) await SymtemSetReward(orderData.id, orderData.userId, updateReward);
                     await UpdateTicketReward(orderData.ticketId, updateReward); // cộng vào tổng thưởng của ticket  
