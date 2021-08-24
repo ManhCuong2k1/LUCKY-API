@@ -9,7 +9,7 @@ const PushNotify = async (to: string, title: string, body: string) => {
         "notification": {
             "title": title,
             "body": body,
-            "sound": "camel.caf"
+            "sound": "default"
         }
     });
 
@@ -22,6 +22,8 @@ const PushNotify = async (to: string, title: string, body: string) => {
         },
         data: data
     });
+
+    console.log(sendNotity);
 
     return sendNotity;
 };

@@ -76,7 +76,7 @@ router.post("/", auth, async (req: Request, res: Response) => {
                 vnpayService.amount = Number(transaction.amount.toString());
                 vnpayService.ipAccess = "118.71.10.19";
                 vnpayService.bankCode = req.body.bankcode;
-                vnpayService.orderId = process.env.MOMO_PREFIX_TRANSACTION + makeTransactionVnpay.id.toString();
+                vnpayService.orderId = process.env.VNP_PREFIX_TRANSACTION + makeTransactionVnpay.id.toString();
                 vnpayService.orderType = "billpayment"; // giữ nguyên
                 vnpayService.orderInfo = "naptien";
                 const postTransactionVnpay = await vnpayService.makePayment();
@@ -155,7 +155,7 @@ router.post("/endpoint/:type", async (req: Request, res: Response) => {
                             dbTransaction.detail = LotteryRechargeModel.DETAIL_ENUM.SUCCESS;
                             await dbTransaction.save();
                             await dbTransaction.reload();
-                            res.send("Nạp tiền thành công. vui lòng quay trở lại App!");
+                            res.send(`<meta name="viewport" content="width=device-width, initial-scale=1.0"><center>Nạp tiền thành công. vui lòng quay trở lại App!</h1></center>`);
                         } else {
                             res.json({
                                 status: false, message: "This transaction has been processed before"
@@ -236,7 +236,7 @@ router.get("/endpoint/:type", async (req: Request, res: Response) => {
 
                 if (typeof transaction.vnp_TxnRef !== "undefined" && typeof transaction.vnp_TransactionNo !== "undefined") {
 
-                    const idRecharge = transaction.vnp_TxnRef.split(process.env.MOMO_PREFIX_TRANSACTION)[1];
+                    const idRecharge = transaction.vnp_TxnRef.split(process.env.VNP_PREFIX_TRANSACTION)[1];
 
                     const dbTransaction = await LotteryRechargeModel.findOne({
                         where: {
@@ -271,9 +271,7 @@ router.get("/endpoint/:type", async (req: Request, res: Response) => {
                         }
 
                     } else {
-                        res.json({
-                            status: false, message: "This transaction has been processed before!"
-                        });
+                        res.send(`<meta name="viewport" content="width=device-width, initial-scale=1.0"><center>Yêu cầu nạp tiền này đã được xử lý!</h1></center>`);
                     }
 
                 } else {

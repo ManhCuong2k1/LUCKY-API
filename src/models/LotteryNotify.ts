@@ -1,5 +1,8 @@
 import { DataTypes, Model} from "sequelize";
 import sequelize from "@database/connection";
+import { UserModel } from "@models/User";
+import SendNotify from "@util/push-notify";
+
 
 interface LotteryNotifyInterface {
     id: number;
@@ -98,6 +101,12 @@ LotteryNotifyModel.init(UserHistoryDefine, {
     sequelize,
 });
 
+const PushNotify = async (userId: number, title: string, body: string) => {
+    const user = await UserModel.findByPk(userId);
+    if(!user) throw new Error("User not found");
+    await SendNotify(user.fcmtoken, title, body);
+};
+
 
 const UserNotifyAdd = async (userId: number, notifySlug: string, notifyName: string, detail: string) => {
     const dataAction: any = {
@@ -134,6 +143,7 @@ const GetUserNotify = async (userId: number, limit: number) => {
 export {
     LotteryNotifyInterface,
     LotteryNotifyModel,
+    PushNotify,
     UserNotifyAdd,
     GetUserNotify
 };
