@@ -77,7 +77,7 @@ router.post("/", auth, async (req: Request, res: Response) => {
                 vnpayService.ipAccess = "118.71.10.19";
                 vnpayService.bankCode = req.body.bankcode;
                 vnpayService.orderId = process.env.MOMO_PREFIX_TRANSACTION + makeTransactionVnpay.id.toString();
-                vnpayService.orderType = "250000"; // giữ nguyên
+                vnpayService.orderType = "billpayment"; // giữ nguyên
                 vnpayService.orderInfo = "naptien";
                 const postTransactionVnpay = await vnpayService.makePayment();
 

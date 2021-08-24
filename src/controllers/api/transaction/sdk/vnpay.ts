@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import querystring from "qs";
-import sha256 from "sha256";
+import crypto from "crypto";  
 import dateformat from "dateformat";
 
 dotenv.config();
@@ -30,7 +30,7 @@ class VnpPayment {
 
   public async makePayment() {
     let VNP_PARAMS: any = {};
-    VNP_PARAMS["vnp_Version"] = "2";
+    VNP_PARAMS["vnp_Version"] = "2.1.0";
     VNP_PARAMS["vnp_Command"] = "pay";
     VNP_PARAMS["vnp_TmnCode"] = process.env.VNP_TMNCODE;
     // VNP_PARAMS['vnp_Merchant'] = ''
@@ -45,11 +45,11 @@ class VnpPayment {
     VNP_PARAMS["vnp_CreateDate"] = this.createDate;
     VNP_PARAMS["vnp_BankCode"] = this.bankCode;
     VNP_PARAMS = this.sortObject(VNP_PARAMS);
-    const signData = process.env.VNP_HASHSCRET + querystring.stringify(VNP_PARAMS, { encode: false });
-    const secureHash = sha256(signData);
-    VNP_PARAMS["vnp_SecureHashType"] = "SHA256";
-    VNP_PARAMS["vnp_SecureHash"] = secureHash;
-    this.vnpUrl += "?" + querystring.stringify(VNP_PARAMS, { encode: true });
+    const signData = querystring.stringify(VNP_PARAMS, { encode: false });
+    const hmac = crypto.createHmac("sha512", process.env.VNP_HASHSCRET);
+    const signed = hmac.update(new Buffer(signData, "utf-8")).digest("hex"); 
+    VNP_PARAMS["vnp_SecureHash"] = signed;
+    this.vnpUrl += "?" + querystring.stringify(VNP_PARAMS, { encode: false });
     return this.vnpUrl;
   }
 
@@ -59,12 +59,12 @@ class VnpPayment {
     const a = [];
     for (key in o) {
       if (o.hasOwnProperty(key)) {
-        a.push(key);
+        a.push(encodeURIComponent(key));
       }
     }
     a.sort();
     for (key = 0; key < a.length; key++) {
-      sorted[a[key]] = o[a[key]];
+      sorted[a[key]] = encodeURIComponent(o[a[key]]).replace(/%20/g, "+");
     }
     return sorted;
   }
