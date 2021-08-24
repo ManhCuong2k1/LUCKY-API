@@ -237,17 +237,21 @@ router.post("/", async (req: Request, res: Response) => {
 
             case "loto234":
 
-                const currentTimeLoto234 = helper.getTime(helper.timeStamp());
-                const isActiveOrderLoto234 = (currentTimeLoto234.getHours() != 18) ? true : false;
+                const currentTimeLoto234: any = moment();
+                currentTimeLoto234.set("hour", 18);
+                currentTimeLoto234.set("minute", 30);
+                currentTimeLoto234.set("second", 0);
+                currentTimeLoto234.set("millisecond", 0);
+                const nowtimeLoto234: any = moment();
+                const isActiveOrderLoto234 = (nowtimeLoto234.format("H") != 18) ? true : false;
 
                 if (isActiveOrderLoto234) { // kiểm tra đơn hàng có thể order trong thời gian cho phép hay không
 
-                    let timeOrder: any = helper.timeStamp();
-
-                    if (currentTimeLoto234.getHours() >= 19) {
-                        timeOrder = helper.addMinuteToTime(helper.timeConverter(timeOrder), 1440); // add 1 day
+                    let timeOrder: any = moment();
+                    if (currentTimeLoto234.format("H") >= 19) {
+                        timeOrder = currentTimeLoto234.add(1, "d");
                     } else {
-                        timeOrder = helper.timeConverter(timeOrder);
+                        timeOrder = currentTimeLoto234;
                     }
 
                     let roundOrder: any = helper.timeConverterNoChar(timeOrder);// gán round hiện tại = ngày hôm nay
@@ -289,9 +293,9 @@ router.post("/", async (req: Request, res: Response) => {
                         // order
                         for (let i = 1; i <= Number(body.preriod); i++) {
 
-                            if (isFirst == false) {
-                                timeOrder = helper.addMinuteToTime(timeOrder, 1440);
-                                roundOrder = helper.timeConverterNoChar(timeOrder);
+                            if(i != 1) {
+                                timeOrder = timeOrder.add(1, "d");
+                                roundOrder = moment(timeOrder).format("YYYYMMDD");
                             }
 
                             dataImport = {
@@ -305,8 +309,8 @@ router.post("/", async (req: Request, res: Response) => {
                                     totalprice: orderPrice
                                 }),
                                 orderStatus: LotteryOrdersModel.ORDERSTATUS_ENUM.DELAY,
-                                resultStatus: LotteryOrdersModel.RESULTSTATUS_ENUM.DELAY + " " + helper.getDate(timeOrder) + " 18:15:0",
-                                finishTime: helper.getDate(timeOrder) + " 18:15:0",
+                                resultStatus: LotteryOrdersModel.RESULTSTATUS_ENUM.DELAY + " " + moment(timeOrder).format("YYYY-MM-DD 18:15:00"),
+                                finishTime: moment(timeOrder).format("YYYY-MM-DD 18:15:00"),
                                 moreDetail: "Đại lý giữ hộ vé"
                             };
 
@@ -406,7 +410,7 @@ router.post("/", async (req: Request, res: Response) => {
                                     totalprice: orderPrice
                                 }),
                                 orderStatus: LotteryOrdersModel.ORDERSTATUS_ENUM.DELAY,
-                                resultStatus: moment(timeOrder).format("YYYY-MM-DD 18:15:00"),
+                                resultStatus: LotteryOrdersModel.RESULTSTATUS_ENUM.DELAY + " " + moment(timeOrder).format("YYYY-MM-DD 18:15:00"),
                                 finishTime: moment(timeOrder).format("YYYY-MM-DD 18:15:00"),
                                 moreDetail: "Đại lý giữ hộ vé"
                             };

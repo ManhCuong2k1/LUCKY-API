@@ -2,7 +2,7 @@ import helper from "@controllers/api/helper/helper";
 import { LotteryOrdersModel, SymtemSetReward } from "@models/LotteryOrder";
 import { UpdateTicketReward } from "@models/LotteryTicket";
 import { UserHistoryModel, UserHistoryAdd } from "@models/LotteryUserHistory";
-import { LotteryNotifyModel, UserNotifyAdd } from "@models/LotteryNotify";
+import { LotteryNotifyModel, UserNotifyAdd, PushNotify } from "@models/LotteryNotify";
 import { LotteryResultsModel } from "@models/LotteryResults";
 import LotteryHelper from "./helper";
 
@@ -59,6 +59,11 @@ const updateResult = async (game: string, data: any) => {
                                 }
 
                                 if (isWin) await SymtemSetReward(orderData.id, orderData.userId, updateReward);
+                                if (isWin) await PushNotify(
+                                    orderData.userId, 
+                                    "Thông Báo Trúng Thưởng", 
+                                    "Bạn vừa trúng " + helper.numberformat(updateReward) + "đ vé Keno #" + orderData.ticketId + "."
+                                    );
                                 await UpdateTicketReward(orderData.ticketId, updateReward); // cộng vào tổng thưởng của ticket
 
                                 dataUpdate.result.iswin = isWin, dataUpdate.result.totalreward = updateReward;
@@ -159,6 +164,11 @@ const updateResult = async (game: string, data: any) => {
                                 }
 
                                 if (isWinChanLe) await SymtemSetReward(orderData.id, orderData.userId, updateRewardChanLe);
+                                if (isWinChanLe) await PushNotify(
+                                    orderData.userId, 
+                                    "Thông Báo Trúng Thưởng", 
+                                    "Bạn vừa trúng " + helper.numberformat(updateRewardChanLe) + "đ vé Keno #" + orderData.ticketId + "."
+                                    );
                                 await UpdateTicketReward(orderData.ticketId, updateRewardChanLe); // cộng vào tổng thưởng của ticket
 
                                 dataUpdateChanLe.result.iswin = isWinChanLe, dataUpdateChanLe.result.totalreward = updateRewardChanLe;
@@ -275,6 +285,11 @@ const updateResult = async (game: string, data: any) => {
                     };
 
                     if (isWin) await SymtemSetReward(orderData.id, orderData.userId, updateReward);
+                    if (isWin) await PushNotify(
+                        orderData.userId, 
+                        "Thông Báo Trúng Thưởng", 
+                        "Bạn vừa trúng " + helper.numberformat(updateReward) + "đ vé Power #" + orderData.ticketId + "."
+                        );
                     await UpdateTicketReward(orderData.ticketId, updateReward); // cộng vào tổng thưởng của ticket  
 
                     dataUpdate.result.iswin = isWin, dataUpdate.result.totalreward = updateReward;
@@ -387,6 +402,11 @@ const updateResult = async (game: string, data: any) => {
                     };
 
                     if (isWin) await SymtemSetReward(orderData.id, orderData.userId, updateReward);
+                    if (isWin) await PushNotify(
+                        orderData.userId, 
+                        "Thông Báo Trúng Thưởng", 
+                        "Bạn vừa trúng " + helper.numberformat(updateReward) + "đ vé Mega #" + orderData.ticketId + "."
+                        );
                     await UpdateTicketReward(orderData.ticketId, updateReward); // cộng vào tổng thưởng của ticket  
 
                     dataUpdate.result.iswin = isWin, dataUpdate.result.totalreward = updateReward;
@@ -520,6 +540,11 @@ const updateResult = async (game: string, data: any) => {
 
 
                     if (isWin) await SymtemSetReward(orderData.id, orderData.userId, updateReward);
+                    if (isWin) await PushNotify(
+                        orderData.userId, 
+                        "Thông Báo Trúng Thưởng", 
+                        "Bạn vừa trúng " + helper.numberformat(updateReward) + "đ vé Max3D #" + orderData.ticketId + "."
+                        );
                     await UpdateTicketReward(orderData.ticketId, updateReward); // cộng vào tổng thưởng của ticket  
 
 
@@ -775,6 +800,11 @@ const updateResult = async (game: string, data: any) => {
                     };
 
                     if (isWin) await SymtemSetReward(orderData.id, orderData.userId, updateReward);
+                    if (isWin) await PushNotify(
+                        orderData.userId, 
+                        "Thông Báo Trúng Thưởng", 
+                        "Bạn vừa trúng " + helper.numberformat(updateReward) + "đ vé Max3DPlus #" + orderData.ticketId + "."
+                        );
                     await UpdateTicketReward(orderData.ticketId, updateReward); // cộng vào tổng thưởng của ticket  
 
                     dataUpdate.result.iswin = isWin, dataUpdate.result.totalreward = updateReward;
@@ -939,6 +969,11 @@ const updateResult = async (game: string, data: any) => {
                                 }
 
                                 if (isWin) await SymtemSetReward(orderData.id, orderData.userId, updateReward);
+                                if (isWin) await PushNotify(
+                                    orderData.userId, 
+                                    "Thông Báo Trúng Thưởng", 
+                                    "Bạn vừa trúng " + helper.numberformat(updateReward) + "đ vé Max4D #" + orderData.ticketId + "."
+                                    );
                                 await UpdateTicketReward(orderData.ticketId, updateReward); // cộng vào tổng thưởng của ticket 
 
 

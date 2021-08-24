@@ -2,7 +2,7 @@ import helper from "@controllers/api/helper/helper";
 import { LotteryOrdersModel, SymtemSetReward } from "@models/LotteryOrder";
 import { UpdateTicketReward } from "@models/LotteryTicket";
 import { UserHistoryModel, UserHistoryAdd } from "@models/LotteryUserHistory";
-import { LotteryNotifyModel, UserNotifyAdd } from "@models/LotteryNotify";
+import { LotteryNotifyModel, PushNotify, UserNotifyAdd } from "@models/LotteryNotify";
 import { LotteryResultsModel } from "@models/LotteryResults";
 import LotteryHelper from "./helper";
 
@@ -101,6 +101,11 @@ const updateResultLoto = async (game: string, data: any) => {
                     }
 
                     if (isWin) await SymtemSetReward(orderData.id, orderData.userId, updateReward);
+                    if (isWin) await PushNotify(
+                        orderData.userId, 
+                        "Thông Báo Trúng Thưởng", 
+                        "Bạn vừa trúng " + helper.numberformat(updateReward) + "đ vé Kiến Thiết #" + orderData.ticketId + "."
+                        );
                     await UpdateTicketReward(orderData.ticketId, updateReward); // cộng vào tổng thưởng của ticket
                     dataUpdate.result.iswin = isWin, dataUpdate.result.totalreward = updateReward;
 
@@ -171,6 +176,11 @@ const updateResultLoto = async (game: string, data: any) => {
                     }
 
                     if (isWin) await SymtemSetReward(orderData.id, orderData.userId, updateReward);
+                    if (isWin) await PushNotify(
+                        orderData.userId, 
+                        "Thông Báo Trúng Thưởng", 
+                        "Bạn vừa trúng " + helper.numberformat(updateReward) + "đ vé Điện Toán 6x36 #" + orderData.ticketId + "."
+                        );
                     await UpdateTicketReward(orderData.ticketId, updateReward); // cộng vào tổng thưởng của ticket
 
                     dataUpdate.result.iswin = isWin, dataUpdate.result.totalreward = updateReward;
@@ -274,6 +284,11 @@ const updateResultLoto = async (game: string, data: any) => {
                     }
 
                     if (isWin) await SymtemSetReward(orderData.id, orderData.userId, updateReward);
+                    if (isWin) await PushNotify(
+                        orderData.userId, 
+                        "Thông Báo Trúng Thưởng", 
+                        "Bạn vừa trúng " + helper.numberformat(updateReward) + "đ vé Điện Toán 123 #" + orderData.ticketId + "."
+                        );
                     await UpdateTicketReward(orderData.ticketId, updateReward); // cộng vào tổng thưởng của ticket
                     dataUpdate.result.iswin = isWin, dataUpdate.result.totalreward = updateReward;
 
@@ -376,6 +391,11 @@ const updateResultLoto = async (game: string, data: any) => {
                     }
 
                     if (isWin) await SymtemSetReward(orderData.id, orderData.userId, updateReward);
+                    if (isWin) await PushNotify(
+                        orderData.userId, 
+                        "Thông Báo Trúng Thưởng", 
+                        "Bạn vừa trúng " + helper.numberformat(updateReward) + "đ vé Loto 2 Số #" + orderData.ticketId + "."
+                        );
                     await UpdateTicketReward(orderData.ticketId, updateReward); // cộng vào tổng thưởng của ticket
                     dataUpdate.result.iswin = isWin, dataUpdate.result.totalreward = updateReward;
                     const orderUpdate = await LotteryOrdersModel.findOne({ where: { id: orderData.id } });
@@ -505,6 +525,11 @@ const updateResultLoto = async (game: string, data: any) => {
 
 
                     if (isWin) await SymtemSetReward(orderData.id, orderData.userId, updateReward);
+                    if (isWin) await PushNotify(
+                        orderData.userId, 
+                        "Thông Báo Trúng Thưởng", 
+                        "Bạn vừa trúng " + helper.numberformat(updateReward) + "đ vé Loto 3 Số #" + orderData.ticketId + "."
+                        );
                     await UpdateTicketReward(orderData.ticketId, updateReward); // cộng vào tổng thưởng của ticket
                     dataUpdate.result.iswin = isWin, dataUpdate.result.totalreward = updateReward;
                     const orderUpdate = await LotteryOrdersModel.findOne({ where: { id: orderData.id } });
@@ -645,6 +670,11 @@ const updateResultLoto = async (game: string, data: any) => {
                     }
 
                     if (isWin) await SymtemSetReward(orderData.id, orderData.userId, updateReward);
+                    if (isWin) await PushNotify(
+                        orderData.userId, 
+                        "Thông Báo Trúng Thưởng", 
+                        "Bạn vừa trúng " + helper.numberformat(updateReward) + "đ vé Loto 5 Số #" + orderData.ticketId + "."
+                        );
                     await UpdateTicketReward(orderData.ticketId, updateReward); // cộng vào tổng thưởng của ticket
                     dataUpdate.result.iswin = isWin, dataUpdate.result.totalreward = updateReward;
                     const orderUpdate = await LotteryOrdersModel.findOne({ where: { id: orderData.id } });
@@ -727,6 +757,11 @@ const updateResultLoto = async (game: string, data: any) => {
                         }
 
                         if (isWin) await SymtemSetReward(item.id, item.userId, updateReward);
+                        if (isWin) await PushNotify(
+                            item.userId, 
+                            "Thông Báo Trúng Thưởng", 
+                            "Bạn vừa trúng " + helper.numberformat(updateReward) + "đ vé Loto234  #" + item.ticketId + "."
+                            );
                         await UpdateTicketReward(item.ticketId, updateReward); // cộng vào tổng thưởng của ticket
                         dataUpdate.result.iswin = isWin, dataUpdate.result.totalreward = updateReward;
                         const orderUpdate = await LotteryOrdersModel.findOne({ where: { id: item.id } });
@@ -823,6 +858,11 @@ const updateResultLoto = async (game: string, data: any) => {
                         }
 
                         if (isWin) await SymtemSetReward(item.id, item.userId, updateReward);
+                        if (isWin) await PushNotify(
+                            item.userId, 
+                            "Thông Báo Trúng Thưởng", 
+                            "Bạn vừa trúng " + helper.numberformat(updateReward) + "đ vé Loto234  #" + item.ticketId + "."
+                            );
                         await UpdateTicketReward(item.ticketId, updateReward); // cộng vào tổng thưởng của ticket
                         dataUpdate.result.iswin = isWin, dataUpdate.result.totalreward = updateReward;
                         const orderUpdate = await LotteryOrdersModel.findOne({ where: { id: item.id } });
@@ -953,6 +993,11 @@ const updateResultLoto = async (game: string, data: any) => {
                         }
 
                         if (isWin) await SymtemSetReward(item.id, item.userId, updateReward);
+                        if (isWin) await PushNotify(
+                            item.userId, 
+                            "Thông Báo Trúng Thưởng", 
+                            "Bạn vừa trúng " + helper.numberformat(updateReward) + "đ vé Loto234  #" + item.ticketId + "."
+                            );
                         await UpdateTicketReward(item.ticketId, updateReward); // cộng vào tổng thưởng của ticket
                         dataUpdate.result.iswin = isWin, dataUpdate.result.totalreward = updateReward;
                         const orderUpdate = await LotteryOrdersModel.findOne({ where: { id: item.id } });
