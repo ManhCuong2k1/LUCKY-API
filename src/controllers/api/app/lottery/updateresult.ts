@@ -232,6 +232,46 @@ const updateResult = async (game: string, data: any) => {
                             isWin = true;
                             updateReward = updateReward + reward;
                         }
+
+                        switch(orderDetail.level) {
+                            case 5:
+                                if(updateReward >= 240000000) updateReward = 240000000; 
+                            break;
+                            case 6:
+                                if(updateReward >= 30000000000) updateReward = 30000000000; 
+                            break;
+                            case 7:
+                                if(updateReward >= 240000000) updateReward = 240000000; 
+                            break;
+                            case 8:
+                                if(updateReward >= 487500000) updateReward = 487500000; 
+                            break;
+                            case 9:
+                                if(updateReward >= 743500000) updateReward = 743500000; 
+                            break;
+                            case 10:
+                                if(updateReward >= 1009000000) updateReward = 1009000000; 
+                            break;
+                            case 11:
+                                if(updateReward >= 1285000000) updateReward = 1285000000; 
+                            break;
+                            case 12:
+                                if(updateReward >= 1572500000) updateReward = 1572500000; 
+                            break;
+                            case 13:
+                                if(updateReward >= 1872500000) updateReward = 1872500000; 
+                            break;
+                            case 14:
+                                if(updateReward >= 2186000000) updateReward = 2186000000; 
+                            break;
+                            case 15:
+                                if(updateReward >= 2514000000) updateReward = 2514000000; 
+                            break;
+                            case 18:
+                                if(updateReward >= 3595000000) updateReward = 3595000000; 
+                            break;
+                        }
+
                     };
 
                     if (isWin) await SymtemSetReward(orderData.id, orderData.userId, updateReward);
