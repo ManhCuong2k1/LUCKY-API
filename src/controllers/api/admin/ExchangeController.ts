@@ -27,7 +27,7 @@ router.get("/", async (req: Request, res: Response) => {
             fromDate && toDate ? { createdAt: { [Op.between]: [moment(fromDate).startOf("day"), moment(toDate).endOf("day")] } } : null
         );
         const whereUser: any = Object.assign({},
-            searchKey === null ? null : { phone: { [Op.like]: `%${searchKey.trim()}%` } },
+            searchKey === null ? null : { name: { [Op.like]: `%${searchKey.trim()}%` } },
             searchCardId === null ? null : { identify: { [Op.like]: `%${searchCardId.trim()}%` } },
         );
 
