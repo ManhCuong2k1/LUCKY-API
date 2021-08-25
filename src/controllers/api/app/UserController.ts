@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
 import { UserInterface, UserModel } from "@models/User";
 import { Sequelize } from "sequelize";
-import { GetUserNotify } from "@models/LotteryNotify";
+import { LotteryNotifyModel, GetUserNotify } from "@models/LotteryNotify";
 
 const router = Router();
 
@@ -69,6 +69,54 @@ router.get("/notify", async (req: Request, res: Response) => {
     }
 });
 
+
+router.put("/notify/:id", async (req: Request, res: Response) => {
+    try {
+        const user: any = req.user;
+
+        if(Object.keys(req.params.id).length) {
+            const id = req.params.id;
+            const notifyUser = await LotteryNotifyModel.findOne({
+                where: {
+                    id,
+                    userId: user.id
+                }
+            });
+
+            if(notifyUser == null || Object.keys(notifyUser).length == 0) {
+                res.json({
+                    status: false,
+                    message: "Notify not found ID "+ id
+                });
+            }else {
+
+                if(notifyUser.seen == LotteryNotifyModel.SEEN_ENUM.TRUE) { 
+                    res.json({
+                        status: false,
+                        message: "This notice has been updated before!"
+                    });
+                }else {
+                    notifyUser.seen = LotteryNotifyModel.SEEN_ENUM.TRUE;
+                    notifyUser.save();
+                    notifyUser.reload();
+                    res.json({
+                        status: true,
+                        message: "Update successful!"
+                    });
+                }
+            }
+        }else {
+            res.json({
+                status: false,
+                message: "Missing notify ID!"
+            });
+        }
+    }catch(e) {
+        res.status(400).send({
+            error: e.message
+        });
+    }
+});
 
 
 

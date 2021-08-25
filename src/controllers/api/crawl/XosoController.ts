@@ -448,7 +448,11 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                             }
                         }
                     } else {
-                        nextTimecompute636 = moment(new Date(moment().format("YYYY/MM/DD") + " 18:00")).tz("Asia/Ho_Chi_Minh").format("X");
+                        runTimecomputer636.set("hour", 18);
+                        runTimecomputer636.set("minute", 15);
+                        runTimecomputer636.set("second", 0);
+                        runTimecomputer636.set("millisecond", 0);
+                        nextTimecompute636 = moment(runTimecomputer636);
                     }
                 } else {
                     for (let loopTimecompute636 = 1; loopTimecompute636 <= 10; loopTimecompute636++) {

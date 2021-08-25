@@ -11,6 +11,7 @@ interface LotteryNotifyInterface {
     notifySlug: string;
     notifyName: string;
     detail: string;
+    seen: string;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -21,6 +22,7 @@ class LotteryNotifyModel extends Model<LotteryNotifyInterface> implements Lotter
     public notifySlug: string;
     public notifyName: string;
     public detail: string;
+    public seen: string;
     public createdAt: Date;
     public updatedAt: Date;
 
@@ -66,6 +68,10 @@ class LotteryNotifyModel extends Model<LotteryNotifyInterface> implements Lotter
         EXCHANGE_REWARD: "Đổi thưởng",
     };
 
+    static readonly SEEN_ENUM = {
+        TRUE: "true",
+        FALSE: "false"
+    }
 }
 
 const UserHistoryDefine = {
@@ -85,6 +91,10 @@ const UserHistoryDefine = {
     },
     detail: {
         type: DataTypes.STRING,
+    },
+    seen: {
+        type: DataTypes.STRING,
+        defaultValue: LotteryNotifyModel.SEEN_ENUM.FALSE
     },
     createdAt: {
         type: DataTypes.DATE,
@@ -191,6 +201,7 @@ const GetUserNotify = async (userId: number, limit: number) => {
             "notifySlug",
             "notifyName",
             "detail",
+            "seen",
             "createdAt"
         ],
         order: [["id", "DESC"]],

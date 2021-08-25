@@ -3,6 +3,8 @@ import errorHandler from "errorhandler";
 import app from "./app";
 import cron from "node-cron";
 import config from "./config";
+import moment from "moment-timezone";
+moment.tz.setDefault("Asia/Ho_Chi_Minh");
 import { 
     TaskKeno,
     TaskMegaPowerMax3dMax4d,
@@ -14,7 +16,7 @@ if (config.ENV === "production") {
     cron.schedule("0 * * * * *", async () => {
         try {
             await TaskKeno();
-            console.log("Task Done: KENO");
+            console.log("Task Done: KENO at " + moment().format("DD-MM-YYYY HH:mm:ss"));
         } catch (error) {
             console.log(error.message);
         }
@@ -22,11 +24,11 @@ if (config.ENV === "production") {
     cron.schedule("00 59 * * * *", async () => {
         try {
             await TaskXsmb();
-            console.log("Task Done: XSMB");
+            console.log("Task Done: XSMB at " + moment().format("DD-MM-YYYY HH:mm:ss"));
             await TaskCompute();
-            console.log("Task Done: COMPUTE123 - COMPUTER6x36");
+            console.log("Task Done: COMPUTE123 - COMPUTER6x36 at " + moment().format("DD-MM-YYYY HH:mm:ss"));
             await TaskMegaPowerMax3dMax4d();
-            console.log("Task Done: MEGA - POWER - MAX3D - MAX3D PLUS - MAX4D");
+            console.log("Task Done: MEGA - POWER - MAX3D - MAX3D PLUS - MAX4D at " + moment().format("DD-MM-YYYY HH:mm:ss"));
         } catch (error) {
             console.log(error.message);
         }
