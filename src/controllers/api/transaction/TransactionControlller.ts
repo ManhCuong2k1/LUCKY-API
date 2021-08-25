@@ -333,9 +333,13 @@ router.get("/callback/:type", async (req: Request, res: Response) => {
 
                         if (dbTransaction !== null) {
 
-                            if (dbTransaction.status == LotteryRechargeModel.STATUS_ENUM.UNPAID) {
 
-                                if (Number(dbTransaction.amount) * 100 == parseInt(transaction["vnp_Amount"])) {
+                            if (Number(dbTransaction.amount) * 100 == parseInt(transaction["vnp_Amount"])) {
+
+
+                                if (dbTransaction.status == LotteryRechargeModel.STATUS_ENUM.UNPAID) {
+
+
 
                                     if (transaction.vnp_ResponseCode == "00") {
 
@@ -366,23 +370,23 @@ router.get("/callback/:type", async (req: Request, res: Response) => {
                                         });
                                     }
 
-                                } else {
+
+                                } else if (dbTransaction.status == LotteryRechargeModel.STATUS_ENUM.PAID) {
                                     res.json({
-                                        Message: "Invalid amount",
-                                        RspCode: "04"
+                                        Message: "Order already confirmed",
+                                        RspCode: "02"
+                                    });
+                                } else if (dbTransaction.status == LotteryRechargeModel.STATUS_ENUM.ERROR) {
+                                    res.json({
+                                        Message: "Order already confirmed",
+                                        RspCode: "02"
                                     });
                                 }
 
-
-                            } else if (dbTransaction.status == LotteryRechargeModel.STATUS_ENUM.PAID) {
+                            } else {
                                 res.json({
-                                    Message: "Order already confirmed",
-                                    RspCode: "02"
-                                });
-                            } else if (dbTransaction.status == LotteryRechargeModel.STATUS_ENUM.ERROR) {
-                                res.json({
-                                    Message: "Order already confirmed",
-                                    RspCode: "02"
+                                    Message: "Invalid amount",
+                                    RspCode: "04"
                                 });
                             }
 
