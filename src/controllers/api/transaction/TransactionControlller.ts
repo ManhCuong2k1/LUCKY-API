@@ -335,10 +335,9 @@ router.get("/callback/:type", async (req: Request, res: Response) => {
 
                             if (dbTransaction.status == LotteryRechargeModel.STATUS_ENUM.UNPAID) {
 
-                                if (transaction.vnp_ResponseCode == "00") {
+                                if (Number(dbTransaction.amount) * 100 == parseInt(transaction["vnp_Amount"])) {
 
-                                    if (Number(dbTransaction.amount) * 100 == parseInt(transaction["vnp_Amount"])) {
-
+                                    if (transaction.vnp_ResponseCode == "00") {
 
                                         const UserData = await UserModel.findOne({ where: { id: dbTransaction.userId } });
                                         if (!UserData) throw new Error("Not found user");
@@ -357,22 +356,23 @@ router.get("/callback/:type", async (req: Request, res: Response) => {
                                         });
 
                                     } else {
+                                        dbTransaction.status = LotteryRechargeModel.STATUS_ENUM.ERROR;
+                                        dbTransaction.detail = LotteryRechargeModel.DETAIL_ENUM.ERROR;
+                                        await dbTransaction.save();
+                                        await dbTransaction.reload();
                                         res.json({
-                                            Message: "Invalid amount",
-                                            RspCode: "04"
+                                            Message: "Confirm Success",
+                                            RspCode: "00"
                                         });
                                     }
 
                                 } else {
-                                    dbTransaction.status = LotteryRechargeModel.STATUS_ENUM.ERROR;
-                                    dbTransaction.detail = LotteryRechargeModel.DETAIL_ENUM.ERROR;
-                                    await dbTransaction.save();
-                                    await dbTransaction.reload();
                                     res.json({
-                                        Message: "Confirm Success",
-                                        RspCode: "00"
+                                        Message: "Invalid amount",
+                                        RspCode: "04"
                                     });
                                 }
+
 
                             } else if (dbTransaction.status == LotteryRechargeModel.STATUS_ENUM.PAID) {
                                 res.json({
