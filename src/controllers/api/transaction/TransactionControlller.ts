@@ -336,30 +336,37 @@ router.get("/callback/:type", async (req: Request, res: Response) => {
                             
                             if(dbTransaction.status == LotteryRechargeModel.STATUS_ENUM.UNPAID) {
 
-                                if (transaction.vnp_ResponseCode == "00") {
-                                    const UserData = await UserModel.findOne({ where: { id: dbTransaction.userId } });
-                                    if (!UserData) throw new Error("Not found user");
-                                    const realCoin = Number(transaction.vnp_Amount) / 100;
-                                    UserData.totalCoin = UserData.totalCoin + realCoin;
-                                    await UserData.save();
-                                    await UserData.reload();
-                            
-                                    dbTransaction.status = LotteryRechargeModel.STATUS_ENUM.PAID;
-                                    dbTransaction.detail = LotteryRechargeModel.DETAIL_ENUM.SUCCESS;
-                                    await dbTransaction.save();
-                                    await dbTransaction.reload();
+                                if(dbTransaction.amount == Number(transaction.vnp_Amount)) {
+                                    if(transaction.vnp_ResponseCode == "00") {
+                                        const UserData = await UserModel.findOne({ where: { id: dbTransaction.userId } });
+                                        if (!UserData) throw new Error("Not found user");
+                                        const realCoin = Number(transaction.vnp_Amount) / 100;
+                                        UserData.totalCoin = UserData.totalCoin + realCoin;
+                                        await UserData.save();
+                                        await UserData.reload();
+                                
+                                        dbTransaction.status = LotteryRechargeModel.STATUS_ENUM.PAID;
+                                        dbTransaction.detail = LotteryRechargeModel.DETAIL_ENUM.SUCCESS;
+                                        await dbTransaction.save();
+                                        await dbTransaction.reload();
+                                        res.json({
+                                            Message: "Confirm Success",
+                                            RspCode: "00"
+                                        });
+                                    } else {
+                                        dbTransaction.status = LotteryRechargeModel.STATUS_ENUM.ERROR;
+                                        dbTransaction.detail = LotteryRechargeModel.DETAIL_ENUM.ERROR;
+                                        await dbTransaction.save();
+                                        await dbTransaction.reload();
+                                        res.json({
+                                            Message: "Confirm Success",
+                                            RspCode: "00"
+                                        });
+                                    }
+                                }else {
                                     res.json({
-                                        Message: "Confirm Success",
-                                        RspCode: "00"
-                                    });
-                                } else {
-                                    dbTransaction.status = LotteryRechargeModel.STATUS_ENUM.ERROR;
-                                    dbTransaction.detail = LotteryRechargeModel.DETAIL_ENUM.ERROR;
-                                    await dbTransaction.save();
-                                    await dbTransaction.reload();
-                                    res.json({
-                                        Message: "Confirm Success",
-                                        RspCode: "00"
+                                        Message: "Invalid amount",
+                                        RspCode: "04"
                                     });
                                 }
 
