@@ -294,16 +294,32 @@ router.get("/callback/:type", async (req: Request, res: Response) => {
 
                 if (typeof transaction.vnp_TxnRef !== "undefined" && typeof transaction.vnp_TransactionNo !== "undefined") {
 
-                    const secureHash = transaction['vnp_SecureHash'];
-                    delete transaction['vnp_SecureHash'];
-                    delete transaction['vnp_SecureHashType'];
+                    const sortObject = (o: any) => {
+                        const sorted: any = {};
+                        let key: any;
+                        const a = [];
+                        for (key in o) {
+                            if (o.hasOwnProperty(key)) {
+                                a.push(encodeURIComponent(key));
+                            }
+                        }
+                        a.sort();
+                        for (key = 0; key < a.length; key++) {
+                            sorted[a[key]] = encodeURIComponent(o[a[key]]).replace(/%20/g, "+");
+                        }
+                        return sorted;
+                    };
+
+                    const secureHash = transaction["vnp_SecureHash"];
+                    delete transaction["vnp_SecureHash"];
+                    delete transaction["vnp_SecureHashType"];
 
                     transaction = sortObject(transaction);
 
                     const secretKey = process.env.VNP_HASHSCRET;
                     const signData = querystring.stringify(transaction, { encode: false });
                     const hmac = crypto.createHmac("sha512", secretKey);
-                    const signed = hmac.update(new Buffer(signData, 'utf-8')).digest("hex");     
+                    const signed = hmac.update(new Buffer(signData, "utf-8")).digest("hex");     
 
                     if(secureHash === signed){
 
@@ -394,23 +410,6 @@ router.get("/callback/:type", async (req: Request, res: Response) => {
         sendError(res, 400, error.message, error);
     }
 });
-
-
-const sortObject = (o: any) => {
-    const sorted: any = {};
-    let key: any;
-    const a = [];
-    for (key in o) {
-        if (o.hasOwnProperty(key)) {
-            a.push(encodeURIComponent(key));
-        }
-    }
-    a.sort();
-    for (key = 0; key < a.length; key++) {
-        sorted[a[key]] = encodeURIComponent(o[a[key]]).replace(/%20/g, "+");
-    }
-    return sorted;
-}
 
 
 export default router;
