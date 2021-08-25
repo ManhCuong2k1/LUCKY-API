@@ -233,6 +233,9 @@ router.get("/endpoint/:type", async (req: Request, res: Response) => {
 
 
             case "vnpay":
+                
+                console.log(transaction);
+
 
                 if (typeof transaction.vnp_TxnRef !== "undefined" && typeof transaction.vnp_TransactionNo !== "undefined") {
 
