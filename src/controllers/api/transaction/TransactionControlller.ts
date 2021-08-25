@@ -422,7 +422,10 @@ router.get("/callback/:type", async (req: Request, res: Response) => {
         }
 
     } catch (error) {
-        sendError(res, 400, error.message, error);
+        res.json({
+            RspCode: "99",
+            Message: "Unknow error"
+        });
     }
 });
 
