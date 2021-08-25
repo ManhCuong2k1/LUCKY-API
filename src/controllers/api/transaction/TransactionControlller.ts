@@ -290,7 +290,6 @@ router.get("/callback/:type", async (req: Request, res: Response) => {
         switch (req.params.type) {
 
             case "vnpay":
-                console.log(transaction);
 
                 if (typeof transaction.vnp_TxnRef !== "undefined" && typeof transaction.vnp_TransactionNo !== "undefined") {
 
@@ -338,7 +337,8 @@ router.get("/callback/:type", async (req: Request, res: Response) => {
 
                                 if (transaction.vnp_ResponseCode == "00") {
 
-                                    if (Number(dbTransaction.amount) == parseInt(transaction["vnp_Amount"])) {
+                                    if (Number(dbTransaction.amount) * 100 == parseInt(transaction["vnp_Amount"])) {
+
 
                                         const UserData = await UserModel.findOne({ where: { id: dbTransaction.userId } });
                                         if (!UserData) throw new Error("Not found user");
