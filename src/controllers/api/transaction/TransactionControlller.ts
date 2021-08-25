@@ -336,7 +336,7 @@ router.get("/callback/:type", async (req: Request, res: Response) => {
                             
                             if(dbTransaction.status == LotteryRechargeModel.STATUS_ENUM.UNPAID) {
 
-                                if(dbTransaction.amount == Number(transaction.vnp_Amount)) {
+                                if(Number(dbTransaction.amount) == parseInt(transaction["vnp_Amount"])) {
                                     if(transaction.vnp_ResponseCode == "00") {
                                         const UserData = await UserModel.findOne({ where: { id: dbTransaction.userId } });
                                         if (!UserData) throw new Error("Not found user");
