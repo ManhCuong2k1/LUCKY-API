@@ -79,6 +79,7 @@ router.post("/orders", async (req: Request, res: Response) => {
 
         const isActiveOrder = (Number(moment().format("H")) < 16 || Number(moment().format("H")) >= 19) ? true : false;
 
+
         if (isActiveOrder) { // kiểm tra đơn hàng có thể order trong thời gian cho phép hay không
 
             let timeOrder: any = helper.timeStamp();

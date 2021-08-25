@@ -127,7 +127,7 @@ router.post("/", async (req: Request, res: Response) => {
 
                 if (isActiveOrder636) { // kiểm tra đơn hàng có thể order trong thời gian cho phép hay không
 
-                    let timeOrder: any = helper.timeStamp();
+                    let timeOrder: any = moment();
                     let totalPrice = 0;
                     let fee = Number(await getSettings("ticket_storage_fee"));
 

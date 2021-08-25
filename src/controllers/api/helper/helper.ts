@@ -1,4 +1,4 @@
-import moment from "moment";
+import moment from "moment-timezone";
 moment.tz.setDefault("Asia/Ho_Chi_Minh");
 
 
@@ -46,6 +46,27 @@ const getTimeData = (string: string) => {
     // format 2021/07/24 17:45:00
     return new Date(string);
 };
+
+
+const blockInPeriodTime = (startHour: number, startMinute: number, endHour:number) => {
+    try {
+      const hourCurrent:any = moment().format("H");
+      const minuteCurrent:any = moment().format("m");
+      
+      if(hourCurrent >= Number(startHour) && hourCurrent < Number(endHour)) {
+          if(hourCurrent == Number(startHour) && minuteCurrent < Number(startMinute)) {
+              return true; // cho
+          }else {
+              return false; // khoong cho
+          } 
+      }else {
+          return true; // cho
+      }
+    }catch (err) {
+      console.log(err.message);
+      return false;
+    }
+  };
 
 
 const countCharExits = (string: string, word: string) => {
@@ -171,6 +192,7 @@ export default {
     timeConverter,
     timeConverterNoChar,
     addMinuteToTime,
+    blockInPeriodTime,
     getTimeData,
     numberformat,
     checkItemExist,
