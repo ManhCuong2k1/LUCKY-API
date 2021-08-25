@@ -1,4 +1,7 @@
 import { Response, Request, Router } from "express";
+import querystring from "qs";
+import crypto from "crypto";  
+import dateformat from "dateformat";
 import { auth } from "@middleware/auth";
 import momo from "./sdk/momo";
 import vnpay from "./sdk/vnpay";
@@ -233,9 +236,6 @@ router.get("/endpoint/:type", async (req: Request, res: Response) => {
 
 
             case "vnpay":
-                
-                console.log(transaction);
-
 
                 if (typeof transaction.vnp_TxnRef !== "undefined" && typeof transaction.vnp_TransactionNo !== "undefined") {
 
@@ -251,30 +251,13 @@ router.get("/endpoint/:type", async (req: Request, res: Response) => {
 
                     if (dbTransaction !== null) {
                         if (transaction.vnp_ResponseCode == "00") {
-                            const UserData = await UserModel.findOne({ where: { id: dbTransaction.userId } });
-                            if (!UserData) throw new Error("Not found user");
-                            const realCoin = Number(transaction.vnp_Amount) / 100;
-                            UserData.totalCoin = UserData.totalCoin + realCoin;
-                            await UserData.save();
-                            await UserData.reload();
-
-                            dbTransaction.status = LotteryRechargeModel.STATUS_ENUM.PAID;
-                            dbTransaction.detail = LotteryRechargeModel.DETAIL_ENUM.SUCCESS;
-                            await dbTransaction.save();
-                            await dbTransaction.reload();
-                            res.send("Nạp tiền thành công. vui lòng quay trở lại App!");
+                            res.send("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">Nạp tiền thành công. vui lòng quay trở lại App!");
                         } else {
-                            dbTransaction.status = LotteryRechargeModel.STATUS_ENUM.ERROR;
-                            dbTransaction.detail = LotteryRechargeModel.DETAIL_ENUM.ERROR;
-                            await dbTransaction.save();
-                            await dbTransaction.reload();
-                            res.json({
-                                status: false, message: "Payment Error!"
-                            });
+                            res.send("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">Nạp tiền thất bại!");
                         }
 
                     } else {
-                        res.send("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><center>Yêu cầu nạp tiền này đã được xử lý!</h1></center>");
+                        res.send("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><center>Yêu cầu nạp tiền này đã được xử lý! Vui lòng quay lại App</h1></center>");
                     }
 
                 } else {
@@ -298,6 +281,136 @@ router.get("/endpoint/:type", async (req: Request, res: Response) => {
     }
 });
 
+
+
+router.get("/callback/:type", async (req: Request, res: Response) => {
+    try {
+        let transaction: any = req.query;
+
+        switch (req.params.type) {
+
+            case "vnpay":
+                console.log(transaction);
+
+                if (typeof transaction.vnp_TxnRef !== "undefined" && typeof transaction.vnp_TransactionNo !== "undefined") {
+
+                    const secureHash = transaction['vnp_SecureHash'];
+                    delete transaction['vnp_SecureHash'];
+                    delete transaction['vnp_SecureHashType'];
+
+                    transaction = sortObject(transaction);
+
+                    const secretKey = process.env.VNP_HASHSCRET;
+                    const signData = querystring.stringify(transaction, { encode: false });
+                    const hmac = crypto.createHmac("sha512", secretKey);
+                    const signed = hmac.update(new Buffer(signData, 'utf-8')).digest("hex");     
+
+                    if(secureHash === signed){
+
+                        const idRecharge = transaction["vnp_TxnRef"].split(process.env.VNP_PREFIX_TRANSACTION)[1];
+
+                        const dbTransaction = await LotteryRechargeModel.findOne({
+                            where: {
+                                id: idRecharge,
+                                method: LotteryRechargeModel.METHOD_ENUM.VNPAY
+                            }
+                        });
+    
+                        if (dbTransaction !== null) {
+                            
+                            if(dbTransaction.status == LotteryRechargeModel.STATUS_ENUM.UNPAID) {
+
+                                if (transaction.vnp_ResponseCode == "00") {
+                                    const UserData = await UserModel.findOne({ where: { id: dbTransaction.userId } });
+                                    if (!UserData) throw new Error("Not found user");
+                                    const realCoin = Number(transaction.vnp_Amount) / 100;
+                                    UserData.totalCoin = UserData.totalCoin + realCoin;
+                                    await UserData.save();
+                                    await UserData.reload();
+                            
+                                    dbTransaction.status = LotteryRechargeModel.STATUS_ENUM.PAID;
+                                    dbTransaction.detail = LotteryRechargeModel.DETAIL_ENUM.SUCCESS;
+                                    await dbTransaction.save();
+                                    await dbTransaction.reload();
+                                    res.json({
+                                        Message: "Confirm Success",
+                                        RspCode: "00"
+                                    });
+                                } else {
+                                    dbTransaction.status = LotteryRechargeModel.STATUS_ENUM.ERROR;
+                                    dbTransaction.detail = LotteryRechargeModel.DETAIL_ENUM.ERROR;
+                                    await dbTransaction.save();
+                                    await dbTransaction.reload();
+                                    res.json({
+                                        Message: "Confirm Success",
+                                        RspCode: "00"
+                                    });
+                                }
+
+                            }else if(dbTransaction.status == LotteryRechargeModel.STATUS_ENUM.PAID) {
+                                res.json({
+                                    Message: "Order already confirmed",
+                                    RspCode: "02"
+                                });
+                            }else if(dbTransaction.status == LotteryRechargeModel.STATUS_ENUM.ERROR) {
+                                res.json({
+                                    Message: "Order already confirmed",
+                                    RspCode: "02"
+                                }); 
+                            }
+    
+    
+                        } else {
+                            res.json({
+                                Message: "Order Not Found",
+                                RspCode: "01"
+                            });
+                        }
+
+                    } else {
+                        res.json({
+                            Message: "Invalid Checksum",
+                            RspCode: "97"
+                        });
+                    }
+
+                } else {
+                    res.json({
+                        status: false, message: "error request!"
+                    });
+                }
+
+                break;
+
+            default:
+                res.json({
+                    status: false,
+                    message: "error params method"
+                });
+                break;
+        }
+
+    } catch (error) {
+        sendError(res, 400, error.message, error);
+    }
+});
+
+
+const sortObject = (o: any) => {
+    const sorted: any = {};
+    let key: any;
+    const a = [];
+    for (key in o) {
+        if (o.hasOwnProperty(key)) {
+            a.push(encodeURIComponent(key));
+        }
+    }
+    a.sort();
+    for (key = 0; key < a.length; key++) {
+        sorted[a[key]] = encodeURIComponent(o[a[key]]).replace(/%20/g, "+");
+    }
+    return sorted;
+}
 
 
 export default router;
