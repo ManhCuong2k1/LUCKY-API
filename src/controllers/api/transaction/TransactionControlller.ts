@@ -1,6 +1,6 @@
 import { Response, Request, Router } from "express";
 import querystring from "qs";
-import crypto from "crypto";  
+import crypto from "crypto";
 import dateformat from "dateformat";
 import { auth } from "@middleware/auth";
 import momo from "./sdk/momo";
@@ -319,9 +319,9 @@ router.get("/callback/:type", async (req: Request, res: Response) => {
                     const secretKey = process.env.VNP_HASHSCRET;
                     const signData = querystring.stringify(transaction, { encode: false });
                     const hmac = crypto.createHmac("sha512", secretKey);
-                    const signed = hmac.update(new Buffer(signData, "utf-8")).digest("hex");     
+                    const signed = hmac.update(new Buffer(signData, "utf-8")).digest("hex");
 
-                    if(secureHash === signed){
+                    if (secureHash === signed) {
 
                         const idRecharge = transaction["vnp_TxnRef"].split(process.env.VNP_PREFIX_TRANSACTION)[1];
 
@@ -331,20 +331,22 @@ router.get("/callback/:type", async (req: Request, res: Response) => {
                                 method: LotteryRechargeModel.METHOD_ENUM.VNPAY
                             }
                         });
-    
-                        if (dbTransaction !== null) {
-                            
-                            if(dbTransaction.status == LotteryRechargeModel.STATUS_ENUM.UNPAID) {
 
-                                if(Number(dbTransaction.amount) == parseInt(transaction["vnp_Amount"])) {
-                                    if(transaction.vnp_ResponseCode == "00") {
+                        if (dbTransaction !== null) {
+
+                            if (dbTransaction.status == LotteryRechargeModel.STATUS_ENUM.UNPAID) {
+
+                                if (transaction.vnp_ResponseCode == "00") {
+
+                                    if (Number(dbTransaction.amount) == parseInt(transaction["vnp_Amount"])) {
+
                                         const UserData = await UserModel.findOne({ where: { id: dbTransaction.userId } });
                                         if (!UserData) throw new Error("Not found user");
                                         const realCoin = Number(transaction.vnp_Amount) / 100;
                                         UserData.totalCoin = UserData.totalCoin + realCoin;
                                         await UserData.save();
                                         await UserData.reload();
-                                
+
                                         dbTransaction.status = LotteryRechargeModel.STATUS_ENUM.PAID;
                                         dbTransaction.detail = LotteryRechargeModel.DETAIL_ENUM.SUCCESS;
                                         await dbTransaction.save();
@@ -353,36 +355,38 @@ router.get("/callback/:type", async (req: Request, res: Response) => {
                                             Message: "Confirm Success",
                                             RspCode: "00"
                                         });
+
                                     } else {
-                                        dbTransaction.status = LotteryRechargeModel.STATUS_ENUM.ERROR;
-                                        dbTransaction.detail = LotteryRechargeModel.DETAIL_ENUM.ERROR;
-                                        await dbTransaction.save();
-                                        await dbTransaction.reload();
                                         res.json({
-                                            Message: "Confirm Success",
-                                            RspCode: "00"
+                                            Message: "Invalid amount",
+                                            RspCode: "04"
                                         });
                                     }
-                                }else {
+
+                                } else {
+                                    dbTransaction.status = LotteryRechargeModel.STATUS_ENUM.ERROR;
+                                    dbTransaction.detail = LotteryRechargeModel.DETAIL_ENUM.ERROR;
+                                    await dbTransaction.save();
+                                    await dbTransaction.reload();
                                     res.json({
-                                        Message: "Invalid amount",
-                                        RspCode: "04"
+                                        Message: "Confirm Success",
+                                        RspCode: "00"
                                     });
                                 }
 
-                            }else if(dbTransaction.status == LotteryRechargeModel.STATUS_ENUM.PAID) {
+                            } else if (dbTransaction.status == LotteryRechargeModel.STATUS_ENUM.PAID) {
                                 res.json({
                                     Message: "Order already confirmed",
                                     RspCode: "02"
                                 });
-                            }else if(dbTransaction.status == LotteryRechargeModel.STATUS_ENUM.ERROR) {
+                            } else if (dbTransaction.status == LotteryRechargeModel.STATUS_ENUM.ERROR) {
                                 res.json({
                                     Message: "Order already confirmed",
                                     RspCode: "02"
-                                }); 
+                                });
                             }
-    
-    
+
+
                         } else {
                             res.json({
                                 Message: "Order Not Found",
