@@ -151,7 +151,9 @@ router.post("/", async (req: Request, res: Response) => {
 
             case "power":
 
-                const isCanOrder = helper.blockInPeriodTime(16, 28, 17);
+                const isCanOrder = helper.blockInPeriodTime(17, 30, 19);
+
+                console.log(isCanOrder)
                 
                 if (isCanOrder) {
 
@@ -548,7 +550,9 @@ router.post("/", async (req: Request, res: Response) => {
 
 
             case "max4d":
-                if ((Number(moment().format("H")) != 18)) {
+                const isCanOrderMax4D = helper.blockInPeriodTime(17, 30, 19);
+                
+                if (isCanOrderMax4D) {
                     let totalPriceMax4d = 0;
                     let feeMax4d = Number(await getSettings("ticket_storage_fee"));
 

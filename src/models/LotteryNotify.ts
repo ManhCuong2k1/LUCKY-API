@@ -203,7 +203,7 @@ const NotifyWhenLimitReward = async (userId: number, game: string, reward: numbe
     }
 };
 
-const UserNotifyAdd = async (userId: number, notifyType:string, notifySlug: string, notifyName: string, detail: string, ticketId: number) => {
+const UserNotifyAdd = async (userId: number, notifyType: string, notifySlug: string, notifyName: string, detail: string, ticketId: number) => {
     const dataAction: any = {
         userId,
         notifyType,

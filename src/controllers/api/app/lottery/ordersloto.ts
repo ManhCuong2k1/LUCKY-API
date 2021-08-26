@@ -28,8 +28,8 @@ router.post("/", async (req: Request, res: Response) => {
                 currentTime.set("second", 0);
                 currentTime.set("millisecond", 0);
                 const nowtime: any = moment();
-                const isActiveOrder = (nowtime.format("H") != 18) ? true : false;
 
+                const isActiveOrder = helper.blockInPeriodTime(17, 30, 19);
 
                 if (isActiveOrder) { // kiểm tra đơn hàng có thể order trong thời gian cho phép hay không
 
@@ -124,7 +124,7 @@ router.post("/", async (req: Request, res: Response) => {
             case "compute636":
 
                 const currentTime636: any = moment();
-                const isActiveOrder636 = (currentTime636.format("H") != 18) ? true : false;
+                const isActiveOrder636 = helper.blockInPeriodTime(17, 30, 19);
 
                 if (isActiveOrder636) { // kiểm tra đơn hàng có thể order trong thời gian cho phép hay không
 
@@ -244,8 +244,8 @@ router.post("/", async (req: Request, res: Response) => {
                 currentTimeLoto234.set("minute", 30);
                 currentTimeLoto234.set("second", 0);
                 currentTimeLoto234.set("millisecond", 0);
-                const nowtimeLoto234: any = moment();
-                const isActiveOrderLoto234 = (nowtimeLoto234.format("H") != 18) ? true : false;
+                
+                const isActiveOrderLoto234 = helper.blockInPeriodTime(17, 30, 19);
 
                 if (isActiveOrderLoto234) { // kiểm tra đơn hàng có thể order trong thời gian cho phép hay không
 
@@ -344,7 +344,8 @@ router.post("/", async (req: Request, res: Response) => {
                 currentTimeLoto2.set("second", 0);
                 currentTimeLoto2.set("millisecond", 0);
                 const nowtimeLoto2: any = moment();
-                const isActiveOrderLoto2 = (nowtimeLoto2.format("H") != 18) ? true : false;
+
+                const isActiveOrderLoto2 = helper.blockInPeriodTime(17, 30, 19);
 
 
                 if (isActiveOrderLoto2) { // kiểm tra đơn hàng có thể order trong thời gian cho phép hay không
@@ -441,8 +442,8 @@ router.post("/", async (req: Request, res: Response) => {
                 currentTimeLoto3.set("minute", 30);
                 currentTimeLoto3.set("second", 0);
                 currentTimeLoto3.set("millisecond", 0);
-                const nowtimeLoto3: any = moment();
-                const isActiveOrderLoto3 = (nowtimeLoto3.format("H") != 18) ? true : false;
+                
+                const isActiveOrderLoto3 = helper.blockInPeriodTime(17, 30, 19);
 
 
                 if (isActiveOrderLoto3) { // kiểm tra đơn hàng có thể order trong thời gian cho phép hay không
@@ -541,7 +542,8 @@ router.post("/", async (req: Request, res: Response) => {
                 currentTimeLoto5.set("second", 0);
                 currentTimeLoto5.set("millisecond", 0);
                 const nowtimeLoto5: any = moment();
-                const isActiveOrderLoto5 = (nowtimeLoto5.format("H") != 18) ? true : false;
+
+                const isActiveOrderLoto5 = helper.blockInPeriodTime(17, 30, 19);
 
                 if (isActiveOrderLoto5) { // kiểm tra đơn hàng có thể order trong thời gian cho phép hay không
 
