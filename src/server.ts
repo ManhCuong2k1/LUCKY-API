@@ -12,6 +12,8 @@ import {
     TaskXsmb
 } from "./task/xoso";
 
+/****
+
 if (config.ENV === "production") {
     cron.schedule("0 * * * * *", async () => {
         try {
@@ -34,6 +36,7 @@ if (config.ENV === "production") {
         }
     });
 }
+ */
 
 /**
  * Error Handler. Provides full stack - remove for production

@@ -48,10 +48,10 @@ const getTimeData = (string: string) => {
 };
 
 
-const blockInPeriodTime = (startHour: number, startMinute: number, endHour:number) => {
+const blockInPeriodTime = (startHour: number, startMinute: number, endHour: number) => {
     try {
-      const hourCurrent:any = moment().format("H");
-      const minuteCurrent:any = moment().format("m");
+      const hourCurrent: any = moment().format("H");
+      const minuteCurrent: any = moment().format("m");
       
       if(hourCurrent >= Number(startHour) && hourCurrent < Number(endHour)) {
           if(hourCurrent == Number(startHour) && minuteCurrent < Number(startMinute)) {
