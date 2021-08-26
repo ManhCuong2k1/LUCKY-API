@@ -220,8 +220,7 @@ const updateResult = async (game: string, data: any) => {
 
                         const checkSame = LotteryHelper.checkSame(arrBet, arrResult);
 
-                        let reward = LotteryHelper.getRewardPower(arrBet.length, checkSame.length);
-                        reward = reward * (i.price / 10000);
+                        const reward = LotteryHelper.getRewardPower(arrBet.length, checkSame.length);
 
                         dataUpdate["data"].push({
                             number: checkSame,
@@ -328,12 +327,9 @@ const updateResult = async (game: string, data: any) => {
 
                         const arrBet = LotteryHelper.arrayStringToNumber(i.number);
                         const arrResult = LotteryHelper.arrayStringToNumber(data.result);
-
                         const checkSame = LotteryHelper.checkSame(arrBet, arrResult);
 
-                        let reward = LotteryHelper.getRewardMega(arrBet.length, checkSame.length);
-                
-                        reward = reward * (i.price / 10000);
+                        const reward = LotteryHelper.getRewardMega(arrBet.length, checkSame.length);
 
                         dataUpdate["data"].push({
                             number: checkSame,

@@ -46,6 +46,7 @@ router.post("/", async (req: Request, res: Response) => {
                     });
 
                     fee = (fee * totalPrice) / 100;
+                    fee = fee * Number(body.preriod);
 
                     const orderPrice = totalPrice; // tiền 1 đơn
                     totalPrice = (totalPrice * body.preriod) + fee; // tiền thanh toán khi đặt liên tiếp các kỳ
@@ -203,7 +204,7 @@ router.post("/", async (req: Request, res: Response) => {
                     });
 
                     fee = (fee * totalPrice) / 100;
-
+                    fee = fee * body.preriod.length;
                     const orderPrice = totalPrice; // tiền 1 đơn
                     totalPrice = (totalPrice * body.preriod.length) + fee; // tiền thanh toán khi đặt liên tiếp các kỳ
 
@@ -323,6 +324,7 @@ router.post("/", async (req: Request, res: Response) => {
                     });
 
                     feeMega = (feeMega * totalPriceMega) / 100;
+                    feeMega = feeMega * body.preriod.length;
 
                     const orderPriceMega = totalPriceMega; // tiền 1 đơn
                     totalPriceMega = (totalPriceMega * body.preriod.length) + feeMega; // tiền thanh toán khi đặt liên tiếp các kỳ
@@ -397,6 +399,7 @@ router.post("/", async (req: Request, res: Response) => {
                     });
 
                     feeMax3d = (feeMax3d * totalPriceMax3d) / 100;
+                    feeMax3d = feeMax3d * body.preriod.length;
 
                     const orderPriceMax3d = totalPriceMax3d; // tiền 1 đơn
                     totalPriceMax3d = (totalPriceMax3d * body.preriod.length) + feeMax3d; // tiền thanh toán khi đặt liên tiếp các kỳ
@@ -471,6 +474,7 @@ router.post("/", async (req: Request, res: Response) => {
                     });
 
                     feeMax3dPlus = (feeMax3dPlus * totalPriceMax3dPlus) / 100;
+                    feeMax3dPlus = feeMax3dPlus * body.preriod.length;
 
                     const orderPriceMax3dPlus = totalPriceMax3dPlus; // tiền 1 đơn
                     totalPriceMax3dPlus = (totalPriceMax3dPlus * body.preriod.length) + feeMax3dPlus; // tiền thanh toán khi đặt liên tiếp các kỳ
@@ -544,6 +548,7 @@ router.post("/", async (req: Request, res: Response) => {
                     });
 
                     feeMax4d = (feeMax4d * totalPriceMax4d) / 100;
+                    feeMax4d = feeMax4d * body.preriod.length;
 
                     const orderPriceMax4d = totalPriceMax4d; // tiền 1 đơn
                     totalPriceMax4d = (totalPriceMax4d * body.preriod.length) + feeMax4d; // tiền thanh toán khi đặt liên tiếp các kỳ

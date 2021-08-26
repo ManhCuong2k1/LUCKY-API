@@ -128,6 +128,9 @@ const NotifyWhenLimitReward = async (userId: number, game: string, reward: numbe
                 case LotteryOrdersModel.GAME_ENUM.KENO:
                     gameName = "KENO";
                     break;
+                case LotteryOrdersModel.GAME_ENUM.MEGA:
+                    gameName = "MEGA";
+                    break;
                 case LotteryOrdersModel.GAME_ENUM.POWER:
                     gameName = "POWER";
                     break;
