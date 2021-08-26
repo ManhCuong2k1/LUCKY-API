@@ -151,7 +151,9 @@ router.post("/", async (req: Request, res: Response) => {
 
             case "power":
 
-                if ((Number(moment().format("H")) != 18)) {
+                const isCanOrder = helper.blockInPeriodTime(16, 28, 17);
+                
+                if (isCanOrder) {
 
                     let priceOneList: number = 0;
 
@@ -273,7 +275,9 @@ router.post("/", async (req: Request, res: Response) => {
 
             case "mega":
 
-                if ((Number(moment().format("H")) != 18)) {
+                const isCanOrderMega = helper.blockInPeriodTime(17, 30, 19);
+
+                if (isCanOrderMega) {
                     let priceOneListMega: number = 0;
 
                     switch (body.level) {
@@ -390,7 +394,9 @@ router.post("/", async (req: Request, res: Response) => {
 
 
             case "max3d":
-                if ((Number(moment().format("H")) != 18)) {
+                const isCanOrderMax3D = helper.blockInPeriodTime(17, 30, 19);
+
+                if (isCanOrderMax3D) {
                     let totalPriceMax3d = 0;
                     let feeMax3d = Number(await getSettings("ticket_storage_fee"));
 
@@ -465,7 +471,10 @@ router.post("/", async (req: Request, res: Response) => {
 
 
             case "max3dplus":
-                if ((Number(moment().format("H")) != 18)) {
+
+                const isCanOrderMax3DPlus = helper.blockInPeriodTime(17, 30, 19);
+
+                if (isCanOrderMax3DPlus) {
                     let totalPriceMax3dPlus = 0;
                     let feeMax3dPlus = Number(await getSettings("ticket_storage_fee"));
 

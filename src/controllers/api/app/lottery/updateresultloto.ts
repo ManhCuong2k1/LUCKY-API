@@ -120,9 +120,11 @@ const updateResultLoto = async (game: string, data: any) => {
                     if (isWin) {
                         UserNotifyAdd(
                             orderUpdate.userId,
+                            LotteryNotifyModel.NOTIFY_TYPE_ENUM.WIN,
                             LotteryNotifyModel.NOTIFY_SLUG_ENUM.KIENTHIET,
                             LotteryNotifyModel.NOTIFY_NAME_ENUM.KIENTHIET,
-                            "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + "."
+                            "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + ".",
+                            orderData.ticketId
                         );
                     }
 
@@ -191,9 +193,11 @@ const updateResultLoto = async (game: string, data: any) => {
                     if (isWin) {
                         UserNotifyAdd(
                             orderUpdate.userId,
+                            LotteryNotifyModel.NOTIFY_TYPE_ENUM.WIN,
                             LotteryNotifyModel.NOTIFY_SLUG_ENUM.COMPUTE636,
                             LotteryNotifyModel.NOTIFY_NAME_ENUM.COMPUTE636,
-                            "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + "."
+                            "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + ".",
+                            orderData.ticketId
                         );
                     }
 
@@ -293,9 +297,11 @@ const updateResultLoto = async (game: string, data: any) => {
                     if (isWin) {
                         UserNotifyAdd(
                             orderUpdate.userId,
+                            LotteryNotifyModel.NOTIFY_TYPE_ENUM.WIN,
                             LotteryNotifyModel.NOTIFY_SLUG_ENUM.COMPUTE123,
                             LotteryNotifyModel.NOTIFY_NAME_ENUM.COMPUTE123,
-                            "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + "."
+                            "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + ".",
+                            orderData.ticketId
                         );
                     }
 
@@ -394,9 +400,11 @@ const updateResultLoto = async (game: string, data: any) => {
                     if (isWin) {
                         UserNotifyAdd(
                             orderUpdate.userId,
+                            LotteryNotifyModel.NOTIFY_TYPE_ENUM.WIN,
                             LotteryNotifyModel.NOTIFY_SLUG_ENUM.LOTO2,
                             LotteryNotifyModel.NOTIFY_NAME_ENUM.LOTO2,
-                            "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + "."
+                            "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + ".",
+                            orderData.ticketId
                         );
                     }
 
@@ -523,9 +531,11 @@ const updateResultLoto = async (game: string, data: any) => {
                     if (isWin) {
                         UserNotifyAdd(
                             orderUpdate.userId,
+                            LotteryNotifyModel.NOTIFY_TYPE_ENUM.WIN,
                             LotteryNotifyModel.NOTIFY_SLUG_ENUM.LOTO3,
                             LotteryNotifyModel.NOTIFY_NAME_ENUM.LOTO3,
-                            "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + "."
+                            "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + ".",
+                            orderData.ticketId
                         );
                     }
 
@@ -663,9 +673,11 @@ const updateResultLoto = async (game: string, data: any) => {
                     if (isWin) {
                         UserNotifyAdd(
                             orderUpdate.userId,
+                            LotteryNotifyModel.NOTIFY_TYPE_ENUM.WIN,
                             LotteryNotifyModel.NOTIFY_SLUG_ENUM.LOTO5,
                             LotteryNotifyModel.NOTIFY_NAME_ENUM.LOTO5,
-                            "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + "."
+                            "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + ".",
+                            orderData.ticketId
                         );
                     }
 
@@ -745,9 +757,11 @@ const updateResultLoto = async (game: string, data: any) => {
                         if (isWin) {
                             UserNotifyAdd(
                                 orderUpdate.userId,
+                                LotteryNotifyModel.NOTIFY_TYPE_ENUM.WIN,
                                 LotteryNotifyModel.NOTIFY_SLUG_ENUM.LOTO234,
                                 LotteryNotifyModel.NOTIFY_NAME_ENUM.LOTO234,
-                                "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + item.ticketId + "."
+                                "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + item.ticketId + ".",
+                                item.ticketId
                             );
                         }
 
@@ -841,9 +855,11 @@ const updateResultLoto = async (game: string, data: any) => {
                         if (isWin) {
                             UserNotifyAdd(
                                 orderUpdate.userId,
+                                LotteryNotifyModel.NOTIFY_TYPE_ENUM.WIN,
                                 LotteryNotifyModel.NOTIFY_SLUG_ENUM.LOTO234,
                                 LotteryNotifyModel.NOTIFY_NAME_ENUM.LOTO234,
-                                "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + item.ticketId + "."
+                                "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + item.ticketId + ".",
+                                item.ticketId
                             );
                         }
                     } catch (err) {
@@ -971,9 +987,11 @@ const updateResultLoto = async (game: string, data: any) => {
                         if (isWin) {
                             UserNotifyAdd(
                                 orderUpdate.userId,
+                                LotteryNotifyModel.NOTIFY_TYPE_ENUM.WIN,
                                 LotteryNotifyModel.NOTIFY_SLUG_ENUM.LOTO234,
                                 LotteryNotifyModel.NOTIFY_NAME_ENUM.LOTO234,
-                                "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + item.ticketId + "."
+                                "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + item.ticketId + ".",
+                                item.ticketId
                             );
                         }
                     } catch (err) {

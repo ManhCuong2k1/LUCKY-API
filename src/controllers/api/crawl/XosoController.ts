@@ -8,6 +8,7 @@ import moment from "moment-timezone";
 moment.tz.setDefault("Asia/Ho_Chi_Minh");
 const router = express.Router();
 import sendMail from "@util/mailer";
+import { LotteryNotifyModel, UserNotifyAdd } from "@models/LotteryNotify";
 
 router.get("/", (req: Request, res: Response) => {
     res.status(403).send("403");
@@ -634,18 +635,5 @@ router.get("/banks", (req, res) => {
     }
 });
 
-
-router.get("/mail", (req, res) => {
-    try {
-        const send = sendMail("mm13571234@gmail.com", "test mail guiwr", "nnoidung maull nhes");
-        console.log(send);
-        res.send("ok");
-    }catch (error) {
-        res.json( {
-            status: false,
-            message: error.message
-        });
-    }
-});
 
 export default router;

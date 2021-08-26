@@ -8,9 +8,11 @@ import { LotteryOrdersModel } from "./LotteryOrder";
 interface LotteryNotifyInterface {
     id: number;
     userId: number;
+    notifyType: string;
     notifySlug: string;
     notifyName: string;
     detail: string;
+    ticketId: number;
     seen: string;
     createdAt: Date;
     updatedAt: Date;
@@ -19,12 +21,23 @@ interface LotteryNotifyInterface {
 class LotteryNotifyModel extends Model<LotteryNotifyInterface> implements LotteryNotifyInterface {
     public id!: number;
     public userId: number;
+    public notifyType: string;
     public notifySlug: string;
     public notifyName: string;
     public detail: string;
     public seen: string;
+    public ticketId: number;
     public createdAt: Date;
     public updatedAt: Date;
+
+    static readonly NOTIFY_TYPE_ENUM = {
+        WIN: "win",
+        BIGWIN: "bigwin",
+        RECHARGE: "rechage",
+        BUY_TICKET: "buy_ticket",
+        EXCHANGE_REWARD: "exchange_reward",
+        NOTIFY: "notify"
+    }
 
     static readonly NOTIFY_SLUG_ENUM = {
         KENO: "keno",
@@ -44,7 +57,8 @@ class LotteryNotifyModel extends Model<LotteryNotifyInterface> implements Lotter
 
         RECHARGE: "rechage",
         BUY_TICKET: "buy_ticket",
-        EXCHANGE_REWARD: "exchange_reward"
+        EXCHANGE_REWARD: "exchange_reward",
+        NOTIFY: "notify"
     }
 
     static readonly NOTIFY_NAME_ENUM = {
@@ -66,6 +80,7 @@ class LotteryNotifyModel extends Model<LotteryNotifyInterface> implements Lotter
         BUY_TICKET: "Mua vé",
         RECHARGE: "Nạp tiền",
         EXCHANGE_REWARD: "Đổi thưởng",
+        NOTIFY: "Thông Báo"
     };
 
     static readonly SEEN_ENUM = {
@@ -83,6 +98,9 @@ const UserHistoryDefine = {
     userId: {
         type: DataTypes.INTEGER,
     },
+    notifyType: {
+        type: DataTypes.STRING,
+    },
     notifySlug: {
         type: DataTypes.STRING,
     },
@@ -91,6 +109,9 @@ const UserHistoryDefine = {
     },
     detail: {
         type: DataTypes.STRING,
+    },
+    ticketId: {
+        type: DataTypes.INTEGER,
     },
     seen: {
         type: DataTypes.STRING,
@@ -182,12 +203,14 @@ const NotifyWhenLimitReward = async (userId: number, game: string, reward: numbe
     }
 };
 
-const UserNotifyAdd = async (userId: number, notifySlug: string, notifyName: string, detail: string) => {
+const UserNotifyAdd = async (userId: number, notifyType:string, notifySlug: string, notifyName: string, detail: string, ticketId: number) => {
     const dataAction: any = {
         userId,
+        notifyType,
         notifySlug,
         notifyName,
-        detail
+        detail,
+        ticketId
     };
     const createNotify = await LotteryNotifyModel.create(dataAction);
     return createNotify;
@@ -201,9 +224,11 @@ const GetUserNotify = async (userId: number, limit: number) => {
         attributes: [
             "id",
             "userId",
+            "notifyType",
             "notifySlug",
             "notifyName",
             "detail",
+            "ticketId",
             "seen",
             "createdAt"
         ],

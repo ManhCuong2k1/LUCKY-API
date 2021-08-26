@@ -4,6 +4,7 @@ import sequelize from "@database/connection";
 interface LotteryNumbersInterface {
     id: number;
     number: string;
+    code: string;
     total: number;
     date: string;
     status: string;
@@ -14,6 +15,7 @@ interface LotteryNumbersInterface {
 class LotteryNumbersModel extends Model<LotteryNumbersInterface> implements LotteryNumbersInterface {
     public id!: number;
     public number: string;
+    public code: string;
     public total: number;
     public date: string;
     public status: string;
@@ -33,6 +35,9 @@ const LotteryNumbersDefine = {
         autoIncrement: true,
     },
     number: {
+        type: DataTypes.STRING,
+    },
+    code: {
         type: DataTypes.STRING,
     },
     total: {
