@@ -492,6 +492,7 @@ router.post("/excel/upload", uploadFile.single("file"), async (req: Request, res
                 const tutorial = {
                 number: row[0],
                 total: row[1],
+                code: row[2],
                 status: LotteryNumbersModel.STATUS_ENUM.TRUE,
                 date: req.body.date
                 };
