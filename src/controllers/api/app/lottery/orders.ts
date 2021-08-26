@@ -153,7 +153,7 @@ router.post("/", async (req: Request, res: Response) => {
 
                 const isCanOrder = helper.blockInPeriodTime(17, 30, 19);
 
-                console.log(isCanOrder)
+                console.log(isCanOrder);
                 
                 if (isCanOrder) {
 

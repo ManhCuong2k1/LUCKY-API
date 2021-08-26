@@ -2,6 +2,7 @@ import helper from "./Helper";
 import request from "request-promise";
 import { LotteryResultsModel, LotteryResultsCheck } from "@models/LotteryResults";
 import moment from "moment-timezone";
+import { replace } from "lodash";
 moment.tz.setDefault("Asia/Ho_Chi_Minh");
 
 
@@ -683,9 +684,13 @@ const getKenoCurrentRound = async () => {
 
 const XosoMienBac = async () => {
   try {
-    const today = moment().format("YYYY-MM-DD");
+    //const today = moment().format("YYYY-MM-DD");
+    //const today2 = moment("DD-MM-YYYY").format();
+    const today = "2021-08-25";
+    const today2 = "25-08-2021";
     const roundId = moment().format("YYYYMMDD");
     const currentDate = moment().format("DD/MM/YYYYY");
+
     const options = {
       "method": "GET",
       "rejectUnauthorized": false,
@@ -702,16 +707,12 @@ const XosoMienBac = async () => {
         message: "Chưa có kết quả cho ngày " + today
       };
     } else {
-      // lấy nội dung bảng kết quả
-      const tableResult = helper.cutstring(dataResp, "<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" class=\"bot\">", "</table>");
-
-      let html;
-      let arrNumber;
       const dataXoso: any = {};
 
       dataXoso["date"] = today;
       dataXoso["round"] = moment(today).format("YYYYMMDD");
       dataXoso["result"] = {};
+      dataXoso["result"]["code"] = [];
       dataXoso["result"]["giaidacbiet"] = [];
       dataXoso["result"]["giainhat"] = [];
       dataXoso["result"]["giainhi"] = [];
@@ -721,98 +722,128 @@ const XosoMienBac = async () => {
       dataXoso["result"]["giaisau"] = [];
       dataXoso["result"]["giaibay"] = [];
 
-
-      // lấy nội dung giải db trong bảng
-      html = helper.cutstring(tableResult, "<tbody>", "</tbody>");
-      dataXoso["result"]["giaidacbiet"] = helper.cutstring(html, "f3b\" colspan=\"12\">", "</td>");
-      // lấy nội dung giải nhat trong bảng
-      dataXoso["result"]["giainhat"] = helper.cutstring(html, "f2\" colspan=\"12\">", "</td>");
-
-      // lấy nội dung giải nhi trong bảng
-      html = helper.cutstring(html, "<h3>Giải Nhì</h3>", "</tr>");
-      html = helper.replaceString(html, "</td>", "");
-      html = helper.replaceString(html, "<td class=\"bor f2\" colspan=\"6\">", ",");
-      html = helper.replaceString(html, "\n", "");
-      html = html.substring(1);
-      arrNumber = html.split(",");
-      dataXoso["result"]["giainhi"] = arrNumber;
-
-      // lấy nội dung giải ba trong bảng
-      html = helper.cutstring(tableResult, "<tbody>", "</tbody>");
-      html = helper.cutstring(html, "<h3>Giải Ba</h3>", "<td class=\"span-2 bol f1b\">");
-      html = helper.replaceString(html, "</td>", "");
-      html = helper.replaceString(html, "<tr>", "");
-      html = helper.replaceString(html, "</tr>", "");
-      html = helper.replaceString(html, "<td class=\"bol f2\" colspan=\"4\">", ",");
-      html = helper.replaceString(html, "\n", "");
-      html = html.substring(1);
-      arrNumber = html.split(",");
-      dataXoso["result"]["giaiba"] = arrNumber;
-
-      // lấy nội dung giải tu trong bảng
-      html = helper.cutstring(tableResult, "<tbody>", "</tbody>");
-      html = helper.cutstring(html, "<h3>Giải Tư</h3>", "</tr>");
-      html = helper.replaceString(html, "</td>", "");
-      html = helper.replaceString(html, "<td class=\"bol f2\" colspan=\"3\">", ",");
-      html = helper.replaceString(html, "\n", "");
-      html = html.substring(1);
-      arrNumber = html.split(",");
-      dataXoso["result"]["giaitu"] = arrNumber;
-
-      // lấy nội dung giải nam trong bảng
-      html = helper.cutstring(tableResult, "<tbody>", "</tbody>");
-      html = helper.cutstring(html, "<h3>Giải Năm</h3>", "<td class=\"span-2 bol f1b\">");
-      html = helper.replaceString(html, "</td>", "");
-      html = helper.replaceString(html, "<tr>", "");
-      html = helper.replaceString(html, "</tr>", "");
-      html = helper.replaceString(html, "<td class=\"bol f2\" colspan=\"4\">", ",");
-      html = helper.replaceString(html, "\n", "");
-      html = html.substring(1);
-      arrNumber = html.split(",");
-      dataXoso["result"]["giainam"] = arrNumber;
-
-      // lấy nội dung giải sau trong bảng
-      html = helper.cutstring(tableResult, "<tbody>", "</tbody>");
-      html = helper.cutstring(html, "<h3>Giải Sáu</h3>", "</tr>");
-      html = helper.replaceString(html, "</td>", "");
-      html = helper.replaceString(html, "<td class=\"bol f2\" colspan=\"4\">", ",");
-      html = helper.replaceString(html, "\n", "");
-      html = html.substring(1);
-      arrNumber = html.split(",");
-      dataXoso["result"]["giaisau"] = arrNumber;
-
-      // lấy nội dung giải bay trong bảng
-      html = helper.cutstring(tableResult, "<tbody>", "</tbody>");
-      html = helper.cutstring(html, "<h3>Giải Bảy</h3>", "</tr>");
-      html = helper.replaceString(html, "</td>", "");
-      html = helper.replaceString(html, "<td class=\"bol f2\" colspan=\"3\">", ",");
-      html = helper.replaceString(html, "\n", "");
-      html = html.substring(1);
-      arrNumber = html.split(",");
-      dataXoso["result"]["giaibay"] = arrNumber;
-      
-
-      const LotteryCheckExits = await LotteryResultsCheck(LotteryResultsModel.GAME_ENUM.XOSOMIENBAC, roundId);
-
-      if (!LotteryCheckExits) {
-        const dataImport: any = {
-          type: LotteryResultsModel.GAME_ENUM.XOSOMIENBAC,
-          date: currentDate,
-          next: moment().add(1, "days").format("YYYY/MM/DD 18:15:00"),
-          round: roundId,
-          result: JSON.stringify(dataXoso)
-        };
-  
-        LotteryResultsModel.create(dataImport);
-      }
-
-
-      return {
-        status: true,
-        data: dataXoso,
-        message: "Success"
+      const optionsGetCode = {
+        "method": "GET",
+        "rejectUnauthorized": false,
+        "url": "https://ketqua247.com/xsmb-" + today2 + ".html?t=" + helper.randomString(13),
+        "headers": {}
       };
 
+      // lấy nội dung mã code 
+      const dataRespGetCode = await request(optionsGetCode);
+      const tableCode = helper.cutstring(dataRespGetCode, "<td colspan=\"2\"> <div>", "</td>");
+      let replaceString: any = helper.replaceString(tableCode, "\n", "");
+      replaceString = helper.replaceString(replaceString, "<span class=\"text-number\">", "");
+      replaceString = helper.replaceString(replaceString, "</div>", "");
+      replaceString = helper.replaceString(replaceString, "</span>", ",");
+      replaceString = helper.replaceString(replaceString, " ", "")
+      replaceString = replaceString.slice(0, -1);
+      const arrCode = replaceString.split(",");
+      if (arrCode.length > 3) {
+        dataXoso["result"]["code"] = arrCode;
+
+        // lấy nội dung bảng kết quả
+        const tableResult = helper.cutstring(dataResp, "<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" class=\"bot\">", "</table>");
+
+        let html;
+        let arrNumber;
+
+        // lấy nội dung giải db trong bảng
+        html = helper.cutstring(tableResult, "<tbody>", "</tbody>");
+        dataXoso["result"]["giaidacbiet"] = helper.cutstring(html, "f3b\" colspan=\"12\">", "</td>");
+        // lấy nội dung giải nhat trong bảng
+        dataXoso["result"]["giainhat"] = helper.cutstring(html, "f2\" colspan=\"12\">", "</td>");
+
+        // lấy nội dung giải nhi trong bảng
+        html = helper.cutstring(html, "<h3>Giải Nhì</h3>", "</tr>");
+        html = helper.replaceString(html, "</td>", "");
+        html = helper.replaceString(html, "<td class=\"bor f2\" colspan=\"6\">", ",");
+        html = helper.replaceString(html, "\n", "");
+        html = html.substring(1);
+        arrNumber = html.split(",");
+        dataXoso["result"]["giainhi"] = arrNumber;
+
+        // lấy nội dung giải ba trong bảng
+        html = helper.cutstring(tableResult, "<tbody>", "</tbody>");
+        html = helper.cutstring(html, "<h3>Giải Ba</h3>", "<td class=\"span-2 bol f1b\">");
+        html = helper.replaceString(html, "</td>", "");
+        html = helper.replaceString(html, "<tr>", "");
+        html = helper.replaceString(html, "</tr>", "");
+        html = helper.replaceString(html, "<td class=\"bol f2\" colspan=\"4\">", ",");
+        html = helper.replaceString(html, "\n", "");
+        html = html.substring(1);
+        arrNumber = html.split(",");
+        dataXoso["result"]["giaiba"] = arrNumber;
+
+        // lấy nội dung giải tu trong bảng
+        html = helper.cutstring(tableResult, "<tbody>", "</tbody>");
+        html = helper.cutstring(html, "<h3>Giải Tư</h3>", "</tr>");
+        html = helper.replaceString(html, "</td>", "");
+        html = helper.replaceString(html, "<td class=\"bol f2\" colspan=\"3\">", ",");
+        html = helper.replaceString(html, "\n", "");
+        html = html.substring(1);
+        arrNumber = html.split(",");
+        dataXoso["result"]["giaitu"] = arrNumber;
+
+        // lấy nội dung giải nam trong bảng
+        html = helper.cutstring(tableResult, "<tbody>", "</tbody>");
+        html = helper.cutstring(html, "<h3>Giải Năm</h3>", "<td class=\"span-2 bol f1b\">");
+        html = helper.replaceString(html, "</td>", "");
+        html = helper.replaceString(html, "<tr>", "");
+        html = helper.replaceString(html, "</tr>", "");
+        html = helper.replaceString(html, "<td class=\"bol f2\" colspan=\"4\">", ",");
+        html = helper.replaceString(html, "\n", "");
+        html = html.substring(1);
+        arrNumber = html.split(",");
+        dataXoso["result"]["giainam"] = arrNumber;
+
+        // lấy nội dung giải sau trong bảng
+        html = helper.cutstring(tableResult, "<tbody>", "</tbody>");
+        html = helper.cutstring(html, "<h3>Giải Sáu</h3>", "</tr>");
+        html = helper.replaceString(html, "</td>", "");
+        html = helper.replaceString(html, "<td class=\"bol f2\" colspan=\"4\">", ",");
+        html = helper.replaceString(html, "\n", "");
+        html = html.substring(1);
+        arrNumber = html.split(",");
+        dataXoso["result"]["giaisau"] = arrNumber;
+
+        // lấy nội dung giải bay trong bảng
+        html = helper.cutstring(tableResult, "<tbody>", "</tbody>");
+        html = helper.cutstring(html, "<h3>Giải Bảy</h3>", "</tr>");
+        html = helper.replaceString(html, "</td>", "");
+        html = helper.replaceString(html, "<td class=\"bol f2\" colspan=\"3\">", ",");
+        html = helper.replaceString(html, "\n", "");
+        html = html.substring(1);
+        arrNumber = html.split(",");
+        dataXoso["result"]["giaibay"] = arrNumber;
+
+
+        const LotteryCheckExits = await LotteryResultsCheck(LotteryResultsModel.GAME_ENUM.XOSOMIENBAC, roundId);
+
+        if (!LotteryCheckExits) {
+          const dataImport: any = {
+            type: LotteryResultsModel.GAME_ENUM.XOSOMIENBAC,
+            date: currentDate,
+            next: moment().add(1, "days").format("YYYY/MM/DD 18:15:00"),
+            round: roundId,
+            result: JSON.stringify(dataXoso)
+          };
+
+          LotteryResultsModel.create(dataImport);
+        }
+
+
+        return {
+          status: true,
+          data: dataXoso,
+          message: "Success"
+        };
+      } else {
+        return {
+          status: false,
+          message: "Chưa có kết quả cho ngày " + today
+        };
+      }
     }
 
   } catch (error) {
@@ -839,7 +870,7 @@ const Xoso6x36 = async () => {
 
     const TimeOfData = dataResp.termDate.split("/");
     const TimeMomentInput = TimeOfData[1] + "-" + TimeOfData[0] + "-" + TimeOfData[2];
-    
+
 
     const roundId = moment(new Date(TimeMomentInput)).format("YYYYMMDD");
     const result = dataResp.result.split(",");
@@ -869,7 +900,7 @@ const Xoso6x36 = async () => {
       message: "Success"
     };
 
-  }catch (error) {
+  } catch (error) {
     console.log(error);
     return {
       status: false,
@@ -894,8 +925,8 @@ const DienToan123 = async () => {
 
     const TimeOfData = dataResp.termDate.split("/");
     const TimeMomentInput = TimeOfData[1] + "-" + TimeOfData[0] + "-" + TimeOfData[2];
-    
-    const roundId = TimeOfData[2]+ TimeOfData[1] + TimeOfData[0];
+
+    const roundId = TimeOfData[2] + TimeOfData[1] + TimeOfData[0];
     const result = dataResp.result.split(",");
     const date = moment(new Date(TimeMomentInput)).format("DD/MM/YYYY");
 
@@ -912,7 +943,7 @@ const DienToan123 = async () => {
 
       LotteryResultsModel.create(dataImport);
     }
-    
+
     return {
       status: true,
       data: {
@@ -923,7 +954,7 @@ const DienToan123 = async () => {
       message: "Success"
     };
 
-  }catch (error) {
+  } catch (error) {
     console.log(error);
     return {
       status: false,
@@ -952,12 +983,12 @@ const LotoCrawl = async () => {
     const date = moment().format("DD/MM/YYYY");
 
 
-    if(dataResp[0] == today) {
+    if (dataResp[0] == today) {
       const dataExport: any[] = [];
       for (const number of dataResp[1]) {
         const numberLastChar = number.slice(-2);;
-        if(numberLastChar >= 2) {
-         dataExport.push(numberLastChar);          
+        if (numberLastChar >= 2) {
+          dataExport.push(numberLastChar);
         }
       }
 
@@ -973,7 +1004,7 @@ const LotoCrawl = async () => {
         };
         LotteryResultsModel.create(dataImport);
       }
-    
+
 
       return {
         status: true,
@@ -984,14 +1015,14 @@ const LotoCrawl = async () => {
         },
         message: "Success"
       };
-    }else {
+    } else {
       return {
         status: false,
         message: "Chưa có kết quả cho ngày " + today
       };
     }
 
-  }catch (error) {
+  } catch (error) {
     console.log(error);
     return {
       status: false,
