@@ -29,7 +29,7 @@ const updateResultLoto = async (game: string, data: any) => {
                     const orderDetail = JSON.parse(orderData.orderDetail);
                     dataUpdate = {}, dataUpdate.data = [], dataUpdate.result = {};
                     let isWin: boolean = false, updateReward: number = 0;
-                    let capsonhan: number = 0;
+                    const capsonhan: number = 0;
 
                     for await (const i of orderDetail.data) {
                         try {

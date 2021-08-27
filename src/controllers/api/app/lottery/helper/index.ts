@@ -53,8 +53,8 @@ const countSame = (item: any, array: any) => {
 };
 
 const checkRewardKhuyenKhich = (numb1: any, numb2: any) => {
-    let number1 = String(numb1).split("");
-    let number2 = String(numb2).split("");  
+    const number1 = String(numb1).split("");
+    const number2 = String(numb2).split("");  
   
     if(number1[0] != numb2[0]) return false;
   
@@ -62,7 +62,7 @@ const checkRewardKhuyenKhich = (numb1: any, numb2: any) => {
   
     let countError = 0;
   
-    for(var i = 0; i <= number2.length - 1; i++) {
+    for(let i = 0; i <= number2.length - 1; i++) {
       if(number1.indexOf(number2[i]) < 0) {
         countError++;
       }else {
@@ -70,7 +70,7 @@ const checkRewardKhuyenKhich = (numb1: any, numb2: any) => {
       }
     }
     if(countError >= 2) return false;else return true;
-  }
+  };
 
 const removeFirstChar = (arr: any, length: number) => {
     const arrExport = [];
