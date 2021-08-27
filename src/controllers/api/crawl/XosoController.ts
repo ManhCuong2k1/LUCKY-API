@@ -148,17 +148,17 @@ router.get("/sync/:type", async (req: Request, res: Response) => {
             }
             break;
 
-            case "loto235":
-                try {
-                    const lotoResult = await Crawl.LotoCrawl();
-                    await updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.LOTO234, lotoResult.data);
-                    return res.send(lotoResult);
-                } catch (e) {
-                    res.status(401).send({
-                        code: e.message
-                    });
-                }
-                break;
+        case "loto235":
+            try {
+                const lotoResult = await Crawl.LotoCrawl();
+                await updateLoto.updateResultLoto(LotteryResultsModel.GAME_ENUM.LOTO234, lotoResult.data);
+                return res.send(lotoResult);
+            } catch (e) {
+                res.status(401).send({
+                    code: e.message
+                });
+            }
+            break;
 
 
         default:
@@ -195,203 +195,20 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                 break;
 
             case "power":
-                const lastRecord = await LotteryResultsModel.findOne({
-                    where: {
-                        type: LotteryResultsModel.GAME_ENUM.POWER
-                    },
-                    order: [["id", "DESC"]],
-                });
-
-                if (lastRecord !== null) {
-                    let currentTimeRound: any = helper.addMinuteToTime(helper.getTimeData(lastRecord.next.toString()), 0);
-
-                    const dataExport: any = [];
-                    let currentRound = Number(lastRecord.round) + 1;
-                    let isFist = true;
-
-                    for (let i = 1; i <= 10; i++) {
-                        if (!isFist) {
-                            currentRound++;
-                            currentTimeRound = helper.addMinuteToTime(currentTimeRound, 2880); // + 2 ngày
-
-                            const thisTime: any = new Date(currentTimeRound).getDay() + 1;
-                            if (thisTime == 3 || thisTime == 5 || thisTime == 7) {
-                            } else {
-                                currentTimeRound = helper.addMinuteToTime(currentTimeRound, 1440); // + 1 ngày
-                            }
-                        }
-
-                        dataExport.push({
-                            round: "00" + currentRound,
-                            time: new Date(currentTimeRound).getTime()
-                        });
-
-                        isFist = false;
-                    }
-
-
-                    res.json({
-                        status: true,
-                        data: dataExport,
-                        jackpot: await Crawl.XosoGetJackPot("power")
-                    });
-
-                } else {
-                    res.json({
-                        status: false,
-                        message: "Error: not find last record"
-                    });
-                }
-
+                res.json(await Crawl.getPowerRound());
                 break;
 
 
             case "mega":
-                const lastRecordMega = await LotteryResultsModel.findOne({
-                    where: {
-                        type: LotteryResultsModel.GAME_ENUM.MEGA
-                    },
-                    order: [["id", "DESC"]],
-                });
-
-                if (lastRecordMega !== null) {
-                    let currentTimeRound: any = helper.addMinuteToTime(helper.getTimeData(lastRecordMega.next.toString()), 0);
-
-                    const dataExport: any = [];
-                    let currentRound = Number(lastRecordMega.round) + 1;
-                    let isFist = true;
-
-                    for (let i = 1; i <= 10; i++) {
-                        if (!isFist) {
-                            currentRound++;
-                            currentTimeRound = helper.addMinuteToTime(currentTimeRound, 2880); // + 2 ngày
-                            const thisTime: any = new Date(currentTimeRound).getDay() + 1;
-                            if (thisTime == 4 || thisTime == 6 || thisTime == 1) {
-                            } else {
-                                currentTimeRound = helper.addMinuteToTime(currentTimeRound, 1440); // + 1 ngày
-                            }
-                        }
-
-                        dataExport.push({
-                            round: "00" + currentRound,
-                            time: new Date(currentTimeRound).getTime()
-                        });
-
-                        isFist = false;
-                    }
-
-
-                    res.json({
-                        status: true,
-                        data: dataExport,
-                        jackpot: await Crawl.XosoGetJackPot("mega")
-                    });
-
-                } else {
-                    res.json({
-                        status: false,
-                        message: "Error: not find last record"
-                    });
-                }
-
+                res.json(await Crawl.getMegaRound());
                 break;
 
             case "max3d":
-                const lastRecordMax3d = await LotteryResultsModel.findOne({
-                    where: {
-                        type: LotteryResultsModel.GAME_ENUM.MAX3D
-                    },
-                    order: [["id", "DESC"]],
-                });
-
-                if (lastRecordMax3d !== null) {
-                    let currentTimeRound: any = helper.addMinuteToTime(helper.getTimeData(lastRecordMax3d.next.toString()), 0);
-
-                    const dataExport: any = [];
-                    let currentRound = Number(lastRecordMax3d.round) + 1;
-                    let isFist = true;
-
-                    for (let i = 1; i <= 10; i++) {
-                        if (!isFist) {
-                            currentRound++;
-                            currentTimeRound = helper.addMinuteToTime(currentTimeRound, 2880); // + 2 ngày
-                            const thisTime: any = new Date(currentTimeRound).getDay() + 1;
-                            if (thisTime == 2 || thisTime == 4 || thisTime == 6) {
-                            } else {
-                                currentTimeRound = helper.addMinuteToTime(currentTimeRound, 1440); // + 1 ngày
-                            }
-                        }
-
-                        dataExport.push({
-                            round: "00" + currentRound,
-                            time: new Date(currentTimeRound).getTime()
-                        });
-
-                        isFist = false;
-                    }
-
-
-                    res.json({
-                        status: true,
-                        data: dataExport
-                    });
-
-                } else {
-                    res.json({
-                        status: false,
-                        message: "Error: not find last record"
-                    });
-                }
-
+                res.json(await Crawl.getMax3DRound());
                 break;
 
             case "max4d":
-                const lastRecordMax4d = await LotteryResultsModel.findOne({
-                    where: {
-                        type: LotteryResultsModel.GAME_ENUM.MAX4D
-                    },
-                    order: [["id", "DESC"]],
-                });
-
-                if (lastRecordMax4d !== null) {
-                    let currentTimeRound: any = helper.addMinuteToTime(helper.getTimeData(lastRecordMax4d.next.toString()), 0);
-
-                    const dataExport: any = [];
-                    let currentRound = Number(lastRecordMax4d.round) + 1;
-                    let isFist = true;
-
-                    for (let i = 1; i <= 10; i++) {
-                        if (!isFist) {
-                            currentRound++;
-                            currentTimeRound = helper.addMinuteToTime(currentTimeRound, 2880); // + 2 ngày
-                            const thisTime: any = new Date(currentTimeRound).getDay() + 1;
-                            if (thisTime == 3 || thisTime == 5 || thisTime == 7) {
-                            } else {
-                                currentTimeRound = helper.addMinuteToTime(currentTimeRound, 1440); // + 1 ngày
-                            }
-                        }
-
-                        dataExport.push({
-                            round: "00" + currentRound,
-                            time: new Date(currentTimeRound).getTime()
-                        });
-
-                        isFist = false;
-                    }
-
-
-                    res.json({
-                        status: true,
-                        data: dataExport
-                    });
-
-                } else {
-                    res.json({
-                        status: false,
-                        message: "Error: not find last record"
-                    });
-                }
-
+                res.json(await Crawl.getMax4DRound());
                 break;
 
             case "kienthiet":

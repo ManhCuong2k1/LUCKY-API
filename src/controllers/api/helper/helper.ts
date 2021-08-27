@@ -13,12 +13,12 @@ const timeConverter = (timestamp: number) => {
 
 const timeConverterNoChar = (string: string) => {
     try {
-      string = string.split("-").join("");
-      string = string.split(":").join("");
-      string = string.split(" ")[0];
-      return string;
-    }catch (e) {
-      console.log(e.message);
+        string = string.split("-").join("");
+        string = string.split(":").join("");
+        string = string.split(" ")[0];
+        return string;
+    } catch (e) {
+        console.log(e.message);
     }
 };
 
@@ -26,19 +26,37 @@ const getDate = (string: string) => {
     try {
         string = string.split(" ")[0];
         return string;
-      }catch (e) {
+    } catch (e) {
         console.log(e.message);
-      }
+    }
 };
 
 const getTime = (timeStamp: any) => {
     return new Date(timeStamp * 1000);
 };
 
+const formatInputMoment = (string: any) => {
+    try {
+        let splitString = string.split(" ")[0];
+        return moment(splitString, ["DD-MM-YYYY"]);
+    } catch (e) {
+        console.log(e.message);
+    }
+};
+
+const getDayCrawl = (string: any) => {
+    try {
+        return string.split("/")[0];
+    } catch (e) {
+        console.log(e.message);
+    }
+}
+
+
 const addMinuteToTime = (time: any, minutes: number) => {
     const parseTime = new Date(time);
     let timeStamp = parseTime.setTime(parseTime.getTime() + (minutes * 60 * 1000));
-        timeStamp = timeStamp / 1000;
+    timeStamp = timeStamp / 1000;
     return timeConverter(timeStamp);
 };
 
@@ -48,36 +66,37 @@ const getTimeData = (string: string) => {
 };
 
 
+
 const blockInPeriodTime = (startHour: number, startMinute: number, endHour: number) => {
     try {
-      const hourCurrent: any = moment().format("H");
-      const minuteCurrent: any = moment().format("m");
-      
-      if(hourCurrent >= Number(startHour) && hourCurrent < Number(endHour)) {
-          if(hourCurrent == Number(startHour) && minuteCurrent < Number(startMinute)) {
-              return true; // cho
-          }else {
-              return false; // khoong cho
-          } 
-      }else {
-          return true; // cho
-      }
-    }catch (err) {
-      console.log(err.message);
-      return false;
+        const hourCurrent: any = moment().format("H");
+        const minuteCurrent: any = moment().format("m");
+
+        if (hourCurrent >= Number(startHour) && hourCurrent < Number(endHour)) {
+            if (hourCurrent == Number(startHour) && minuteCurrent < Number(startMinute)) {
+                return true; // cho
+            } else {
+                return false; // khoong cho
+            }
+        } else {
+            return true; // cho
+        }
+    } catch (err) {
+        console.log(err.message);
+        return false;
     }
-  };
+};
 
 
 const countCharExits = (string: string, word: string) => {
     const count = string.split(word).length - 1;
- 
+
     let stringExport = "";
- 
-    for(let i = 1; i <= count; i++) {
+
+    for (let i = 1; i <= count; i++) {
         stringExport += word;
     }
- 
+
     return stringExport;
 };
 
@@ -94,12 +113,15 @@ const numberformat = (nStr: any) => {
 };
 
 
+
+
+
 const checkItemExist = (array1: any, array2: any) => {
     const arrExport = [];
 
-    for(const i in array1) {
-        for(const i2 in array2) {
-            if(array1[i] == array2[i2]) {
+    for (const i in array1) {
+        for (const i2 in array2) {
+            if (array1[i] == array2[i2]) {
                 arrExport.push(array1[i]);
             }
         }
@@ -112,76 +134,76 @@ const checkItemExist = (array1: any, array2: any) => {
 const employeStringToSignalCode = (arrString: any) => {
 
     const arrConvert: any = {
-        "0":    "0",
-        "1":    "1",
-        "2":    "2",
-        "3":    "3",
-        "4":    "4",
-        "5":    "5",
-        "6":    "6",
-        "7":    "7",
-        "8":    "8",
-        "9":    "9",
-        "a":    "A",
-        "b":    "B",
-        "c":    "C",
-        "d":    "D",
-        "e":    "E",
-        "f":    "F",
-        "1ky":  "Y",
-        "2ky":  "O",
-        "3ky":  "o",
-        "4ky":  "U",
-        "5ky":  "P",
-        "6ky":  "{",
+        "0": "0",
+        "1": "1",
+        "2": "2",
+        "3": "3",
+        "4": "4",
+        "5": "5",
+        "6": "6",
+        "7": "7",
+        "8": "8",
+        "9": "9",
+        "a": "A",
+        "b": "B",
+        "c": "C",
+        "d": "D",
+        "e": "E",
+        "f": "F",
+        "1ky": "Y",
+        "2ky": "O",
+        "3ky": "o",
+        "4ky": "U",
+        "5ky": "P",
+        "6ky": "{",
         "bao5": "G",
         "bao7": "H",
         "bao8": "J",
         "bao9": "K",
         "baokhac": "L",
-        "10k":  "!",
-        "20k":  "@",
-        "50k":  "#",
+        "10k": "!",
+        "20k": "@",
+        "50k": "#",
         "100k": "$",
         "200k": "%",
         "500k": "^",
-        "1000k":"&",
+        "1000k": "&",
         "lock": "1",
         "exit": "S",
         "func": "s",
         "recall": "c",
         "cancel": "v",
-        "help":   "h",
+        "help": "h",
         "report": "b",
-        "print":  "r",
-        "sales":  "n",
-        "pay":    "V",
+        "print": "r",
+        "sales": "n",
+        "pay": "V",
         "6tren45": "l",
         "6tren55": "k",
-        "keno":    "d",
-        "3d":      "N",
-        "3dplus":  "q",
-        "4d":      "y",
+        "keno": "d",
+        "3d": "N",
+        "3dplus": "q",
+        "4d": "y",
         "4dtohop": "u",
         "4dcuon1": "M",
-        "4dbao":   "m",
+        "4dbao": "m",
         "4dcuon4": "<",
-        "khac":     "*",
-        "tuchon":   "I",
-        "arrowdown":"[",
-        "arrowup":  "]",
-        "arrowleft":"không rõ",
-        "clear":    "xxx",
-        "dot":      ".",
-        "send":     "x",
-        "total":    "t"
+        "khac": "*",
+        "tuchon": "I",
+        "arrowdown": "[",
+        "arrowup": "]",
+        "arrowleft": "không rõ",
+        "clear": "xxx",
+        "dot": ".",
+        "send": "x",
+        "total": "t"
     };
     const signalArray: any = [];
 
     arrString.forEach((string: any) => {
         signalArray.push(arrConvert[string]);
     });
-    
+
     return signalArray;
 };
 
@@ -189,6 +211,8 @@ export default {
     timeStamp,
     getDate,
     getTime,
+    formatInputMoment,
+    getDayCrawl,
     timeConverter,
     timeConverterNoChar,
     addMinuteToTime,

@@ -1,4 +1,5 @@
 import helper from "./Helper";
+import appHelper from "../../api/helper/helper";
 import request from "request-promise";
 import { LotteryResultsModel, LotteryResultsCheck } from "@models/LotteryResults";
 import moment from "moment-timezone";
@@ -736,7 +737,7 @@ const XosoMienBac = async () => {
       replaceString = helper.replaceString(replaceString, "<span class=\"text-number\">", "");
       replaceString = helper.replaceString(replaceString, "</div>", "");
       replaceString = helper.replaceString(replaceString, "</span>", ",");
-      replaceString = helper.replaceString(replaceString, " ", "")
+      replaceString = helper.replaceString(replaceString, " ", "");
       replaceString = replaceString.slice(0, -1);
       const arrCode = replaceString.split(",");
       if (arrCode.length > 3) {
@@ -1032,8 +1033,161 @@ const LotoCrawl = async () => {
 };
 
 
+const getPowerRound = async () => {
+  try {
+    const options = {
+      "method": "GET",
+      "rejectUnauthorized": false,
+      "url": "https://api.vietluck.vn/api/v1/product/2",
+      "headers": {}
+    };
+
+    let dataResp = await request(options);
+    dataResp = JSON.parse(dataResp);
+
+    let dataExport = [];
+
+    for (const data of dataResp.term) {
+      const date = moment(appHelper.formatInputMoment(data.date));
+      date.set("hour", 18);
+      date.set("minute", 30);
+      date.set("second", 0);
+      date.set("millisecond", 0);
+      const roundID = data.termString.split("#")[1];
+
+      dataExport.push({
+        round: roundID,
+        time: Number(moment(date).format("X")) * 1000
+      });
+    }
+
+    return {
+      status: true,
+      data: dataExport,
+      jackpot: await XosoGetJackPot("power")
+    };
+
+  } catch (e) {
+    console.log(e.message);
+  }
+}
+
+const getMegaRound = async () => {
+  try {
+    const options = {
+      "method": "GET",
+      "rejectUnauthorized": false,
+      "url": "https://api.vietluck.vn/api/v1/product/1",
+      "headers": {}
+    };
+
+    let dataResp = await request(options);
+    dataResp = JSON.parse(dataResp);
+
+    let dataExport = [];
+
+    for (const data of dataResp.term) {
+      const date = moment(appHelper.formatInputMoment(data.date));
+      date.set("hour", 18);
+      date.set("minute", 30);
+      date.set("second", 0);
+      date.set("millisecond", 0);
+      const roundID = data.termString.split("#")[1];
+
+      dataExport.push({
+        round: roundID,
+        time: Number(moment(date).format("X")) * 1000
+      });
+    }
+
+    return {
+      status: true,
+      data: dataExport,
+      jackpot: await XosoGetJackPot("mega")
+    };
+
+  } catch (e) {
+    console.log(e.message);
+  }
+}
 
 
+
+const getMax3DRound = async () => {
+  try {
+    const options = {
+      "method": "GET",
+      "rejectUnauthorized": false,
+      "url": "https://api.vietluck.vn/api/v1/product/4",
+      "headers": {}
+    };
+
+    let dataResp = await request(options);
+    dataResp = JSON.parse(dataResp);
+
+    let dataExport = [];
+
+    for (const data of dataResp.term) {
+      const date = moment(appHelper.formatInputMoment(data.date));
+      date.set("hour", 18);
+      date.set("minute", 30);
+      date.set("second", 0);
+      date.set("millisecond", 0);
+      const roundID = data.termString.split("#")[1];
+
+      dataExport.push({
+        round: roundID,
+        time: Number(moment(date).format("X")) * 1000
+      });
+    }
+
+    return {
+      status: true,
+      data: dataExport
+    };
+
+  } catch (e) {
+    console.log(e.message);
+  }
+}
+
+const getMax4DRound = async () => {
+  try {
+    const options = {
+      "method": "GET",
+      "rejectUnauthorized": false,
+      "url": "https://api.vietluck.vn/api/v1/product/3",
+      "headers": {}
+    };
+
+    let dataResp = await request(options);
+    dataResp = JSON.parse(dataResp);
+
+    let dataExport = [];
+
+    for (const data of dataResp.term) {
+      const date = moment(appHelper.formatInputMoment(data.date));
+      date.set("hour", 18);
+      date.set("minute", 30);
+      date.set("second", 0);
+      date.set("millisecond", 0);
+      const roundID = data.termString.split("#")[1];
+
+      dataExport.push({
+        round: roundID,
+        time: Number(moment(date).format("X")) * 1000
+      });
+    }
+
+    return {
+      status: true,
+      data: dataExport
+    };
+
+  } catch (e) {
+    console.log(e.message);
+  }
+}
 
 export default {
   XosoGetJackPot,
@@ -1046,5 +1200,9 @@ export default {
   XosoMienBac,
   Xoso6x36,
   DienToan123,
-  LotoCrawl
+  LotoCrawl,
+  getPowerRound,
+  getMegaRound,
+  getMax3DRound,
+  getMax4DRound
 };
