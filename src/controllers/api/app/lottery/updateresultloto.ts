@@ -28,12 +28,13 @@ const updateResultLoto = async (game: string, data: any) => {
                 for (const orderData of OrderItem) {
                     const orderDetail = JSON.parse(orderData.orderDetail);
                     dataUpdate = {}, dataUpdate.data = [], dataUpdate.result = {};
-                    const isWin: boolean = false, updateReward: number = 0;
-                    const capsonhan: number = 0;
+                    let isWin: boolean = false, updateReward: number = 0;
+                    let capsonhan: number = 0;
 
                     for await (const i of orderDetail.data) {
                         try {
                             const dataNumber: any[] = [];
+                            let reward: number = 0;
                             const number = i.number;
                             const numberFindCode = await LotteryNumbersModel.findOne({
                                 where: {
@@ -42,18 +43,14 @@ const updateResultLoto = async (game: string, data: any) => {
                             });
                             const code = numberFindCode.code;
 
-                            console.log("MA CODE: "+ code + " - Con So: " + number);
 
                             const numberOrder5so = number;
-                            const giaiDb2so = data.result.giaidacbiet.slice(-2);
                             const numberOrder4so = number.slice(-4);
                             const numberOrder3so = number.slice(-3);
                             const numberOrder2so = number.slice(-2);
 
-                            const isWinDB = (String(numberOrder5so) == data.result.giaidacbiet) ? true : false;
-                            const isWinPhuDB = true; 
-                            const isWinKk = (String(numberOrder2so) == giaiDb2so) ? true : false;
-
+                            const isWinDB = (String(numberOrder5so) == data.result.giaidacbiet && data.result.code.indexOf(code) > -1) ? true : false;
+                            const isWinPhuDB = (String(numberOrder5so) == data.result.giaidacbiet && data.result.code.indexOf(code) < 0) ? true : false;
                             const isWinGN = (String(numberOrder5so) == data.result.giainhat) ? true : false;
                             const isWinGNhi = (LotteryHelper.countSame(String(numberOrder5so), data.result.giainhi) > 0) ? true : false;
                             const isWinGBa = (LotteryHelper.countSame(String(numberOrder5so), data.result.giaiba) > 0) ? true : false;
@@ -61,20 +58,108 @@ const updateResultLoto = async (game: string, data: any) => {
                             const isWinGNam = (LotteryHelper.countSame(String(numberOrder4so), data.result.giainam) > 0) ? true : false;
                             const isWinGS = (LotteryHelper.countSame(String(numberOrder3so), data.result.giaisau) > 0) ? true : false;
                             const isWinGBay = (LotteryHelper.countSame(String(numberOrder2so), data.result.giaibay) > 0) ? true : false;
+                            const isWinKk = (LotteryHelper.checkRewardKhuyenKhich(data.result.giaidacbiet, String(numberOrder5so)) == true) ? true: false;
 
 
+                            if (isWinDB == true || 
+                                isWinPhuDB == true || 
+                                isWinGN == true ||
+                                isWinGNhi == true ||
+                                isWinGBa == true ||
+                                isWinGT == true ||
+                                isWinGNam == true ||
+                                isWinGS == true ||
+                                isWinGBay == true ||
+                                isWinKk == true) {
+                                isWin = true;
+                            }
+
+                            if (isWin == true) {
+                                if (isWinDB == true) {
+                                    reward = 500000000;
+                                } else if (isWinPhuDB == true) {
+                                    reward = 25000000;
+                                } else if (isWinGN == true) {
+                                    reward = 10000000;
+                                } else if (isWinGNhi == true) {
+                                    reward = 5000000 * Number(LotteryHelper.countSame(String(numberOrder5so), data.result.giainhi));
+                                } else if (isWinGBa == true) {
+                                    reward = 1000000 * Number(LotteryHelper.countSame(String(numberOrder5so), data.result.giaiba));
+                                } else if (isWinGT == true) {
+                                    reward = 400000 * Number(LotteryHelper.countSame(String(numberOrder4so), data.result.giaitu));
+                                } else if (isWinGNam == true) {
+                                    reward = 200000 * Number(LotteryHelper.countSame(String(numberOrder4so), data.result.giainam));
+                                } else if (isWinGS == true) {
+                                    reward = 100000 * Number(LotteryHelper.countSame(String(numberOrder3so), data.result.giaisau));
+                                } else if (isWinGBay == true) {
+                                    reward = 40000 * Number(LotteryHelper.countSame(String(numberOrder4so), data.result.giainam));
+                                } else if (isWinKk == true) {
+                                    reward = 40000;
+                                } else {
+                                    reward = 0;
+                                }
+                            }
+
+                            if (reward > 0) updateReward = updateReward + (reward * i.total);
 
 
+                            if (isWin == true) {
+                                (isWinDB == true) ? dataNumber.push(number) : "";
+                                (isWinPhuDB == true) ? dataNumber.push(number) : "";
+                                (isWinGN == true) ? dataNumber.push(number) : "";
+                                (isWinGBa == true) ? dataNumber.push(number) : "";
+                                (isWinGT == true) ? dataNumber.push(number) : "";
+                                (isWinGNam == true) ? dataNumber.push(number) : "";
+                                (isWinGS == true) ? dataNumber.push(number) : "";
+                                (isWinGBay == true) ? dataNumber.push(number) : "";
+                                (isWinKk == true) ? dataNumber.push(number) : "";
 
-
-
+                                if (dataNumber.length > 0) {
+                                    dataUpdate["data"].push({
+                                        number: dataNumber,
+                                        reward: reward
+                                    });
+                                }
+                            }
 
                         } catch (error) {
                             console.log(error.message);
                         }
                     }
 
+                    if (isWin) await SymtemSetReward(orderData.id, orderData.userId, updateReward);
+                    if (isWin) await NotifyWhenLimitReward(orderData.userId, orderData.type, updateReward);
+                    if (isWin) await PushNotify(
+                        orderData.userId, 
+                        "Thông Báo Trúng Thưởng", 
+                        "Bạn vừa trúng " + helper.numberformat(updateReward) + "đ vé Kiến Thiết #" + orderData.ticketId + "."
+                        );
+                    await UpdateTicketReward(orderData.ticketId, updateReward); // cộng vào tổng thưởng của ticket
+
+                    dataUpdate.result.iswin = isWin, dataUpdate.result.totalreward = updateReward;
+
+                    const orderUpdate = await LotteryOrdersModel.findOne({ where: { id: orderData.id } });
+                    orderUpdate.orderStatus = LotteryOrdersModel.ORDERSTATUS_ENUM.DRAWNED;
+                    orderUpdate.resultDetail = JSON.stringify(dataUpdate);
+                    orderUpdate.resultStatus = (isWin) ? LotteryOrdersModel.RESULTSTATUS_ENUM.WINNED : LotteryOrdersModel.RESULTSTATUS_ENUM.DRAWNED;
+                    await orderUpdate.save();
+                    await orderUpdate.reload();
+
+                    if (isWin) {
+                        UserNotifyAdd(
+                            orderUpdate.userId,
+                            LotteryNotifyModel.NOTIFY_TYPE_ENUM.WIN,
+                            LotteryNotifyModel.NOTIFY_SLUG_ENUM.KIENTHIET,
+                            LotteryNotifyModel.NOTIFY_NAME_ENUM.KIENTHIET,
+                            "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + ".",
+                            orderData.ticketId
+                        );
+                    }
+
                 };
+
+
+
 
             } catch (error) {
                 status = false, message = error.message;

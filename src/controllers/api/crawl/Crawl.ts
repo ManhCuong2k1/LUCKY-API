@@ -687,8 +687,8 @@ const XosoMienBac = async () => {
   try {
     //const today = moment().format("YYYY-MM-DD");
     //const today2 = moment("DD-MM-YYYY").format();
-    const today = "2021-08-25";
-    const today2 = "25-08-2021";
+    const today = "2021-08-26";
+    const today2 = "26-08-2021";
     const roundId = moment().format("YYYYMMDD");
     const currentDate = moment().format("DD/MM/YYYYY");
 
@@ -1045,7 +1045,7 @@ const getPowerRound = async () => {
     let dataResp = await request(options);
     dataResp = JSON.parse(dataResp);
 
-    let dataExport = [];
+    const dataExport = [];
 
     for (const data of dataResp.term) {
       const date = moment(appHelper.formatInputMoment(data.date));
@@ -1070,7 +1070,7 @@ const getPowerRound = async () => {
   } catch (e) {
     console.log(e.message);
   }
-}
+};
 
 const getMegaRound = async () => {
   try {
@@ -1084,7 +1084,7 @@ const getMegaRound = async () => {
     let dataResp = await request(options);
     dataResp = JSON.parse(dataResp);
 
-    let dataExport = [];
+    const dataExport = [];
 
     for (const data of dataResp.term) {
       const date = moment(appHelper.formatInputMoment(data.date));
@@ -1109,7 +1109,7 @@ const getMegaRound = async () => {
   } catch (e) {
     console.log(e.message);
   }
-}
+};
 
 
 
@@ -1125,7 +1125,7 @@ const getMax3DRound = async () => {
     let dataResp = await request(options);
     dataResp = JSON.parse(dataResp);
 
-    let dataExport = [];
+    const dataExport = [];
 
     for (const data of dataResp.term) {
       const date = moment(appHelper.formatInputMoment(data.date));
@@ -1149,7 +1149,7 @@ const getMax3DRound = async () => {
   } catch (e) {
     console.log(e.message);
   }
-}
+};
 
 const getMax4DRound = async () => {
   try {
@@ -1163,7 +1163,7 @@ const getMax4DRound = async () => {
     let dataResp = await request(options);
     dataResp = JSON.parse(dataResp);
 
-    let dataExport = [];
+    const dataExport = [];
 
     for (const data of dataResp.term) {
       const date = moment(appHelper.formatInputMoment(data.date));
@@ -1187,7 +1187,7 @@ const getMax4DRound = async () => {
   } catch (e) {
     console.log(e.message);
   }
-}
+};
 
 export default {
   XosoGetJackPot,

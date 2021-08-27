@@ -37,7 +37,7 @@ const getTime = (timeStamp: any) => {
 
 const formatInputMoment = (string: any) => {
     try {
-        let splitString = string.split(" ")[0];
+        const splitString = string.split(" ")[0];
         return moment(splitString, ["DD-MM-YYYY"]);
     } catch (e) {
         console.log(e.message);
@@ -50,7 +50,7 @@ const getDayCrawl = (string: any) => {
     } catch (e) {
         console.log(e.message);
     }
-}
+};
 
 
 const addMinuteToTime = (time: any, minutes: number) => {
