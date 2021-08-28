@@ -347,6 +347,7 @@ const updateResult = async (game: string, data: any) => {
                             updateReward = updateReward + reward;
                         }
 
+                        /***  SET NGƯỠNG
                         switch(orderDetail.level) {
                             case 5:
                                 if(updateReward >= 390000000) updateReward = 390000000; 
@@ -385,7 +386,7 @@ const updateResult = async (game: string, data: any) => {
                                 if(updateReward >= 390000000) updateReward = 1149000000; 
                             break;
                         }
-
+                           END SET NGƯỠNG   ****/
                     };
 
                     if (isWin) await SymtemSetReward(orderData.id, orderData.userId, updateReward);
