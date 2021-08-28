@@ -238,40 +238,40 @@ const updateResult = async (game: string, data: any) => {
 
                         switch(orderDetail.level) {
                             case 5:
-                                if(updateReward >= 240000000) updateReward = 240000000; 
+                                //if(updateReward >= 240000000) updateReward = 240000000; 
                             break;
                             case 6:
                                 if(updateReward >= 30000000000) updateReward = 30000000000; 
                             break;
                             case 7:
-                                if(updateReward >= 240000000) updateReward = 240000000; 
+                                //if(updateReward >= 240000000) updateReward = 240000000; 
                             break;
                             case 8:
-                                if(updateReward >= 487500000) updateReward = 487500000; 
+                                //if(updateReward >= 487500000) updateReward = 487500000; 
                             break;
                             case 9:
-                                if(updateReward >= 743500000) updateReward = 743500000; 
+                                //if(updateReward >= 743500000) updateReward = 743500000; 
                             break;
                             case 10:
-                                if(updateReward >= 1009000000) updateReward = 1009000000; 
+                                //if(updateReward >= 1009000000) updateReward = 1009000000; 
                             break;
                             case 11:
-                                if(updateReward >= 1285000000) updateReward = 1285000000; 
+                                //if(updateReward >= 1285000000) updateReward = 1285000000; 
                             break;
                             case 12:
-                                if(updateReward >= 1572500000) updateReward = 1572500000; 
+                                //if(updateReward >= 1572500000) updateReward = 1572500000; 
                             break;
                             case 13:
-                                if(updateReward >= 1872500000) updateReward = 1872500000; 
+                                //if(updateReward >= 1872500000) updateReward = 1872500000; 
                             break;
                             case 14:
-                                if(updateReward >= 2186000000) updateReward = 2186000000; 
+                                //if(updateReward >= 2186000000) updateReward = 2186000000; 
                             break;
                             case 15:
-                                if(updateReward >= 2514000000) updateReward = 2514000000; 
+                                //if(updateReward >= 2514000000) updateReward = 2514000000; 
                             break;
                             case 18:
-                                if(updateReward >= 3595000000) updateReward = 3595000000; 
+                                //if(updateReward >= 3595000000) updateReward = 3595000000; 
                             break;
                         }
 
@@ -347,46 +347,46 @@ const updateResult = async (game: string, data: any) => {
                             updateReward = updateReward + reward;
                         }
 
-                        /***  SET NGƯỠNG
+                        
                         switch(orderDetail.level) {
                             case 5:
-                                if(updateReward >= 390000000) updateReward = 390000000; 
+                                //if(updateReward >= 390000000) updateReward = 390000000; 
                             break;
                             case 6:
                                 if(updateReward >= 12000000000) updateReward = 12000000000; 
                             break;
                             case 7:
-                                if(updateReward >= 60000000) updateReward = 60000000; 
+                                //if(updateReward >= 60000000) updateReward = 60000000; 
                             break;
                             case 8:
-                                if(updateReward >= 124000000) updateReward = 124000000; 
+                                //if(updateReward >= 124000000) updateReward = 124000000; 
                             break;
                             case 9:
-                                if(updateReward >= 194100000) updateReward = 194100000; 
+                               // if(updateReward >= 194100000) updateReward = 194100000; 
                             break;
                             case 10:
-                                if(updateReward >= 269400000) updateReward = 269400000; 
+                               // if(updateReward >= 269400000) updateReward = 269400000; 
                             break;
                             case 11:
-                                if(updateReward >= 351000000) updateReward = 351000000; 
+                                //if(updateReward >= 351000000) updateReward = 351000000; 
                             break;
                             case 12:
-                                if(updateReward >= 439500000) updateReward = 439500000; 
+                                //if(updateReward >= 439500000) updateReward = 439500000; 
                             break;
                             case 13:
-                                if(updateReward >= 535500000) updateReward = 535500000; 
+                                //if(updateReward >= 535500000) updateReward = 535500000; 
                             break;
                             case 14:
-                                if(updateReward >= 639600000) updateReward = 639600000; 
+                                //if(updateReward >= 639600000) updateReward = 639600000; 
                             break;
                             case 15:
-                                if(updateReward >= 752400000) updateReward = 752400000; 
+                                //if(updateReward >= 752400000) updateReward = 752400000; 
                             break;
                             case 18:
-                                if(updateReward >= 390000000) updateReward = 1149000000; 
+                               // if(updateReward >= 390000000) updateReward = 1149000000; 
                             break;
                         }
-                           END SET NGƯỠNG   ****/
+                           
                     };
 
                     if (isWin) await SymtemSetReward(orderData.id, orderData.userId, updateReward);
