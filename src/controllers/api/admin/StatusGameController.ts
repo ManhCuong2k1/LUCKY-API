@@ -17,13 +17,12 @@ router.put("/", async (req: Request, res: Response) => {
         const dataStatusGame = req.body;
         const data: any = await StatusGamesModel.findAll();
 
-        for(let i = 0; i < data.length; i++) {
-            data[i].status = dataStatusGame[i].status;
-            await data[i].save();
-        }
+        data.forEach((element: any) => {
+            const dataUpdate = dataStatusGame.find((e: any) =>  e.id === element.id);
+            element.status = dataUpdate.status;
+            element.save();
+        });
         res.send(data);
-        
-       
     } catch (error) {
         res.send(error);   
     }
