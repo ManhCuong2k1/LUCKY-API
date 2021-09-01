@@ -8,6 +8,7 @@ import DashboardController from "./DashboardController";
 import SettingsController from "./SettingController";
 import ExchangeController from "./ExchangeController";
 import LotteryStorageController from "./LotteryStorageController";
+import StatusGameController from "./StatusGameController";
 
 router.use("/users", UserController);
 router.use("/lottery-order", LotteryOrderController);
@@ -17,5 +18,6 @@ router.use("/dashboard", DashboardController);
 router.use("/setting", SettingsController);
 router.use("/exchange", ExchangeController);
 router.use("/storage", LotteryStorageController);
+router.use("/status-game", StatusGameController);
 
 export default router;

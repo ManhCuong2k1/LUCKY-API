@@ -5,35 +5,44 @@ const router = Router();
 
 router.get("/", async (req: Request, res: Response) => {
     try {
-        const dataExchangeLimit = await SettingsModel.findAll({
+        const dataLimitMin = await SettingsModel.findAll({
             where: {
-                key : {
-                    [Op.ne]: "hot_line"
-                }
+                [Op.or]: [
+                    { key: "exchange_local_min" }, 
+                    { key: "exchange_momo_min" },
+                    { key: "exchange_vnpay_min" },
+                    { key: "exchange_bank_min" },
+                    { key: "recharge_momo_min" },
+                    { key: "recharge_vnpay_min" },
+                ],
             }
         });
-        
-        if(dataExchangeLimit.length !== 0) {
-            const result: any = {
-                "exchange_local_min": dataExchangeLimit[0].value,
-                "exchange_momo_min": dataExchangeLimit[1].value,
-                "exchange_vnpay_min": dataExchangeLimit[2].value,
-                "exchange_bank_min": dataExchangeLimit[3].value,
-                "recharge_momo_min": dataExchangeLimit[4].value,
-                "recharge_vnpay_min": dataExchangeLimit[5].value,
-                "exchange_local_max": dataExchangeLimit[6].value,
-                "exchange_momo_max": dataExchangeLimit[7].value,
-                "exchange_vnpay_max": dataExchangeLimit[8].value,
-                "exchange_bank_max": dataExchangeLimit[9].value,
-                "recharge_momo_max": dataExchangeLimit[10].value,
-                "recharge_vnpay_max": dataExchangeLimit[11].value,
-                "ticket_storage_fee": dataExchangeLimit[12].value,
-            };
-            
-            res.send({data: result});
-        } else {
-            res.send({data: null});
-        }
+
+        const dataLimitMax = await SettingsModel.findAll({
+            where: {
+                [Op.or]: [
+                    { key: "exchange_local_max" }, 
+                    { key: "exchange_momo_max" },
+                    { key: "exchange_vnpay_max" },
+                    { key: "exchange_bank_max" },
+                    { key: "recharge_momo_max" },
+                    { key: "recharge_vnpay_max" },
+                ],
+            }
+        });
+
+        const dataStorageFee = await SettingsModel.findOne({
+            where: {
+                [Op.or]: [
+                    { key: "ticket_storage_fee" }, 
+                ],
+            }
+        });
+        res.send({data: {
+            minLimit: dataLimitMin,
+            maxLimit: dataLimitMax,
+            storageFee: dataStorageFee,
+        }});
         
     } catch (error) {
         res.send(error);   
@@ -165,23 +174,19 @@ router.put("/", async (req: Request, res: Response) => {
             }
         });
         
-        data[0].value = dataSetting.exchange_local_min;
-        data[1].value = dataSetting.exchange_momo_min;
-        data[2].value = dataSetting.exchange_vnpay_min;
-        data[3].value = dataSetting.exchange_bank_min;
-        data[4].value = dataSetting.recharge_momo_min;
-        data[5].value = dataSetting.recharge_vnpay_min;
-        data[6].value = dataSetting.exchange_local_max;
-        data[7].value = dataSetting.exchange_momo_max;
-        data[8].value = dataSetting.exchange_vnpay_max;
-        data[9].value = dataSetting.exchange_bank_max;
-        data[10].value = dataSetting.recharge_momo_max;
-        data[11].value = dataSetting.recharge_vnpay_max;
-        data[12].value = dataSetting.ticket_storage_fee;
-        
-        for(let i = 0; i < data.length; i++) {
-            await data[i].save();
-        }
+        data.forEach((element: any) => {
+            const dataUpdateMax = dataSetting.maxLimit.find((max: any) => max.id === element.id);
+            const dataUpdateMin = dataSetting.minLimit.find((min: any) => min.id === element.id);
+            
+            if(dataUpdateMax) {
+                element.value = dataUpdateMax.value;
+            } else if(dataUpdateMin) {
+                element.value = dataUpdateMin.value;
+            } else {
+                element.value = dataSetting.storageFee.value;
+            }
+            element.save();
+        });
 
         res.send(data);
     } catch (error) {
