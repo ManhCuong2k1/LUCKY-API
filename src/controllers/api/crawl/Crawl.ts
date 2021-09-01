@@ -4,6 +4,7 @@ import request from "request-promise";
 import { LotteryResultsModel, LotteryResultsCheck } from "@models/LotteryResults";
 import moment from "moment-timezone";
 import { replace } from "lodash";
+import { LotteryPeriodsCheck, LotteryPeriodsModel } from "@models/LotteryPeriod";
 moment.tz.setDefault("Asia/Ho_Chi_Minh");
 
 
@@ -687,8 +688,8 @@ const XosoMienBac = async () => {
   try {
     //const today = moment().format("YYYY-MM-DD");
     //const today2 = moment("DD-MM-YYYY").format();
-    const today = "2021-08-26";
-    const today2 = "26-08-2021";
+    const today = "2021-08-30";
+    const today2 = "30-08-2021";
     const roundId = moment().format("YYYYMMDD");
     const currentDate = moment().format("DD/MM/YYYYY");
 
@@ -1055,11 +1056,23 @@ const getPowerRound = async () => {
       date.set("millisecond", 0);
       const roundID = data.termString.split("#")[1];
 
+      const LotteryCheckExits = await LotteryPeriodsCheck(LotteryResultsModel.GAME_ENUM.POWER, roundID);
+      if (!LotteryCheckExits) {
+        const dataImport: any = {
+          type: LotteryResultsModel.GAME_ENUM.POWER,
+          roundId: roundID,
+          time: Number(moment(date).format("X")) * 1000
+        };
+        LotteryPeriodsModel.create(dataImport);
+      }
+
       dataExport.push({
         round: roundID,
         time: Number(moment(date).format("X")) * 1000
       });
+
     }
+
 
     return {
       status: true,
@@ -1093,6 +1106,17 @@ const getMegaRound = async () => {
       date.set("second", 0);
       date.set("millisecond", 0);
       const roundID = data.termString.split("#")[1];
+
+      const LotteryCheckExits = await LotteryPeriodsCheck(LotteryResultsModel.GAME_ENUM.MEGA, roundID);
+      if (!LotteryCheckExits) {
+        const dataImport: any = {
+          type: LotteryResultsModel.GAME_ENUM.MEGA,
+          roundId: roundID,
+          time: Number(moment(date).format("X")) * 1000
+        };
+        LotteryPeriodsModel.create(dataImport);
+      }
+
 
       dataExport.push({
         round: roundID,
@@ -1135,6 +1159,17 @@ const getMax3DRound = async () => {
       date.set("millisecond", 0);
       const roundID = data.termString.split("#")[1];
 
+      const LotteryCheckExits = await LotteryPeriodsCheck(LotteryResultsModel.GAME_ENUM.MAX3D, roundID);
+      if (!LotteryCheckExits) {
+        const dataImport: any = {
+          type: LotteryResultsModel.GAME_ENUM.MAX3D,
+          roundId: roundID,
+          time: Number(moment(date).format("X")) * 1000
+        };
+        LotteryPeriodsModel.create(dataImport);
+      }
+
+
       dataExport.push({
         round: roundID,
         time: Number(moment(date).format("X")) * 1000
@@ -1172,6 +1207,17 @@ const getMax4DRound = async () => {
       date.set("second", 0);
       date.set("millisecond", 0);
       const roundID = data.termString.split("#")[1];
+
+      const LotteryCheckExits = await LotteryPeriodsCheck(LotteryResultsModel.GAME_ENUM.MAX4D, roundID);
+      if (!LotteryCheckExits) {
+        const dataImport: any = {
+          type: LotteryResultsModel.GAME_ENUM.MAX4D,
+          roundId: roundID,
+          time: Number(moment(date).format("X")) * 1000
+        };
+        LotteryPeriodsModel.create(dataImport);
+      }
+
 
       dataExport.push({
         round: roundID,

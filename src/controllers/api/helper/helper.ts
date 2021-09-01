@@ -112,9 +112,32 @@ const numberformat = (nStr: any) => {
     return x1 + x2;
 };
 
+const pushZeroToNumb = (number: any) => {
+    let i = 0;
+    for (const num of number) {
+        if (num.toString().length < 2) {
+            number[i] = String("0" + num);
+        }
+        number[i] = String(number[i]);
+        i++;
+    }
+    return number;
+}
 
+const getCharFromListRound = (round: any, roundList: any) => {
+    const arrCharTime = ["a", "b", "c", "d", "e", "f"];
+    for (const i in roundList) {
+        if (String(roundList[i].round) == String(round)) {
+            return arrCharTime[Number(i)];
+            break;
+        }
+    }
+}
 
-
+const getCharFromNumBer = (numb: any) => {
+    const arrCharTime = ["a", "b", "c", "d", "e", "f"];
+    return arrCharTime[numb];
+}
 
 const checkItemExist = (array1: any, array2: any) => {
     const arrExport = [];
@@ -161,13 +184,13 @@ const employeStringToSignalCode = (arrString: any) => {
         "bao8": "J",
         "bao9": "K",
         "baokhac": "L",
-        "10k": "!",
-        "20k": "@",
-        "50k": "#",
-        "100k": "$",
-        "200k": "%",
-        "500k": "^",
-        "1000k": "&",
+        "10000": "!",
+        "20000": "@",
+        "50000": "#",
+        "100000": "$",
+        "200000": "%",
+        "500000": "^",
+        "1000000": "&",
         "lock": "1",
         "exit": "S",
         "func": "s",
@@ -219,6 +242,9 @@ export default {
     blockInPeriodTime,
     getTimeData,
     numberformat,
+    pushZeroToNumb,
+    getCharFromListRound,
+    getCharFromNumBer,
     checkItemExist,
     employeStringToSignalCode
 };

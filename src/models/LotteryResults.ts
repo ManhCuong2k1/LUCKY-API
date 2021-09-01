@@ -89,14 +89,23 @@ LotteryResultsModel.init(LotteryResultsDefine, {
 // Func
 const LotteryResultsCheck = async (type: string, round: string) => {
     const RoundCheck = await LotteryResultsModel.findOne({
-      where: { type, round },
+        where: { type, round },
     });
-    const exportData = (RoundCheck == null) ? false: RoundCheck;
+    const exportData = (RoundCheck == null) ? false : RoundCheck;
     return exportData;
-  };
+};
+
+const LotteryResultsGetLastRound = async (type: string) => {
+    const RoundCheck = await LotteryResultsModel.findOne({
+        where: { type },
+        order: [["id", "DESC"]],
+    });
+    return RoundCheck;
+};
 
 export {
-    LotteryResultsInterface, 
+    LotteryResultsInterface,
     LotteryResultsModel,
-    LotteryResultsCheck
+    LotteryResultsCheck,
+    LotteryResultsGetLastRound
 };

@@ -56,3 +56,15 @@ export const TaskXsmb = async () => {
         console.log(e.message);
     }
 };
+
+
+export const TaskGetRound = async () => {
+    try {
+        await Crawl.getPowerRound();
+        await Crawl.getMegaRound();
+        await Crawl.getMax3DRound();
+        await Crawl.getMax4DRound();
+    }catch(e) {
+        console.log(e.message);
+    }
+};

@@ -7,6 +7,7 @@ import { LotteryRechargeModel } from "@models/LotteryRecharge";
 import { UserHistoryModel } from "@models/LotteryUserHistory";
 import { LotteryNotifyModel } from "@models/LotteryNotify";
 import { LotteryExchangesModel } from "@models/LotteryExchanges";
+import { LotteryPeriodsModel } from "./LotteryPeriod";
 import { LotteryStoragesModel } from "./LotteryStorage";
 import { Image } from "@models/Images";
 

@@ -1,7 +1,6 @@
 import helper from "@controllers/api/helper/helper";
 import { LotteryOrdersModel, SymtemSetReward } from "@models/LotteryOrder";
 import { UpdateTicketReward } from "@models/LotteryTicket";
-import { UserHistoryModel, UserHistoryAdd } from "@models/LotteryUserHistory";
 import { LotteryNotifyModel, UserNotifyAdd, PushNotify, NotifyWhenLimitReward } from "@models/LotteryNotify";
 import { LotteryResultsModel } from "@models/LotteryResults";
 import LotteryHelper from "./helper";
@@ -647,7 +646,7 @@ const updateResult = async (game: string, data: any) => {
                         const giaibaWinNum1 = (data.result.giaiba.indexOf(String(number1)) > -1) ? true : false;
                         const giaibaWinNum2 = (data.result.giaiba.indexOf(String(number2)) > -1) ? true : false;
 
-                        if (giaibaWinNum1 == true && giaibaWinNum2) {
+                        if (giaibaWinNum1 == true && giaibaWinNum2 == true ) {
                             rewardGiaiBa = 10000000;
                             dataUpdate["data"]["giaiba"].push({
                                 number: [number1, number2],
@@ -870,7 +869,7 @@ const updateResult = async (game: string, data: any) => {
 
 
                                 // GIAI NHI
-                                const arrResultGiaiNhi = LotteryHelper.arrayStringToNumber(data.result.giainhi);
+                                const arrResultGiaiNhi = data.result.giainhi;
                                 const checkSameGiaiNhi = LotteryHelper.checkSame(arrBet, arrResultGiaiNhi);
 
                                 if (checkSameGiaiNhi.length > 0) {
@@ -910,8 +909,8 @@ const updateResult = async (game: string, data: any) => {
 
 
                                 // GIAI KHYEN KHICH 1
-                                const arrResultKK1 = LotteryHelper.arrayStringToNumber(LotteryHelper.removeFirstChar(data.result.giaikhuyenkhich1, 1));
-                                const checkSameKK1 = LotteryHelper.arrayStringToNumber(LotteryHelper.checkSame(LotteryHelper.removeFirstChar(LotteryHelper.arrNumberToString(arrBet), 1), arrResultKK1));
+                                const arrResultKK1 = LotteryHelper.removeFirstChar(data.result.giaikhuyenkhich1, 1);
+                                const checkSameKK1 = LotteryHelper.checkSame(LotteryHelper.removeFirstChar(LotteryHelper.arrNumberToString(arrBet), 1), arrResultKK1);
 
                                 if (checkSameKK1.length > 0) {
 
@@ -929,8 +928,8 @@ const updateResult = async (game: string, data: any) => {
                                 }
 
                                 // GIAI KHYEN KHICH 2
-                                const arrResultKK2 = LotteryHelper.arrayStringToNumber(LotteryHelper.removeFirstChar(data.result.giaikhuyenkhich2, 2));
-                                const checkSameKK2 = LotteryHelper.arrayStringToNumber(LotteryHelper.checkSame(LotteryHelper.removeFirstChar(LotteryHelper.arrNumberToString(arrBet), 2), arrResultKK2));
+                                const arrResultKK2 = LotteryHelper.removeFirstChar(data.result.giaikhuyenkhich2, 2);
+                                const checkSameKK2 = LotteryHelper.checkSame(LotteryHelper.removeFirstChar(LotteryHelper.arrNumberToString(arrBet), 2), arrResultKK2);
 
                                 if (checkSameKK2.length > 0) {
 

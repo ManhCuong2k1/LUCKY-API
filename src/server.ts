@@ -5,16 +5,27 @@ import cron from "node-cron";
 import config from "./config";
 import moment from "moment-timezone";
 moment.tz.setDefault("Asia/Ho_Chi_Minh");
-import { 
+import {
     TaskKeno,
     TaskMegaPowerMax3dMax4d,
     TaskCompute,
-    TaskXsmb
+    TaskXsmb,
+    TaskGetRound
 } from "./task/xoso";
 
 /****
 
-if (config.ENV === "production") {
+    if (config.ENV === "production") {
+        
+        cron.schedule("00 59 * * * *", async () => {
+        try {
+            await TaskGetRound();
+            console.log("Task Done: Get Round at " + moment().format("DD-MM-YYYY HH:mm:ss"));
+        } catch (error) {
+            console.log(error.message);
+        }
+    });
+
     cron.schedule("0 * * * * *", async () => {
         try {
             await TaskKeno();
@@ -23,6 +34,7 @@ if (config.ENV === "production") {
             console.log(error.message);
         }
     });
+
     cron.schedule("00 59 * * * *", async () => {
         try {
             await TaskXsmb();
