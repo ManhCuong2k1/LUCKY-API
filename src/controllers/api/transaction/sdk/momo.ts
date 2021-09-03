@@ -20,8 +20,8 @@ class MomoPayment {
       accessKey: process.env.MOMO_ACCESS_KEY,
       partnerCode: process.env.MOMO_PARTNER_CODE,
       requestType: "captureMoMoWallet",
-      returnUrl: `${process.env.HOST_URL}/api/transaction/endpoint/momo`,
-      notifyUrl: `${process.env.HOST_URL}/api/transaction/endpoint/momo`,
+      returnUrl: `${process.env.HOST}/api/transaction/endpoint/momo`,
+      notifyUrl: `${process.env.HOST}/api/transaction/endpoint/momo`,
       orderId: this.orderId,
       amount: this.amount,
       requestId: this.requestId,
@@ -64,8 +64,8 @@ class MomoPayment {
       `&amount=${this.amount}` +
       `&orderId=${this.orderId}` +
       `&orderInfo=${this.orderInfo}` +
-      `&returnUrl=${process.env.HOST_URL}/api/transaction/endpoint/momo` +
-      `&notifyUrl=${process.env.HOST_URL}/api/transaction/endpoint/momo` +
+      `&returnUrl=${process.env.HOST}/api/transaction/endpoint/momo` +
+      `&notifyUrl=${process.env.HOST}/api/transaction/endpoint/momo` +
       "&extraData=", process.env.MOMO_SECRET_KEY).toString();
     return signature;
   }
