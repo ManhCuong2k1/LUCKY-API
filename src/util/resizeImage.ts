@@ -1,19 +1,26 @@
-import axios from "axios";
-import FormData from "form-data";
+import path from "path";
+import moment from "moment-timezone";
+import fs from "fs";
+import slugify from "slugify";
 
 const saveFile = async (file: any) => {
-    const initImage = new FormData();
-    initImage.append("file", file.buffer);
+    const currentDate = moment().format("MM-YYYY");
+    const orifinalName = file.originalname.split(".");
+    const editName = orifinalName.slice(0, orifinalName.length - 1)[0] + "-" + new Date().getTime();
+    const fileName = slugify(editName, { strict: true });
+
+    const imageFolder = path.join(__dirname, "../../public/images/" + currentDate);
+    const ext = path.extname(file.originalname);
+    const filePath = path.resolve(`${imageFolder}/${fileName}${ext}`);
     
-    const postImage = await axios({
-        method: "post",
-        url: process.env.HOST_IMAGES_URL + "/images?category=content",
-        headers: {
-            ...initImage.getHeaders()
-        },
-        data: initImage
+    fs.mkdir(path.join(__dirname, "../../public/images/" + currentDate), async () => {
+        console.log("Created folder images!");
     });
-    return postImage.data;
+    fs.writeFile(filePath, file.buffer, "binary", function(err){
+        if (err) throw err;
+        console.log("File saved.");
+    });
+    return `${currentDate}/${fileName}${ext}`;
 };
 
 export {
