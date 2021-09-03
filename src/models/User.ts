@@ -199,7 +199,7 @@ const PostUserOtp = async (userId: number) => {
       existedUser.otpCode = code;
       await existedUser.save();
       await existedUser.reload();
-      const message = `${code} là mã xác minh của bạn`;
+      const message = `FNOTIFY - Ma OTP cua quy khach la ${code}. Truy cap chi tiet: https://fnotify.vn/. Hotline 0988576503`;
       await sendSmsOtp(existedUser.phone, message);
       return code;
     } else {
