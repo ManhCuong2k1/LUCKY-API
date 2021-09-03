@@ -36,15 +36,16 @@ const router = Router();
 router.post("/single-upload", [ authUser, upload.single("file") ], async (req: Request, res: Response) => {
     try {
         const user: any = req.user;
-        if (!req.file) throw new Error("No file to upload");
+        // if (!req.file) throw new Error("No file to upload");
         console.log("Recive file!");
-        const fileName = await saveFile(req.file);
-        const newImage: any = {
-            imageUrl: fileName,
-            UserId: user.id
-        };
-        await Image.create(newImage);
-        res.send(newImage);
+        // const fileName = await saveFile(req.file);
+        // const newImage: any = {
+        //     imageUrl: fileName,
+        //     UserId: user.id
+        // };
+        // await Image.create(newImage);
+        // res.send(newImage);
+        res.send(user);
     } catch (e) {
         res.status(400).send({
             error: e.message
@@ -156,7 +157,6 @@ router.get("/images", authUser, async (req: Request, res: Response) => {
     }
 });
 
-
 /**
  * @openapi
  * /upload/images/:id:
@@ -190,6 +190,5 @@ router.get("/images/:id", async (req: Request, res: Response) => {
         });
     }
 });
-
 
 export default router;
