@@ -10,17 +10,17 @@ const sendSmsOtp = async (phoneNumber: string, message: string) => {
     
     try {
       const config: AxiosRequestConfig = {
-        method: 'post',
-        url: 'http://rest.esms.vn/MainService.svc/json/SendMultipleMessage_V4_post_json/',
+        method: "post",
+        url: "http://rest.esms.vn/MainService.svc/json/SendMultipleMessage_V4_post_json/",
         headers: { 
-          'Content-Type': 'application/json', 
-          'Cookie': 'ASP.NET_SessionId=mqnr3acglwodhoiidxpdroxo'
+          "Content-Type": "application/json", 
+          "Cookie": "ASP.NET_SessionId=mqnr3acglwodhoiidxpdroxo"
         },
         data : JSON.stringify({
           "ApiKey": process.env.SMS_API_KEY,
           "Content": message,
           "Phone": phoneNumber,
-          "SecretKey": process.env.SMS_SCRET_KEY,
+          "SecretKey": process.env.SMS_SECRET_KEY,
           "Brandname": "FNOTIFY",
           "SmsType": "2",
           "campaignid": "lucky"
