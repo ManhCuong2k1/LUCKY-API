@@ -39,7 +39,7 @@ router.post("/single-upload", [ authEmploye, upload.single("file") ], async (req
         if (!req.file) throw new Error("No file to upload");
         const fileName = await saveFile(req.file);
         const newImage: any = {
-            imageUrl: fileName.data.url.src,
+            imageUrl: fileName,
             UserId: user.id
         };
         await Image.create(newImage);
