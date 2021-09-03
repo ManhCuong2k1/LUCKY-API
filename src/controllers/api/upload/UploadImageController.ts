@@ -4,7 +4,7 @@ import { saveFile } from "@util/resizeImage";
 import { LotteryImagesModel } from "@models/LotteryImages";
 import { Image } from "@models/Images";
 import { GridInterface } from "@models/Transformers/Grid";
-import { authEmploye } from "../../../middleware/auth";
+import { authUser } from "../../../middleware/auth";
 
 const router = Router();
 
@@ -33,7 +33,7 @@ const router = Router();
  *     security:
  *      - Bearer: []
  */
-router.post("/single-upload", [ authEmploye, upload.single("file") ], async (req: Request, res: Response) => {
+router.post("/single-upload", [ authUser, upload.single("file") ], async (req: Request, res: Response) => {
     try {
         const user: any = req.user;
         if (!req.file) throw new Error("No file to upload");
