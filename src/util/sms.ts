@@ -1,30 +1,20 @@
 import dotenv from "dotenv";
 import axios, { AxiosRequestConfig } from "axios";
-import qs from "qs";
 
 dotenv.config();
 
 const sendSmsOtp = async (phoneNumber: string, message: string) => {
     if (phoneNumber.charAt(0) === "0") {
-      phoneNumber = phoneNumber.replace("0", "+84");
+      phoneNumber = phoneNumber.replace("0", "0");
     }
-    const data = qs.stringify({
-      Body: message,
-      From: process.env.SMS_PHONE_NUMBER,
-      To: phoneNumber,
-    });
+    
     try {
       const config: AxiosRequestConfig = {
-        method: "POST",
-        url: `https://api.twilio.com/2010-04-01/Accounts/${process.env.SMS_OTP_SID}/Messages.json`,
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        auth: {
-          username: process.env.SMS_OTP_SID,
-          password: process.env.SMS_AUTH_TOKEN,
-        },
-        data: data,
+        method: "get",
+        url: "http://rest.esms.vn/MainService.svc/json/SendMultipleMessage_V4_get?Phone="+phoneNumber+"&Content="+message+"&ApiKey="+process.env.SMS_API_KEY+"&SecretKey="+process.env.SMS_SCRET_KEY+"&SmsType=2&Brandname=FNOTIFY",
+        headers: { 
+          "Cookie": "ASP.NET_SessionId=vgqyosn3t0mh4uxhswgvyfpo"
+        }
       };
       return await axios(config);
     } catch (e) {
