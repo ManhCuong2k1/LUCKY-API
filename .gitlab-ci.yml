@@ -11,7 +11,7 @@ build:
   script:
     - echo $IMAGE_TAG-$CI_COMMIT_SHORT_SHA
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build -t $IMAGE_TAG -t $IMAGE_TAG-$CI_COMMIT_SHORT_SHA -f dockerfiles/Prod/Dockerfile .
+    - DOCKER_BUILDKIT=1 docker build -t $IMAGE_TAG -t $IMAGE_TAG-$CI_COMMIT_SHORT_SHA -f dockerfiles/Prod/Dockerfile .
     - docker push $IMAGE_TAG-$CI_COMMIT_SHORT_SHA
     - docker push $IMAGE_TAG
   only:
@@ -28,3 +28,13 @@ deploy_develop:
     name: develop
   only:
     - develop
+
+deploy_master:
+  stage: deploy
+  script:
+    - echo image_tag $IMAGE_TAG ci_commit $CI_COMMIT_SHORT_SHA
+    - sshpass -p $SERVER_PASS_3 ssh $SERVER_USER_3@$SERVER_HOST_3 "/home/ubuntu/DOCKER_DEV/docker_project deploy $SERVICE_NAME"
+  environment:
+    name: production
+  only:
+    - master
