@@ -3,7 +3,7 @@ import moment from "moment-timezone";
 import fs from "fs";
 import slugify from "slugify";
 
-const saveFile = async (file: any) => {
+export const saveFile = async (file: any) => {
     const currentDate = moment().format("MM-YYYY");
     const orifinalName = file.originalname.split(".");
     const editName = orifinalName.slice(0, orifinalName.length - 1)[0] + "-" + new Date().getTime();
@@ -21,8 +21,4 @@ const saveFile = async (file: any) => {
         console.log("File saved.");
     });
     return `${currentDate}/${fileName}${ext}`;
-};
-
-export {
-    saveFile
 };

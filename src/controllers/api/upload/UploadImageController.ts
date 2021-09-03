@@ -49,7 +49,6 @@ router.post("/single-upload", [ authEmploye, upload.single("file") ], async (req
             error: e.message
         });
     }
-
 });
 
 /**
