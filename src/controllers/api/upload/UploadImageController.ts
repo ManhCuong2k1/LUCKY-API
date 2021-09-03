@@ -125,7 +125,7 @@ router.post("/multi-upload",upload.array("image"), async (req: Request, res: Res
  *         description: Error can't get data.
  */
 
-router.get("/images", authEmploye, async (req: Request, res: Response) => {
+router.get("/images", authUser, async (req: Request, res: Response) => {
     try {
         const user: any = req.user;
         const page: number = parseInt(req.query.page ? req.query.page.toString() : "1");
