@@ -33,9 +33,9 @@ const router = Router();
  *     security:
  *      - Bearer: []
  */
-router.post("/single-upload", [ authUser, upload.single("file") ], async (req: Request, res: Response) => {
+router.post("/single-upload", upload.single("file"), async (req: Request, res: Response) => {
     try {
-        const user: any = req.user;
+        // const user: any = req.user;
         // if (!req.file) throw new Error("No file to upload");
         console.log("Recive file!");
         // const fileName = await saveFile(req.file);
@@ -45,7 +45,7 @@ router.post("/single-upload", [ authUser, upload.single("file") ], async (req: R
         // };
         // await Image.create(newImage);
         // res.send(newImage);
-        res.send(user);
+        // res.send(user);
     } catch (e) {
         res.status(400).send({
             error: e.message
