@@ -42,6 +42,19 @@ const checkSame = (arrBet: any, arrResult: any) => {
     return arrExport;
 };
 
+const checkSameArrString = (arrBet: any, arrResult: any) => {
+    const arrExport = [];
+    for (const i of arrayStringToNumber(arrBet)) {
+        for (const j of arrayStringToNumber(arrResult)) {
+            if (i == j) {
+                arrExport.push(i);
+                break;
+            }
+        }
+    }
+    return arrExport;
+};
+
 const countSame = (item: any, array: any) => {
     const arrExport = [];
     for (const i of array) {
@@ -162,6 +175,7 @@ export default {
     arrNumberToString,
     sortRounds,
     checkSame,
+    checkSameArrString,
     countSame,
     checkRewardKhuyenKhich,
     removeFirstChar,

@@ -446,82 +446,63 @@ const updateResult = async (game: string, data: any) => {
                         dataUpdate.result = {};
                     let isWin: boolean = false, updateReward: number = 0;
 
-
                     for await (const i of orderDetail.data) {
-                        const arrBet = LotteryHelper.arrayStringToNumber(i.number);
+                        let reward: number = 0;
+                        const arrBet = i.number;
+                        const numBet = i.number[0];
 
-                        // GIAI NHAT
-                        const arrResultGiaiNhat = LotteryHelper.arrayStringToNumber(data.result.giainhat);
-                        const checkSameGiaiNhat = LotteryHelper.checkSame(arrBet, arrResultGiaiNhat);
-                        const rewardReciveGiaiNhat = checkSameGiaiNhat.length * 1000000; // các số trùng x 1.000.000
-                        let rewardGiaiNhat = rewardReciveGiaiNhat;
-                        rewardGiaiNhat = rewardGiaiNhat * (i.price / 10000);
+                        let isWinGN = (data.result.giainhat.indexOf(numBet) > -1) ? true: false;
+                        let isWinGNhi = (data.result.giainhi.indexOf(numBet) > -1) ? true: false;
+                        let isWinGBa = (data.result.giaiba.indexOf(numBet) > -1) ? true: false;
+                        let isWinGKK = (data.result.giaikhuyenkhich.indexOf(numBet) > -1) ? true: false;
 
-                        dataUpdate["data"]["giainhat"].push({
-                            number: checkSameGiaiNhat,
-                            reward: rewardGiaiNhat
-                        });
+                        if(isWinGN || isWinGNhi || isWinGBa || isWinGKK) isWin = true;
 
-                        if (rewardGiaiNhat > 0) {
-                            isWin = true;
-                            updateReward = updateReward + rewardGiaiNhat;
+                        if(isWinGN == true) {
+                            reward = 0;
+                            reward = 1000000;
+                            reward = reward * (i.price / 10000);
+                            dataUpdate["data"]["giainhat"].push({
+                                number: LotteryHelper.checkSame(arrBet, data.result.giainhat),
+                                reward: reward
+                            });
+                            updateReward = updateReward + reward;
                         }
 
-
-                        // GIAI NHI
-                        const arrResultGiaiNhi = LotteryHelper.arrayStringToNumber(data.result.giainhi);
-                        const checkSameGiaiNhi = LotteryHelper.checkSame(arrBet, arrResultGiaiNhi);
-                        const rewardReciveGiaiNhi = checkSameGiaiNhi.length * 350000; // các số trùng x 1.000.000
-                        let rewardGiaiNhi = rewardReciveGiaiNhi;
-                        rewardGiaiNhi = rewardGiaiNhi * (i.price / 10000);
-
-                        dataUpdate["data"]["giainhi"].push({
-                            number: checkSameGiaiNhi,
-                            reward: rewardGiaiNhi
-                        });
-
-                        if (rewardGiaiNhi > 0) {
-                            isWin = true;
-                            updateReward = updateReward + rewardGiaiNhi;
+                        if(isWinGNhi) {
+                            reward = 0;
+                            reward = Number(LotteryHelper.checkSame(arrBet, data.result.giainhi).length) * 350000;
+                            reward = reward * (i.price / 10000);
+                            dataUpdate["data"]["giainhi"].push({
+                                number: LotteryHelper.checkSame(arrBet, data.result.giainhi),
+                                reward: reward
+                            });
+                            updateReward = updateReward + reward;
                         }
 
-                        // GIAI BA 
-                        const arrResultGiaiBa = LotteryHelper.arrayStringToNumber(data.result.giaiba);
-                        const checkSameGiaiBa = LotteryHelper.checkSame(arrBet, arrResultGiaiBa);
-                        const rewardReciveGiaiBa = checkSameGiaiBa.length * 210000; // các số trùng x 210000
-                        let rewardGiaiBa = rewardReciveGiaiBa;
-                        rewardGiaiBa = rewardGiaiBa * (i.price / 10000);
-
-                        dataUpdate["data"]["giaiba"].push({
-                            number: checkSameGiaiBa,
-                            reward: rewardGiaiBa
-                        });
-
-                        if (rewardGiaiBa > 0) {
-                            isWin = true;
-                            updateReward = updateReward + rewardGiaiBa;
+                        if(isWinGBa) {
+                            reward = 0;
+                            reward = Number(LotteryHelper.checkSame(arrBet, data.result.giaiba).length) * 210000;
+                            reward = reward * (i.price / 10000);
+                            dataUpdate["data"]["giaiba"].push({
+                                number: LotteryHelper.checkSame(arrBet, data.result.giaiba),
+                                reward: reward
+                            });
+                            updateReward = updateReward + reward;
                         }
 
-
-                        // GIAI KHUYEN KHICH
-                        const arrResultGiaiKhuyenKhich = LotteryHelper.arrayStringToNumber(data.result.giaikhuyenkhich);
-                        const checkSameGiaiKhuyenKhich = LotteryHelper.checkSame(arrBet, arrResultGiaiKhuyenKhich);
-                        const rewardReciveGiaiKhuyenKhich = checkSameGiaiKhuyenKhich.length * 100000; // các số trùng x 100.000
-                        let rewardGiaiKhuyenKhich = rewardReciveGiaiKhuyenKhich;
-                        rewardGiaiKhuyenKhich = rewardGiaiKhuyenKhich * (i.price / 10000);
-
-                        dataUpdate["data"]["giaikhuyenkhich"].push({
-                            number: checkSameGiaiKhuyenKhich,
-                            reward: rewardGiaiKhuyenKhich
-                        });
-
-                        if (rewardGiaiKhuyenKhich > 0) {
-                            isWin = true;
-                            updateReward = updateReward + rewardGiaiKhuyenKhich;
+                        if(isWinGKK) {
+                            reward = 0;
+                            reward = Number(LotteryHelper.checkSame(arrBet, data.result.giaikhuyenkhich).length) * 210000;
+                            reward = reward * (i.price / 10000);
+                            dataUpdate["data"]["giaikhuyenkhich"].push({
+                                number: LotteryHelper.checkSame(arrBet, data.result.giaikhuyenkhich),
+                                reward: reward
+                            });
+                            updateReward = updateReward + reward;
                         }
 
                     };
-
 
                     if (isWin) await SymtemSetReward(orderData.id, orderData.userId, updateReward);
                     if (isWin) await NotifyWhenLimitReward(orderData.userId, orderData.type, updateReward);
@@ -531,7 +512,6 @@ const updateResult = async (game: string, data: any) => {
                         "Bạn vừa trúng " + helper.numberformat(updateReward) + "đ vé Max3D #" + orderData.ticketId + "."
                         );
                     await UpdateTicketReward(orderData.ticketId, updateReward); // cộng vào tổng thưởng của ticket  
-
 
                     dataUpdate.result.iswin = isWin, dataUpdate.result.totalreward = updateReward;
 
@@ -588,195 +568,115 @@ const updateResult = async (game: string, data: any) => {
                         dataUpdate.data.giaibay = [],
                         dataUpdate.result = {};
                     let isWin: boolean = false, updateReward: number = 0;
-                    let isWinGN: boolean = false;
-                    let rewardGiaiNhat: number = 0, rewardGiaiNhi: number = 0, rewardGiaiBa: number = 0, rewardGiaiTu: number = 0, rewardGiaiNam: number = 0, rewardGiaiSau: number = 0, rewardGiaiBay: number = 0;
-
 
                     for await (const i of orderDetail.data) {
 
-                        const number = i.number;
-                        const number1 = number[0];
-                        const number2 = number[1];
+                        let reward: number = 0;
 
-                        // GIAI NHAT
-                        const giainhatWinNum1 = (number1 == data.result.giainhat[0]) ? true : false;
-                        const giainhatWinNum2 = (number2 == data.result.giainhat[1]) ? true : false;
-                        if (giainhatWinNum1 && giainhatWinNum2) isWinGN = true;
-                        if (isWinGN == true) {
-                            rewardGiaiNhat = 1000000000;
+                        const arrBet = i.number;
+                        
+                        let isWinGN = (LotteryHelper.checkSame(arrBet, data.result.giainhat).length >= 2) ? true: false;
+                        let isWinGNhi = (LotteryHelper.checkSame(arrBet, data.result.giainhi).length >= 2) ? true: false;
+                        let isWinGBa = (LotteryHelper.checkSame(arrBet, data.result.giaiba).length >= 2) ? true: false;
+                        let isWinGT = (LotteryHelper.checkSame(arrBet, data.result.giaikhuyenkhich).length >= 2) ? true: false;
+
+                        const join123KK = data.result.giainhat.concat(data.result.giainhi).concat(data.result.giaiba).concat(data.result.giaikhuyenkhich);
+                        let isWinGNam = (LotteryHelper.checkSame(arrBet, join123KK).length >= 2) ? true: false;
+                        
+                        let isWinGS = (LotteryHelper.checkSame(arrBet, data.result.giainhat).length >= 1) ? true: false;
+                        const join23KK = data.result.giainhi.concat(data.result.giaiba).concat(data.result.giaikhuyenkhich);
+                        let isWinGBay = (LotteryHelper.checkSame(arrBet, join23KK).length >= 1) ? true: false;
+
+                        if(isWinGN || isWinGNhi || isWinGBa || isWinGT || isWinGNam || isWinGS || isWinGBay) isWin = true;
+
+
+                        if(isWinGN == true) {
+                            reward = 0;
+                            reward = 2 * 1000000;
+                            reward = reward * (i.price / 10000);
                             dataUpdate["data"]["giainhat"].push({
-                                number: [number1, number2],
-                                reward: rewardGiaiNhat
+                                number: LotteryHelper.checkSame(arrBet, data.result.giainhat),
+                                reward: reward
                             });
-                        } else {
-                            rewardGiaiNhat = 0;
-                            dataUpdate["data"]["giainhat"].push({
-                                number: [],
-                                reward: 0
-                            });
-                        }
-                        if (rewardGiaiNhat > 0) {
-                            isWin = true;
-                            updateReward = updateReward + rewardGiaiNhat;
+                            updateReward = updateReward + reward;
                         }
 
-                        // GIAI NHI
-                        const giainhiWinNum1 = (data.result.giainhi.indexOf(String(number1)) > -1) ? true : false;
-                        const giainhiWinNum2 = (data.result.giainhi.indexOf(String(number2)) > -1) ? true : false;
-
-                        if (giainhiWinNum1 == true && giainhiWinNum2) {
-                            rewardGiaiNhi = 40000000;
+                        if(isWinGNhi) {
+                            reward = 0;
+                            reward = 2 * 40000000;
+                            reward = reward * (i.price / 10000);
                             dataUpdate["data"]["giainhi"].push({
-                                number: [number1, number2],
-                                reward: rewardGiaiNhi
+                                number: LotteryHelper.checkSame(arrBet, data.result.giainhi),
+                                reward: reward
                             });
-                        } else {
-                            rewardGiaiNhi = 0;
-                            dataUpdate["data"]["giainhi"].push({
-                                number: [],
-                                reward: 0
-                            });
-                        }
-                        if (rewardGiaiNhi > 0) {
-                            isWin = true;
-                            updateReward = updateReward + rewardGiaiNhi;
+                            updateReward = updateReward + reward;
                         }
 
-                        // GIAI BA 
-                        const giaibaWinNum1 = (data.result.giaiba.indexOf(String(number1)) > -1) ? true : false;
-                        const giaibaWinNum2 = (data.result.giaiba.indexOf(String(number2)) > -1) ? true : false;
-
-                        if (giaibaWinNum1 == true && giaibaWinNum2 == true ) {
-                            rewardGiaiBa = 10000000;
+                        if(isWinGBa) {
+                            reward = 0;
+                            reward = 2 * 10000000;
+                            reward = reward * (i.price / 10000);
                             dataUpdate["data"]["giaiba"].push({
-                                number: [number1, number2],
-                                reward: rewardGiaiBa
+                                number: LotteryHelper.checkSame(arrBet, data.result.giaiba),
+                                reward: reward
                             });
-                        } else {
-                            rewardGiaiNhi = 0;
-                            dataUpdate["data"]["giaiba"].push({
-                                number: [],
-                                reward: 0
-                            });
-                        }
-                        if (rewardGiaiBa > 0) {
-                            isWin = true;
-                            updateReward = updateReward + rewardGiaiBa;
+                            updateReward = updateReward + reward;
                         }
 
-                        // GIAI TU
-                        const giaituWinNum1 = (data.result.giaikhuyenkhich.indexOf(String(number1)) > -1) ? true : false;
-                        const giaituWinNum2 = (data.result.giaikhuyenkhich.indexOf(String(number2)) > -1) ? true : false;
-
-                        
-                        if (giaituWinNum1 == true && giaituWinNum2 == true) {
-                            rewardGiaiTu = 5000000;
+                        if(isWinGT) {
+                            reward = 0;
+                            reward = 2 * 5000000;
+                            reward = reward * (i.price / 10000);
                             dataUpdate["data"]["giaitu"].push({
-                                number: [number1, number2],
-                                reward: rewardGiaiTu
+                                number: LotteryHelper.checkSame(arrBet, data.result.giaikhuyenkhich),
+                                reward: reward
                             });
-                        } else {
-                            rewardGiaiTu = 0;
+                            updateReward = updateReward + reward;
+                        }
+
+                        if(isWinGT) {
+                            reward = 0;
+                            reward = 2 * 5000000;
+                            reward = reward * (i.price / 10000);
                             dataUpdate["data"]["giaitu"].push({
-                                number: [],
-                                reward: 0
+                                number: LotteryHelper.checkSame(arrBet, data.result.giaikhuyenkhich),
+                                reward: reward
                             });
+                            updateReward = updateReward + reward;
                         }
-                        
-                        if (rewardGiaiTu > 0) {
-                            isWin = true;
-                            updateReward = updateReward + rewardGiaiTu;
-                        }
-                        const arrResultGiaiNhat = LotteryHelper.arrayStringToNumber(data.result.giainhat);
-                        const arrResultGiaiNhi = LotteryHelper.arrayStringToNumber(data.result.giainhat);
-                        const arrResultGiaiBa = LotteryHelper.arrayStringToNumber(data.result.giainhat);
-                        const arrResultGiaiKk = LotteryHelper.arrayStringToNumber(data.result.giainhat);
-                        
-                        // GIAI NAM
-                        const arrBet = LotteryHelper.arrayStringToNumber(number);
-                        const giai5checkSameGiaiNhat = LotteryHelper.checkSame(arrBet, arrResultGiaiNhat);
-                        const giai5checkSameGiaiNhi = LotteryHelper.checkSame(arrBet, arrResultGiaiNhi);
-                        const giai5checkSameGiaiBa = LotteryHelper.checkSame(arrBet, arrResultGiaiBa);
-                        const giai5checkSameGiaiKk = LotteryHelper.checkSame(arrBet, arrResultGiaiKk);
-                        
-                        if (
-                            giai5checkSameGiaiNhat.length == 1 ||
-                            giai5checkSameGiaiNhi.length >= 1 ||
-                            giai5checkSameGiaiBa.length >= 1 ||
-                            giai5checkSameGiaiKk.length >= 1
-                        ) {
-                            rewardGiaiNam = 1000000;
+
+                        if(isWinGNam) {
+                            reward = 0;
+                            reward = 2 * 1000000;
+                            reward = reward * (i.price / 10000);
                             dataUpdate["data"]["giainam"].push({
-                                number: [number1, number2],
-                                reward: rewardGiaiNam
+                                number: LotteryHelper.checkSame(arrBet, join123KK),
+                                reward: reward
                             });
-                        }else {
-                            rewardGiaiNam = 0;
-                            dataUpdate["data"]["giainam"].push({
-                                number: [],
-                                reward: 0
-                            });
+                            updateReward = updateReward + reward;
                         }
-                        
-                        if (rewardGiaiNam > 0) {
-                            isWin = true;
-                            updateReward = updateReward + rewardGiaiNam;
-                        }
-                        
 
-                        // GIAI SAU
-                        const giai6checkSameGiaiNhat = LotteryHelper.checkSame(arrBet, arrResultGiaiNhat);
-
-                        if (
-                            giai6checkSameGiaiNhat.length == 1
-                            ) {
-                            rewardGiaiSau = 150000;
+                        if(isWinGS) {
+                            reward = 0;
+                            reward = 150000;
+                            reward = reward * (i.price / 10000);
                             dataUpdate["data"]["giaisau"].push({
-                                number: [number1, number2],
-                                reward: rewardGiaiSau
+                                number: LotteryHelper.checkSame(arrBet, data.result.giainhat),
+                                reward: reward
                             });
-                        }else {
-                            rewardGiaiSau = 0;
-                            dataUpdate["data"]["giaisau"].push({
-                                number: [],
-                                reward: 0
-                            });
+                            updateReward = updateReward + reward;
                         }
 
-                        if (rewardGiaiSau > 0) {
-                            isWin = true;
-                            updateReward = updateReward + rewardGiaiSau;
-                        }
-
-                        // GIAI BAY
-                        const giai7checkSameGiaiNhi = LotteryHelper.checkSame(arrBet, arrResultGiaiNhi);
-                        const giai7checkSameGiaiBa = LotteryHelper.checkSame(arrBet, arrResultGiaiBa);
-                        const giai7checkSameGiaiKk = LotteryHelper.checkSame(arrBet, arrResultGiaiKk);
-
-                        if (
-                            giai7checkSameGiaiNhi.length == 1 ||
-                            giai7checkSameGiaiBa.length == 1 ||
-                            giai7checkSameGiaiKk.length == 1
-                            ) {
-                            rewardGiaiBay = 40000;
+                        if(isWinGBay) {
+                            reward = 0;
+                            reward = 40000;
+                            reward = reward * (i.price / 10000);
                             dataUpdate["data"]["giaibay"].push({
-                                number: [number1, number2],
-                                reward: rewardGiaiBay
+                                number: LotteryHelper.checkSame(arrBet, join23KK),
+                                reward: reward
                             });
-                        }else {
-                            rewardGiaiBay = 0;
-                            dataUpdate["data"]["giaibay"].push({
-                                number: [],
-                                reward: 0
-                            });
+                            updateReward = updateReward + reward;
                         }
-
-                        if (rewardGiaiBay > 0) {
-                            isWin = true;
-                            updateReward = updateReward + rewardGiaiBay;
-                        }
-
-                        updateReward = updateReward * (i.price / 10000);
                         
                     };
 
@@ -847,145 +747,86 @@ const updateResult = async (game: string, data: any) => {
                             // ĐẶT SỐ TRUYỀN THỐNG MAX4D
                             case "basic":
 
-                                const arrBet = LotteryHelper.arrayStringToNumber(i.number);
+                                let reward: number = 0;
+                                const arrBet = i.number;
+                                const numBet = i.number[0];
+                            
+                                let isWinGN = (numBet == data.result.giainhat[0]) ? true: false;
+                                let isWinGNhi = (LotteryHelper.checkSame(arrBet, data.result.giainhi).length >= 1) ? true: false;
+                                let isWinGBa = (LotteryHelper.checkSame(arrBet, data.result.giaiba).length >= 1) ? true: false;
+                            
 
-                                // GIAI NHAT
-                                const arrResultGiaiNhat = LotteryHelper.arrayStringToNumber(data.result.giainhat);
-                                const checkSameGiaiNhat = LotteryHelper.checkSame(arrBet, arrResultGiaiNhat);
+                                if(isWinGN || isWinGNhi || isWinGBa) isWin = true;
 
-                                if (checkSameGiaiNhat.length > 0) {
-                                    const rewardGiaiNhat = i.price * 1500; // lấy giá trị đặt cược x 1.500
-                                    console.log("giai nhat " + rewardGiaiNhat);
+
+                                if(isWinGN == true) {
+                                    reward = 0;
+                                    reward = i.price * 1500;
                                     dataUpdate["data"]["giainhat"].push({
-                                        number: checkSameGiaiNhat,
-                                        reward: rewardGiaiNhat
+                                        number: arrBet,
+                                        reward: reward
                                     });
-
-                                    if (rewardGiaiNhat > 0) {
-                                        isWin = true;
-                                        updateReward = updateReward + rewardGiaiNhat;
-                                    }
+                                    updateReward = updateReward + reward;
                                 }
-
-
-                                // GIAI NHI
-                                const arrResultGiaiNhi = data.result.giainhi;
-                                const checkSameGiaiNhi = LotteryHelper.checkSame(arrBet, arrResultGiaiNhi);
-
-                                if (checkSameGiaiNhi.length > 0) {
-
-                                    const rewardGiaiNhi = i.price * 650; // lấy giá trị đặt cược x 650
-
+        
+                                if(isWinGNhi) {
+                                    reward = 0;
+                                    reward = i.price * 650;
                                     dataUpdate["data"]["giainhi"].push({
-                                        number: checkSameGiaiNhi,
-                                        reward: rewardGiaiNhi
+                                        number: arrBet,
+                                        reward: reward
                                     });
-
-                                    if (rewardGiaiNhi > 0) {
-                                        isWin = true;
-                                        updateReward = updateReward + rewardGiaiNhi;
-                                    }
+                                    updateReward = updateReward + reward;
                                 }
-
-
-                                // GIAI BA
-                                const arrResultGiaiBa = LotteryHelper.arrayStringToNumber(data.result.giaiba);
-                                const checkSameGiaiBa = LotteryHelper.checkSame(arrBet, arrResultGiaiBa);
-
-                                if (checkSameGiaiBa.length > 0) {
-
-                                    const rewardGiaiBa = i.price * 300; // lấy giá trị đặt cược x 300
-
+        
+                                if(isWinGBa) {
+                                    reward = 0;
+                                    reward = i.price * 300;
                                     dataUpdate["data"]["giaiba"].push({
-                                        number: checkSameGiaiBa,
-                                        reward: rewardGiaiBa
+                                        number: arrBet,
+                                        reward: reward
                                     });
-
-                                    if (rewardGiaiBa > 0) {
-                                        isWin = true;
-                                        updateReward = updateReward + rewardGiaiBa;
-                                    }
+                                    updateReward = updateReward + reward;
                                 }
-
-
-                                // GIAI KHYEN KHICH 1
-                                const arrResultKK1 = LotteryHelper.removeFirstChar(data.result.giaikhuyenkhich1, 1);
-                                const checkSameKK1 = LotteryHelper.checkSame(LotteryHelper.removeFirstChar(LotteryHelper.arrNumberToString(arrBet), 1), arrResultKK1);
-
-                                if (checkSameKK1.length > 0) {
-
-                                    const rewardKK1 = i.price * 100; // lấy giá trị đặt cược x 100
-
-                                    dataUpdate["data"]["giaikhuyenkhich1"].push({
-                                        number: checkSameKK1,
-                                        reward: rewardKK1
-                                    });
-
-                                    if (rewardKK1 > 0) {
-                                        isWin = true;
-                                        updateReward = updateReward + rewardKK1;
-                                    }
-                                }
-
-                                // GIAI KHYEN KHICH 2
-                                const arrResultKK2 = LotteryHelper.removeFirstChar(data.result.giaikhuyenkhich2, 2);
-                                const checkSameKK2 = LotteryHelper.checkSame(LotteryHelper.removeFirstChar(LotteryHelper.arrNumberToString(arrBet), 2), arrResultKK2);
-
-                                if (checkSameKK2.length > 0) {
-
-                                    const rewardKK2 = i.price * 10; // lấy giá trị đặt cược x 10
-
-                                    dataUpdate["data"]["giaikhuyenkhich2"].push({
-                                        number: checkSameKK2,
-                                        reward: rewardKK2
-                                    });
-
-                                    if (rewardKK2 > 0) {
-                                        isWin = true;
-                                        updateReward = updateReward + rewardKK2;
-                                    }
-                                }
-
-                                if (isWin) await SymtemSetReward(orderData.id, orderData.userId, updateReward);
-                                if (isWin) await NotifyWhenLimitReward(orderData.userId, orderData.type, updateReward);
-                                if (isWin) await PushNotify(
-                                    orderData.userId, 
-                                    "Thông Báo Trúng Thưởng", 
-                                    "Bạn vừa trúng " + helper.numberformat(updateReward) + "đ vé Max4D #" + orderData.ticketId + "."
-                                    );
-                                await UpdateTicketReward(orderData.ticketId, updateReward); // cộng vào tổng thưởng của ticket 
-
-
-                                dataUpdate.result.iswin = isWin, dataUpdate.result.totalreward = updateReward;
-
-                                const orderUpdate = await LotteryOrdersModel.findOne({ where: { id: orderData.id } });
-                                orderUpdate.orderStatus = LotteryOrdersModel.ORDERSTATUS_ENUM.DRAWNED;
-                                orderUpdate.resultDetail = JSON.stringify(dataUpdate);
-                                orderUpdate.resultStatus = (isWin) ? LotteryOrdersModel.RESULTSTATUS_ENUM.WINNED : LotteryOrdersModel.RESULTSTATUS_ENUM.DRAWNED;
-                                await orderUpdate.save();
-                                await orderUpdate.reload();
-
-                                if (isWin) {
-                                    await UserNotifyAdd(
-                                        orderData.userId,
-                                        LotteryNotifyModel.NOTIFY_TYPE_ENUM.WIN,
-                                        LotteryNotifyModel.NOTIFY_SLUG_ENUM.MAX4D,
-                                        LotteryNotifyModel.NOTIFY_NAME_ENUM.MAX4D,
-                                        "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + ".",
-                                        orderData.ticketId
-                                    );
-                                }
-
-                                break;
+        
+                            break;
 
 
                             // ĐẶT TỔ HỢP
                             case "tohop":
-                                // code Tổ hợp 
-
-                                break;
+                                // code here
+                            break;
                         }
 
+                    };
+
+                    if (isWin) await SymtemSetReward(orderData.id, orderData.userId, updateReward);
+                    if (isWin) await NotifyWhenLimitReward(orderData.userId, orderData.type, updateReward);
+                    if (isWin) await PushNotify(
+                        orderData.userId, 
+                        "Thông Báo Trúng Thưởng", 
+                        "Bạn vừa trúng " + helper.numberformat(updateReward) + "đ vé Max4D #" + orderData.ticketId + "."
+                        );
+                    await UpdateTicketReward(orderData.ticketId, updateReward); // cộng vào tổng thưởng của ticket 
+
+                    dataUpdate.result.iswin = isWin, dataUpdate.result.totalreward = updateReward;
+
+                    const orderUpdate = await LotteryOrdersModel.findOne({ where: { id: orderData.id } });
+                    orderUpdate.orderStatus = LotteryOrdersModel.ORDERSTATUS_ENUM.DRAWNED;
+                    orderUpdate.resultDetail = JSON.stringify(dataUpdate);
+                    orderUpdate.resultStatus = (isWin) ? LotteryOrdersModel.RESULTSTATUS_ENUM.WINNED : LotteryOrdersModel.RESULTSTATUS_ENUM.DRAWNED;
+                    await orderUpdate.save();
+                    await orderUpdate.reload();
+
+                    if (isWin) {
+                        await UserNotifyAdd(
+                            orderData.userId,
+                            LotteryNotifyModel.NOTIFY_TYPE_ENUM.WIN,
+                            LotteryNotifyModel.NOTIFY_SLUG_ENUM.MAX4D,
+                            LotteryNotifyModel.NOTIFY_NAME_ENUM.MAX4D,
+                            "Bạn đã trúng " + helper.numberformat(updateReward) + "đ vé " + orderData.ticketId + ".",
+                            orderData.ticketId
+                        );
                     }
 
                 };
