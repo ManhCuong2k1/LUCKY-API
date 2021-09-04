@@ -42,12 +42,12 @@ router.post("/upload/:id", upload.fields([{ name: "beforeimage", maxCount: 1 }, 
 
                 if (typeof req.files.beforeimage !== "undefined") {
                     const saveImage = await saveFile(req.files.beforeimage[0]);
-                    beforeImageSrc = saveImage.data.url.src;
+                    beforeImageSrc = saveImage;
                 }
 
                 if (typeof req.files.afterimage !== "undefined") {
                     const saveImage = await saveFile(req.files.afterimage[0]);
-                    afterImageSrc = saveImage.data.url.src;
+                    afterImageSrc = saveImage;
                 }
 
                 const objectData: any = {

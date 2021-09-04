@@ -13,11 +13,10 @@ import {
     TaskGetRound
 } from "./task/xoso";
 
-/****
 
-    if (config.ENV === "production") {
-        
-        cron.schedule("00 59 * * * *", async () => {
+if (config.ENV === "production") {
+
+    cron.schedule("00 59 * * * *", async () => {
         try {
             await TaskGetRound();
             console.log("Task Done: Get Round at " + moment().format("DD-MM-YYYY HH:mm:ss"));
@@ -48,7 +47,6 @@ import {
         }
     });
 }
- */
 
 /**
  * Error Handler. Provides full stack - remove for production

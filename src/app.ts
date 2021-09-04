@@ -42,9 +42,8 @@ app.options("*", cors());
 /**
  * Swagger API docs config
  */
-app.use("/api-docs",swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
 app.use(strongParams());
+app.use("/api-docs",swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/api", APIController);
 
 

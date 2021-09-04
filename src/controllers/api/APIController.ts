@@ -10,9 +10,7 @@ import XosoController from "./crawl/XosoController";
 import EmployeController from "./employe";
 import TransactionController from "./transaction/TransactionControlller";
 
-
 const router = express.Router();
-
 
 router.use("/init", InitController);
 router.use("/auth", AuthController);

@@ -25,7 +25,6 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
-
 export const authAdmin = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const token = req.header("Authorization").replace("Bearer ", "");
@@ -46,7 +45,6 @@ export const authAdmin = async (req: Request, res: Response, next: NextFunction)
     }
 };
 
-
 export const authEmploye = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const token = req.header("Authorization").replace("Bearer ", "");
@@ -62,6 +60,26 @@ export const authEmploye = async (req: Request, res: Response, next: NextFunctio
         });
         if (user == null) {
             return res.status(401).send({ code: "ERROR: PERMISSTION DENIED!" });
+        }
+        req.user = user;
+        next();
+    } catch (error) {
+        res.status(401).send({
+            error: "Not authorized to access this resource",
+            code: ERROR_CODES.SomeErrorsOccurredPleaseTryAgain
+        });
+    }
+};
+
+export const authUser = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const token = req.header("Authorization").replace("Bearer ", "");
+        const payload: any = jwt.verify(token, config.JWT_KEY);
+        const user: UserInterface = await UserModel.findOne({
+            where: { id: payload.id },
+        });
+        if (user == null) {
+            return res.status(401).send({ code: ERROR_CODES.InvalidOrExpiredToken });
         }
         req.user = user;
         next();

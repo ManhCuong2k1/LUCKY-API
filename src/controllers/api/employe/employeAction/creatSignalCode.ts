@@ -187,17 +187,89 @@ export const creatSignalCode = async (type: string, preriod: number, totalPrice:
         case LotteryTicketModel.GAME_ENUM.MAX3D:
             TicketPrinter = [];
             run = 0;
-            TicketPrinter.push("3d");
+
+
+            for (const order of data) {
+                order.toJSON();
+                const orderDetails: any = order.orderDetail;
+
+                TicketPrinter.push("3d");
+
+                for (const data of orderDetails.data) {
+
+                    let stringNumber = data.number.join("");
+                    stringNumber = stringNumber.split("");
+                    for (const num of stringNumber) TicketPrinter.push(num);
+                    TicketPrinter.push(data.price);
+                    TicketPrinter.push("arrowdown");
+
+                }
+
+                const lastRound = await LotteryResultsGetLastRound(LotteryTicketModel.GAME_ENUM.MAX3D);
+                const numberChoose = Number(order.roundId) - Number(lastRound.round);
+
+                TicketPrinter.push(helper.getCharFromNumBer(numberChoose - 1));
+                TicketPrinter.push("send");
+
+            };
+
             break;
         case LotteryTicketModel.GAME_ENUM.MAX3DPLUS:
             TicketPrinter = [];
             run = 0;
-            TicketPrinter.push("3dplus");
+            
+            for (const order of data) {
+                order.toJSON();
+                const orderDetails: any = order.orderDetail;
+
+                TicketPrinter.push("3d");
+                TicketPrinter.push("3dplus");
+                
+                for (const data of orderDetails.data) {
+                    let stringNumber = data.number.join("");
+                    stringNumber = stringNumber.split("");
+                    for (const num of stringNumber) TicketPrinter.push(num);
+                    TicketPrinter.push(data.price);
+                    TicketPrinter.push("arrowdown");
+
+                }
+
+                const lastRound = await LotteryResultsGetLastRound(LotteryTicketModel.GAME_ENUM.MAX3DPLUS);
+                const numberChoose = Number(order.roundId) - Number(lastRound.round);
+
+                TicketPrinter.push(helper.getCharFromNumBer(numberChoose - 1));
+                TicketPrinter.push("send");
+
+            };
+            
+
             break;
         case LotteryTicketModel.GAME_ENUM.MAX4D:
             TicketPrinter = [];
             run = 0;
-            TicketPrinter.push("4d");
+            
+            for (const order of data) {
+                order.toJSON();
+                const orderDetails: any = order.orderDetail;
+
+                TicketPrinter.push("4d");
+                
+                for (const data of orderDetails.data) {
+                    let stringNumber = data.number.join("");
+                    stringNumber = stringNumber.split("");
+                    for (const num of stringNumber) TicketPrinter.push(num);
+                    TicketPrinter.push(data.price);
+                    TicketPrinter.push("arrowdown");
+                }
+
+                const lastRound = await LotteryResultsGetLastRound(LotteryTicketModel.GAME_ENUM.MAX4D);
+                const numberChoose = Number(order.roundId) - Number(lastRound.round);
+
+                TicketPrinter.push(helper.getCharFromNumBer(numberChoose - 1));
+                TicketPrinter.push("send");
+
+            };
+            
             break;
     }
 

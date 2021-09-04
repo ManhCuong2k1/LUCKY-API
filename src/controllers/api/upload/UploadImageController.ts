@@ -4,7 +4,7 @@ import { saveFile } from "@util/resizeImage";
 import { LotteryImagesModel } from "@models/LotteryImages";
 import { Image } from "@models/Images";
 import { GridInterface } from "@models/Transformers/Grid";
-import { authEmploye } from "../../../middleware/auth";
+import { authUser } from "../../../middleware/auth";
 
 const router = Router();
 
@@ -33,13 +33,13 @@ const router = Router();
  *     security:
  *      - Bearer: []
  */
-router.post("/single-upload", [ authEmploye, upload.single("file") ], async (req: Request, res: Response) => {
+router.post("/single-upload", [authUser, upload.single("file")], async (req: Request, res: Response) => {
     try {
         const user: any = req.user;
         if (!req.file) throw new Error("No file to upload");
         const fileName = await saveFile(req.file);
         const newImage: any = {
-            imageUrl: fileName.data.url.src,
+            imageUrl: fileName,
             UserId: user.id
         };
         await Image.create(newImage);
@@ -49,7 +49,6 @@ router.post("/single-upload", [ authEmploye, upload.single("file") ], async (req
             error: e.message
         });
     }
-
 });
 
 /**
@@ -78,7 +77,7 @@ router.post("/single-upload", [ authEmploye, upload.single("file") ], async (req
  *     security:
  *      - Bearer: []
  */
-router.post("/multi-upload",upload.array("image"), async (req: Request, res: Response) => {
+router.post("/multi-upload", [authUser, upload.array("image")], async (req: Request, res: Response) => {
     try {
         if (!req.files || req.files.length === 0) throw new Error("No file to upload");
         const files: any[] = [];
@@ -125,7 +124,7 @@ router.post("/multi-upload",upload.array("image"), async (req: Request, res: Res
  *         description: Error can't get data.
  */
 
-router.get("/images", authEmploye, async (req: Request, res: Response) => {
+router.get("/images", authUser, async (req: Request, res: Response) => {
     try {
         const user: any = req.user;
         const page: number = parseInt(req.query.page ? req.query.page.toString() : "1");
@@ -155,7 +154,6 @@ router.get("/images", authEmploye, async (req: Request, res: Response) => {
         });
     }
 });
-
 
 /**
  * @openapi
@@ -190,6 +188,5 @@ router.get("/images/:id", async (req: Request, res: Response) => {
         });
     }
 });
-
 
 export default router;
