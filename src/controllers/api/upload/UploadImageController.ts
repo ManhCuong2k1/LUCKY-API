@@ -37,7 +37,7 @@ router.post("/single-upload", upload.single("file"), async (req: Request, res: R
     try {
         // const user: any = req.user;
         // if (!req.file) throw new Error("No file to upload");
-        console.log("Recive file!");
+        res.status(200).send("Recive file!");
         // const fileName = await saveFile(req.file);
         // const newImage: any = {
         //     imageUrl: fileName,
@@ -45,7 +45,6 @@ router.post("/single-upload", upload.single("file"), async (req: Request, res: R
         // };
         // await Image.create(newImage);
         // res.send(newImage);
-        // res.send(user);
     } catch (e) {
         res.status(400).send({
             error: e.message
@@ -79,7 +78,7 @@ router.post("/single-upload", upload.single("file"), async (req: Request, res: R
  *     security:
  *      - Bearer: []
  */
-router.post("/multi-upload",upload.array("image"), async (req: Request, res: Response) => {
+router.post("/multi-upload", upload.array("image"), async (req: Request, res: Response) => {
     try {
         if (!req.files || req.files.length === 0) throw new Error("No file to upload");
         const files: any[] = [];
