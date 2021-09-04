@@ -12,6 +12,7 @@ const router = Router();
 
 router.post("/upload/:id", upload.fields([{ name: "beforeimage", maxCount: 1 }, { name: "afterimage", maxCount: 1 }]), async (req: any, res: any, next) => {
 
+
     try {
 
         if (!req.files || req.files.length === 0) {

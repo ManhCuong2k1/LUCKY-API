@@ -23,8 +23,8 @@ export const creatSignalCode = async (type: string, preriod: number, totalPrice:
                 for (const data of orderDetails.data) {
                     if (run > 1) break;
                     let stringNumber = helper.pushZeroToNumb(data.number);
-                    stringNumber = data.number.join('');
-                    stringNumber = stringNumber.split('');
+                    stringNumber = data.number.join("");
+                    stringNumber = stringNumber.split("");
                     for (const num of stringNumber) TicketPrinter.push(num);
                     TicketPrinter.push(data.price);
                     TicketPrinter.push("arrowdown");
@@ -95,8 +95,8 @@ export const creatSignalCode = async (type: string, preriod: number, totalPrice:
                     }
 
                     let stringNumber = helper.pushZeroToNumb(data.number);
-                    stringNumber = data.number.join('');
-                    stringNumber = stringNumber.split('');
+                    stringNumber = data.number.join("");
+                    stringNumber = stringNumber.split("");
                     for (const num of stringNumber) TicketPrinter.push(num);
                     TicketPrinter.push("arrowdown");
 
@@ -167,8 +167,8 @@ export const creatSignalCode = async (type: string, preriod: number, totalPrice:
                     }
 
                     let stringNumber = helper.pushZeroToNumb(data.number);
-                    stringNumber = data.number.join('');
-                    stringNumber = stringNumber.split('');
+                    stringNumber = data.number.join("");
+                    stringNumber = stringNumber.split("");
                     for (const num of stringNumber) TicketPrinter.push(num);
                     TicketPrinter.push("arrowdown");
 

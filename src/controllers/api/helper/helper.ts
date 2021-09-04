@@ -122,7 +122,7 @@ const pushZeroToNumb = (number: any) => {
         i++;
     }
     return number;
-}
+};
 
 const getCharFromListRound = (round: any, roundList: any) => {
     const arrCharTime = ["a", "b", "c", "d", "e", "f"];
@@ -132,12 +132,12 @@ const getCharFromListRound = (round: any, roundList: any) => {
             break;
         }
     }
-}
+};
 
 const getCharFromNumBer = (numb: any) => {
     const arrCharTime = ["a", "b", "c", "d", "e", "f"];
     return arrCharTime[numb];
-}
+};
 
 const checkItemExist = (array1: any, array2: any) => {
     const arrExport = [];
