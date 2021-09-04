@@ -33,7 +33,7 @@ deploy_master:
   stage: deploy
   script:
     - echo image_tag $IMAGE_TAG ci_commit $CI_COMMIT_SHORT_SHA
-    - sshpass -p $SERVER_PASS_3 ssh $SERVER_USER_3@$SERVER_HOST_3 "cd /home/ubuntu/DOCKER_PROD/lucky && docker-compose up -d"
+    - sshpass -p $SERVER_PASS_3 ssh $SERVER_USER_3@$SERVER_HOST_3 "cd /home/ubuntu/DOCKER_PROD/lucky && docker-compose pull && docker-compose up -d"
   environment:
     name: production
   only:
