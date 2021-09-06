@@ -15,6 +15,9 @@ export const creatSignalCode = async (type: string, preriod: number, totalPrice:
             TicketPrinter.push("d"); // chọn số lượng kì khác
             TicketPrinter.push(String(preriod)); // nhập vào số kì
 
+            // ấn nút gửi
+            TicketPrinter.push("send");
+
             for (const order of data) {
                 run++;
                 order.toJSON();
