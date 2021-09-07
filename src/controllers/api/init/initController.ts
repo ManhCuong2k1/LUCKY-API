@@ -36,6 +36,12 @@ router.get("/app-settings", async (req: Request, res: Response) => {
             });
         });
 
+        dataExport.rechargeStatus = {};
+        dataExport.rechargeStatus.momo = JSON.parse(await getSettings("recharge_momo_status"));
+        dataExport.rechargeStatus.vnpay = JSON.parse(await getSettings("recharge_vnpay_status"));
+        dataExport.rechargeStatus.bank = JSON.parse(await getSettings("recharge_bank_status"));
+
+
         dataExport.exchange = {};
         dataExport.exchange.local_min = Number(await getSettings("exchange_local_min"));
         dataExport.exchange.local_max = Number(await getSettings("exchange_local_max"));

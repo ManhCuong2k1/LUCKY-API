@@ -451,10 +451,10 @@ const updateResult = async (game: string, data: any) => {
                         const arrBet = i.number;
                         const numBet = i.number[0];
 
-                        let isWinGN = (data.result.giainhat.indexOf(numBet) > -1) ? true: false;
-                        let isWinGNhi = (data.result.giainhi.indexOf(numBet) > -1) ? true: false;
-                        let isWinGBa = (data.result.giaiba.indexOf(numBet) > -1) ? true: false;
-                        let isWinGKK = (data.result.giaikhuyenkhich.indexOf(numBet) > -1) ? true: false;
+                        const isWinGN = (data.result.giainhat.indexOf(numBet) > -1) ? true: false;
+                        const isWinGNhi = (data.result.giainhi.indexOf(numBet) > -1) ? true: false;
+                        const isWinGBa = (data.result.giaiba.indexOf(numBet) > -1) ? true: false;
+                        const isWinGKK = (data.result.giaikhuyenkhich.indexOf(numBet) > -1) ? true: false;
 
                         if(isWinGN || isWinGNhi || isWinGBa || isWinGKK) isWin = true;
 
@@ -575,17 +575,17 @@ const updateResult = async (game: string, data: any) => {
 
                         const arrBet = i.number;
                         
-                        let isWinGN = (LotteryHelper.checkSame(arrBet, data.result.giainhat).length >= 2) ? true: false;
-                        let isWinGNhi = (LotteryHelper.checkSame(arrBet, data.result.giainhi).length >= 2) ? true: false;
-                        let isWinGBa = (LotteryHelper.checkSame(arrBet, data.result.giaiba).length >= 2) ? true: false;
-                        let isWinGT = (LotteryHelper.checkSame(arrBet, data.result.giaikhuyenkhich).length >= 2) ? true: false;
+                        const isWinGN = (LotteryHelper.checkSame(arrBet, data.result.giainhat).length >= 2) ? true: false;
+                        const isWinGNhi = (LotteryHelper.checkSame(arrBet, data.result.giainhi).length >= 2) ? true: false;
+                        const isWinGBa = (LotteryHelper.checkSame(arrBet, data.result.giaiba).length >= 2) ? true: false;
+                        const isWinGT = (LotteryHelper.checkSame(arrBet, data.result.giaikhuyenkhich).length >= 2) ? true: false;
 
                         const join123KK = data.result.giainhat.concat(data.result.giainhi).concat(data.result.giaiba).concat(data.result.giaikhuyenkhich);
-                        let isWinGNam = (LotteryHelper.checkSame(arrBet, join123KK).length >= 2) ? true: false;
+                        const isWinGNam = (LotteryHelper.checkSame(arrBet, join123KK).length >= 2) ? true: false;
                         
-                        let isWinGS = (LotteryHelper.checkSame(arrBet, data.result.giainhat).length >= 1) ? true: false;
+                        const isWinGS = (LotteryHelper.checkSame(arrBet, data.result.giainhat).length >= 1) ? true: false;
                         const join23KK = data.result.giainhi.concat(data.result.giaiba).concat(data.result.giaikhuyenkhich);
-                        let isWinGBay = (LotteryHelper.checkSame(arrBet, join23KK).length >= 1) ? true: false;
+                        const isWinGBay = (LotteryHelper.checkSame(arrBet, join23KK).length >= 1) ? true: false;
 
                         if(isWinGN || isWinGNhi || isWinGBa || isWinGT || isWinGNam || isWinGS || isWinGBay) isWin = true;
 
@@ -751,9 +751,9 @@ const updateResult = async (game: string, data: any) => {
                                 const arrBet = i.number;
                                 const numBet = i.number[0];
                             
-                                let isWinGN = (numBet == data.result.giainhat[0]) ? true: false;
-                                let isWinGNhi = (LotteryHelper.checkSame(arrBet, data.result.giainhi).length >= 1) ? true: false;
-                                let isWinGBa = (LotteryHelper.checkSame(arrBet, data.result.giaiba).length >= 1) ? true: false;
+                                const isWinGN = (numBet == data.result.giainhat[0]) ? true: false;
+                                const isWinGNhi = (LotteryHelper.checkSame(arrBet, data.result.giainhi).length >= 1) ? true: false;
+                                const isWinGBa = (LotteryHelper.checkSame(arrBet, data.result.giaiba).length >= 1) ? true: false;
                             
 
                                 if(isWinGN || isWinGNhi || isWinGBa) isWin = true;
