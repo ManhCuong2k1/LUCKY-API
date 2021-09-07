@@ -38,10 +38,21 @@ router.get("/", async (req: Request, res: Response) => {
                 ],
             }
         });
+
+        const rechargeStatus = await SettingsModel.findAll({
+            where: {
+                [Op.or]: [
+                    { key: "recharge_momo_status" }, 
+                    { key: "recharge_vnpay_status" },
+                    { key: "recharge_bank_status" },
+                ],
+            }
+        });
         res.send({data: {
             minLimit: dataLimitMin,
             maxLimit: dataLimitMax,
             storageFee: dataStorageFee,
+            statusRecharge: rechargeStatus,
         }});
         
     } catch (error) {
@@ -121,6 +132,18 @@ router.post("/", async (req: Request, res: Response) => {
                 key: "ticket_storage_fee",
                 value: req.body.ticket_storage_fee
             },
+            {
+                key: "recharge_momo_status",
+                value: req.body.recharge_momo_status
+            },
+            {
+                key: "recharge_vnpay_status",
+                value: req.body.recharge_vnpay_status
+            },
+            {
+                key: "recharge_bank_status",
+                value: req.body.recharge_bank_status
+            },
             
         ];
         const data = await SettingsModel.bulkCreate(limitExchange);
@@ -177,12 +200,15 @@ router.put("/", async (req: Request, res: Response) => {
         data.forEach((element: any) => {
             const dataUpdateMax = dataSetting.maxLimit.find((max: any) => max.id === element.id);
             const dataUpdateMin = dataSetting.minLimit.find((min: any) => min.id === element.id);
+            const dataStatusRecharge = dataSetting.statusRecharge.find((min: any) => min.id === element.id);
             
             if(dataUpdateMax) {
                 element.value = dataUpdateMax.value;
             } else if(dataUpdateMin) {
                 element.value = dataUpdateMin.value;
-            } else {
+            } else if(dataStatusRecharge) {
+                element.value = dataStatusRecharge.value;
+            }else {
                 element.value = dataSetting.storageFee.value;
             }
             element.save();
