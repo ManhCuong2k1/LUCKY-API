@@ -178,7 +178,7 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
 
         switch (req.params.type) {
             case "keno":
-    
+                /* eslint-disable */
                 const nextRoundTime = helper.roundingTime().format("x");
 
                 const KenoRoundDB = await LotteryPeriodsModel.findOne({
@@ -204,7 +204,7 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
                         }
                     });
                 }
-
+                /* eslint-enable */
                 break;
 
             case "power":

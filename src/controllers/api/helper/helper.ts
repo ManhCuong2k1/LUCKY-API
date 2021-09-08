@@ -61,7 +61,7 @@ const addMinuteToTime = (time: any, minutes: number) => {
 };
 
 const roundingTime = () => {
-    let currentTime = moment();
+    const currentTime = moment();
     const minute = currentTime.minute();
     if (minute < 10) {
         currentTime.set("minute", 10);
@@ -74,13 +74,13 @@ const roundingTime = () => {
     } else if (minute < 50) {
         currentTime.set("minute", 50);
     } else if (minute < 60) {
-        currentTime.add(1, 'hours');
+        currentTime.add(1, "hours");
         currentTime.set("minute", 0);
     }
     currentTime.set("second", 0);
     currentTime.set("millisecond", 0);
     return currentTime;
-}
+};
 
 const getTimeData = (string: string) => {
     // format 2021/07/24 17:45:00

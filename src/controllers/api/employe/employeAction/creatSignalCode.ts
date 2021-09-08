@@ -234,15 +234,15 @@ export const creatSignalCode = async (type: string, preriod: number, totalPrice:
                     for (const num of stringNumber) TicketPrinter.push(num);
                     TicketPrinter.push(data.price);
                     TicketPrinter.push("arrowdown");
-
                 }
 
-                const lastRound = await LotteryResultsGetLastRound(LotteryTicketModel.GAME_ENUM.MAX3DPLUS);
+                const lastRound = await LotteryResultsGetLastRound(LotteryTicketModel.GAME_ENUM.MAX3D);
                 const numberChoose = Number(order.roundId) - Number(lastRound.round);
+
+                console.log(numberChoose);
 
                 TicketPrinter.push(helper.getCharFromNumBer(numberChoose - 1));
                 TicketPrinter.push("send");
-
             };
             
 
