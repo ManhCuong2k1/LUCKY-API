@@ -5,6 +5,7 @@ import { LotteryResultsModel } from "@models/LotteryResults";
 
 export const TaskKeno = async () => {
     try {
+        await Crawl.getKenoCrawlRound();
         const crawling = await Crawl.XosoKenoData();
         await updateTicket.updateResult(LotteryResultsModel.GAME_ENUM.KENO, crawling.data);
     } catch (e) {

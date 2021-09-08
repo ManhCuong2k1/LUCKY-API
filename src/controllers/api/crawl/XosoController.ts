@@ -1,14 +1,13 @@
 import express, { Response, Request } from "express";
 import Crawl from "./Crawl";
-import helper from "@controllers/api/helper/helper";
 import updateTicket from "../app/lottery/updateresult";
 import updateLoto from "../app/lottery/updateresultloto";
 import { LotteryResultsModel } from "@models/LotteryResults";
 import moment from "moment-timezone";
+import helper from "../helper/helper";
+import { LotteryPeriodsModel } from "@models/LotteryPeriod";
 moment.tz.setDefault("Asia/Ho_Chi_Minh");
 const router = express.Router();
-import sendMail from "@util/mailer";
-import { LotteryNotifyModel, UserNotifyAdd } from "@models/LotteryNotify";
 
 router.get("/", (req: Request, res: Response) => {
     res.status(403).send("403");
@@ -179,19 +178,33 @@ router.get("/get-round/:type", async (req: express.Request, res: Response) => {
 
         switch (req.params.type) {
             case "keno":
-                const getKenoRoud: any = await Crawl.getKenoCurrentRound();
-                const momentTime = moment(getKenoRoud.data.finish_time).format("X");
+    
+                const nextRoundTime = helper.roundingTime().format("x");
 
-                const datExport: any = {
-                    status: true,
-                    data: {
-                        current_round: getKenoRoud.data.current_round, // eslint-disable-line
-                        finish_time: Number(momentTime) * 1000 // eslint-disable-line
-                    },
-                    message: "success"
-                };
+                const KenoRoundDB = await LotteryPeriodsModel.findOne({
+                    where: {
+                        time: nextRoundTime
+                    }
+                });
 
-                res.send(datExport);
+                if(KenoRoundDB !== null) {
+                    res.json({
+                        status: true,
+                        data: {
+                            current_round: KenoRoundDB.roundId,
+                            finish_time: Number(KenoRoundDB.time)
+                        }
+                    });   
+                }else {
+                    res.json({
+                        status: true,
+                        data: {
+                            current_round: "00undefined",
+                            finish_time: Number(moment().format("x"))
+                        }
+                    });
+                }
+
                 break;
 
             case "power":

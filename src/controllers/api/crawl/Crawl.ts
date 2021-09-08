@@ -648,7 +648,6 @@ const XosoMax4dData = async () => {
 };
 
 
-
 const getKenoCurrentRound = async () => {
   try {
     const options = {
@@ -683,6 +682,50 @@ const getKenoCurrentRound = async () => {
 };
 
 
+const getKenoCrawlRound = async () => {
+  try {
+    const options = {
+      "method": "GET",
+      "rejectUnauthorized": false,
+      "url": "https://api.vietluck.vn/api/v1/product/6?t=" + helper.randomString(13),
+      "headers": {}
+    };
+    const dataResp = await request(options);
+    const objData = JSON.parse(dataResp);
+
+    const listRound: any = objData.term;
+
+    for(const round of listRound) {
+      const time = moment(round.date, ["DD-MM-YYYY h:mm:ss"]).format("x");
+      const roundId = round.termString.split("#")[1];
+
+      const roundDB = await LotteryPeriodsModel.findOne({
+        where: {
+          type: LotteryPeriodsModel.GAME_ENUM.KENO,
+          roundId
+        },
+        attributes: ["roundId", "type"] 
+      });
+
+      if(roundDB == null) {
+        const dataImport: any = {
+          type: LotteryPeriodsModel.GAME_ENUM.KENO,
+          roundId,
+          time
+        };
+        LotteryPeriodsModel.create(dataImport);
+      }
+    }
+
+  } catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      message: error.message
+    };
+  }
+
+};
 
 const XosoMienBac = async () => {
   try {
@@ -1243,6 +1286,7 @@ export default {
   XosoMax3dData,
   XosoMax4dData,
   getKenoCurrentRound,
+  getKenoCrawlRound,
   XosoMienBac,
   Xoso6x36,
   DienToan123,

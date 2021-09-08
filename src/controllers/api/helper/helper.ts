@@ -60,6 +60,28 @@ const addMinuteToTime = (time: any, minutes: number) => {
     return timeConverter(timeStamp);
 };
 
+const roundingTime = () => {
+    let currentTime = moment();
+    const minute = currentTime.minute();
+    if (minute < 10) {
+        currentTime.set("minute", 10);
+    } else if (minute < 20) {
+        currentTime.set("minute", 20);
+    } else if (minute < 30) {
+        currentTime.set("minute", 30);
+    } else if (minute < 40) {
+        currentTime.set("minute", 40);
+    } else if (minute < 50) {
+        currentTime.set("minute", 50);
+    } else if (minute < 60) {
+        currentTime.add(1, 'hours');
+        currentTime.set("minute", 0);
+    }
+    currentTime.set("second", 0);
+    currentTime.set("millisecond", 0);
+    return currentTime;
+}
+
 const getTimeData = (string: string) => {
     // format 2021/07/24 17:45:00
     return new Date(string);
@@ -239,6 +261,7 @@ export default {
     timeConverter,
     timeConverterNoChar,
     addMinuteToTime,
+    roundingTime,
     blockInPeriodTime,
     getTimeData,
     numberformat,
