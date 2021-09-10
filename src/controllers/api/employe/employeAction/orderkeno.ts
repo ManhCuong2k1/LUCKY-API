@@ -22,7 +22,6 @@ router.get("/get-last-orders", async (req: Request, res: Response) => {
                     exclude: [
                         "nickname",
                         "otpCode",
-                        "identify",
                         "fcmtoken",
                         "password",
                         "referrerId",
