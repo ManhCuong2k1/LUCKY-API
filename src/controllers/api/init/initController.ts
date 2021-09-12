@@ -3,7 +3,7 @@
 import { Response, Request, Router } from "express";
 import dotenv from "dotenv";
 import { Banner } from "@models/Banner";
-import { getSettings } from "@models/LotterySettings";
+import { getSettings, SettingsModel } from "@models/LotterySettings";
 
 
 dotenv.config();
@@ -17,7 +17,7 @@ router.get("/app-settings", async (req: Request, res: Response) => {
             [key: string]: any;
         }
         const dataExport: ExportInterface = {};
-        
+
         dataExport.appver = process.env.APP_VERSION || "1.0.0";
         dataExport.host = process.env.HOST;
         dataExport.images = {};
@@ -33,6 +33,25 @@ router.get("/app-settings", async (req: Request, res: Response) => {
                 image: process.env.HOST_IMAGES_EXPORT_URL + banner.image,
                 type: banner.type,
                 index: banner.index
+            });
+        });
+
+        dataExport.bank_rerchage_info = [];
+        const bankDB = await SettingsModel.findAll({
+            where: {
+                key: "bank_rerchage_info"
+            },
+            order: [["id", "ASC"]]
+        });
+
+        bankDB.forEach((bank: any) => {
+            const dataBank = JSON.parse(bank.value);
+            dataExport.bank_rerchage_info.push({
+                id: bank.id,
+                bank_user: dataBank.bank_user,
+                bank_name: dataBank.bank_name,
+                bank_number: dataBank.bank_number,
+                bank_branch: dataBank.bank_branch,
             });
         });
 
@@ -57,7 +76,7 @@ router.get("/app-settings", async (req: Request, res: Response) => {
         dataExport.recharge.momo_max = Number(await getSettings("recharge_momo_max"));
         dataExport.recharge.vnpay_min = Number(await getSettings("recharge_vnpay_min"));
         dataExport.recharge.vnpay_max = Number(await getSettings("recharge_vnpay_max"));
-        
+
         dataExport.ticket = {};
         dataExport.ticket.ticket_storage_fee = Number(await getSettings("ticket_storage_fee"));
 
@@ -70,7 +89,7 @@ router.get("/app-settings", async (req: Request, res: Response) => {
             data: dataExport,
             message: "Success"
         });
-    }catch (err) {
+    } catch (err) {
         console.log(err.message);
         res.json({
             status: false,
