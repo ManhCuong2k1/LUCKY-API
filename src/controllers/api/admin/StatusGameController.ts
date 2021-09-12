@@ -1,8 +1,9 @@
 import { Router, Request, Response } from "express";
 import { StatusGamesModel } from "@models/LotteryStatusGames";
+import { authAdmin } from "../../../middleware/auth";
 const router = Router();
 
-router.get("/", async (req: Request, res: Response) => {
+router.get("/", authAdmin, async (req: Request, res: Response) => {
     try {
         const statusGames = await StatusGamesModel.findAll();
         res.send({data: statusGames});
@@ -12,7 +13,7 @@ router.get("/", async (req: Request, res: Response) => {
     }
 });
 
-router.put("/", async (req: Request, res: Response) => {
+router.put("/", authAdmin, async (req: Request, res: Response) => {
     try {
         const dataStatusGame = req.body;
         const data: any = await StatusGamesModel.findAll();

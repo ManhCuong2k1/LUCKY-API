@@ -111,7 +111,7 @@ router.get("/detail/:id", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/", async (req: Request, res: Response) => {
+router.post("/", authAdmin, async (req: Request, res: Response) => {
   try {
     const user: UserInterface = req.body;
     if (!user.username || !user.password) {
