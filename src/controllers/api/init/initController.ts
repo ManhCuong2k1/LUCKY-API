@@ -49,7 +49,7 @@ router.get("/app-settings", async (req: Request, res: Response) => {
             dataExport.bank_rerchage_info.push({
                 id: bank.id,
                 bank_user: dataBank.bank_user,
-                bank_name: dataBank.bank_name,
+                bankcode: dataBank.bank_name.toUpperCase(),
                 bank_number: dataBank.bank_number,
                 bank_branch: dataBank.bank_branch,
             });
