@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import { SettingsModel } from "@models/LotterySettings";
 import { Op } from "sequelize";
+import { ERROR_CODES } from "@util/constants";
 const router = Router();
 
 router.get("/", async (req: Request, res: Response) => {
@@ -219,5 +220,44 @@ router.put("/", async (req: Request, res: Response) => {
         res.send(error);   
     }
 });
+
+router.post("/update-bank", async (req: Request, res: Response) => {
+    try {
+        /* eslint-disable */
+        const {
+            bank_user,
+            bank_name,
+            bank_number,
+            bank_branch
+        } = req.body;
+        /* eslint-enable */
+        if(bank_user == "" || bank_user == "undefined" || bank_user == null) throw new Error(ERROR_CODES.SomeErrorsOccurredPleaseTryAgain);
+        if(bank_name == "" || bank_name == "undefined" || bank_name == null) throw new Error(ERROR_CODES.SomeErrorsOccurredPleaseTryAgain);
+        if(bank_number == "" || bank_number == "undefined" || bank_number == null) throw new Error(ERROR_CODES.SomeErrorsOccurredPleaseTryAgain);
+        if(bank_branch == "" || bank_branch == "undefined" || bank_branch == null) throw new Error(ERROR_CODES.SomeErrorsOccurredPleaseTryAgain);
+
+        const importDB:any = {
+            bank_user,
+            bank_name,
+            bank_number,
+            bank_branch
+        }
+        const dataDB:any = {
+            key: "bank_rerchage_info",
+            value: JSON.stringify(importDB)
+        }
+        await SettingsModel.create(dataDB);
+
+        res.json({
+            status: true,
+            message: "Success"
+        })
+
+    }catch(e) {
+        console.log(e.message);
+        res.json({code: e.message});
+    }
+});
+
 
 export default router;
