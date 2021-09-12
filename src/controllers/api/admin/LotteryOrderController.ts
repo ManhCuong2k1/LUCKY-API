@@ -10,6 +10,7 @@ import { Op, Sequelize } from "sequelize";
 import moment from "moment-timezone";
 moment.tz.setDefault("Asia/Ho_Chi_Minh");
 import { uploadFile } from "../../../middleware/file";
+import { authEmploye, authAdmin } from "../../../middleware/auth";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const readXlsxFile = require("read-excel-file/node");
 import path from "path";
@@ -17,7 +18,7 @@ const router = Router();
 
 // Lấy danh sách vé Vietlott
 
-router.get("/vietlott", async (req: Request, res: Response) => {
+router.get("/vietlott", authEmploye, async (req: Request, res: Response) => {
     try {
         const page: number = parseInt(req.query.page ? req.query.page.toString() : "1");
         const pageSize: number = parseInt(req.query.pageSize ? req.query.pageSize.toString() : "20");
@@ -106,7 +107,7 @@ router.get("/vietlott", async (req: Request, res: Response) => {
 
 // Lấy danh sách vé Dien toan
 
-router.get("/computer", async (req: Request, res: Response) => {
+router.get("/computer", authEmploye, async (req: Request, res: Response) => {
     try {
         const page: number = parseInt(req.query.page ? req.query.page.toString() : "1");
         const pageSize: number = parseInt(req.query.pageSize ? req.query.pageSize.toString() : "20");
@@ -194,7 +195,7 @@ router.get("/computer", async (req: Request, res: Response) => {
 
 // Lấy danh sách vé Kien thiet
 
-router.get("/construction", async (req: Request, res: Response) => {
+router.get("/construction", authEmploye, async (req: Request, res: Response) => {
     try {
         const page: number = parseInt(req.query.page ? req.query.page.toString() : "1");
         const pageSize: number = parseInt(req.query.pageSize ? req.query.pageSize.toString() : "20");
@@ -275,7 +276,7 @@ router.get("/construction", async (req: Request, res: Response) => {
 
 // Lấy vé theo id
 
-router.get("/detail/:id", async (req: Request, res: Response) => {
+router.get("/detail/:id", authEmploye, async (req: Request, res: Response) => {
     try {
         const idTicket = req.params.id;
         const ticketDetail = await LotteryTicketModel.findOne({
@@ -314,7 +315,7 @@ router.get("/detail/:id", async (req: Request, res: Response) => {
 
 // post ảnh theo id vé
 
-router.post("/:id/images", async (req: Request, res: Response) => {
+router.post("/:id/images", authEmploye, async (req: Request, res: Response) => {
     try {
 
         const imageBefore = req.body.imageBefore;
@@ -370,7 +371,7 @@ router.post("/:id/images", async (req: Request, res: Response) => {
 });
 
 // update images
-router.put("/updateImage/:id", async (req: Request, res: Response) => {
+router.put("/updateImage/:id", authEmploye, async (req: Request, res: Response) => {
     try {
         const idTicket = req.params.id;
         const imageBefore = req.body.imageBefore;
@@ -423,7 +424,7 @@ router.put("/updateImage/:id", async (req: Request, res: Response) => {
 });
 
 // Huy ve
-router.post("/:id", async (req: Request, res: Response) => {
+router.post("/:id", authEmploye, async (req: Request, res: Response) => {
     try {
         const ticketId = req.params.id;
         const ticketDetail: any = await LotteryTicketModel.findOne({
@@ -511,7 +512,7 @@ router.post("/excel/upload", uploadFile.single("file"), async (req: Request, res
 });
 
 // update date vao trong db 
-router.post("/date/upload", async (req: Request, res: Response) => {
+router.post("/date/upload", authEmploye, async (req: Request, res: Response) => {
     try {
         const data = await LotteryNumbersModel.findAll({
             where: {    
@@ -539,7 +540,7 @@ router.post("/date/upload", async (req: Request, res: Response) => {
       }
 });
 
-router.put("/:id", async (req: Request, res: Response) => {
+router.put("/:id", authEmploye, async (req: Request, res: Response) => {
     try {
         const idTicket = req.params.id;
 

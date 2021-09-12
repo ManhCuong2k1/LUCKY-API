@@ -2,13 +2,14 @@ import express, { Response, Request } from "express";
 import { UserModel } from "@models/User";
 import { LotteryExchangesModel } from "@models/LotteryExchanges";
 import { GridInterface } from "@models/Transformers/Grid";
+import { authAdmin } from "../../../middleware/auth";
 import moment from "moment-timezone";
 moment.tz.setDefault("Asia/Ho_Chi_Minh");
 import { col, fn, Op } from "sequelize";
 
 const router = express.Router();
 
-router.get("/", async (req: Request, res: Response) => {
+router.get("/", authAdmin, async (req: Request, res: Response) => {
     try {
         const page: number = parseInt(req.query.page ? req.query.page.toString() : "1");
         const pageSize: number = parseInt(req.query.pageSize ? req.query.pageSize.toString() : "20");
@@ -61,7 +62,7 @@ router.get("/", async (req: Request, res: Response) => {
     }
 });
 
-router.put("/:id", async (req: Request, res: Response) => {
+router.put("/:id", authAdmin, async (req: Request, res: Response) => {
     try {
         const id = req.params.id;
         const dataExchange = await LotteryExchangesModel.findByPk(id);

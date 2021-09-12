@@ -1,9 +1,10 @@
 import { Router, Request, Response } from "express";
 import { SettingsModel } from "@models/LotterySettings";
+import { authAdmin } from "../../../middleware/auth";
 import { Op } from "sequelize";
 const router = Router();
 
-router.get("/", async (req: Request, res: Response) => {
+router.get("/", authAdmin, async (req: Request, res: Response) => {
     try {
         const dataLimitMin = await SettingsModel.findAll({
             where: {
@@ -60,7 +61,7 @@ router.get("/", async (req: Request, res: Response) => {
     }
 });
 
-router.get("/hotline", async (req: Request, res: Response) => {
+router.get("/hotline", authAdmin, async (req: Request, res: Response) => {
     try {
         const dataHotline = await SettingsModel.findOne({
             where: {
@@ -77,7 +78,7 @@ router.get("/hotline", async (req: Request, res: Response) => {
     }
 });
 
-router.post("/", async (req: Request, res: Response) => {
+router.post("/", authAdmin, async (req: Request, res: Response) => {
     try {
         const limitExchange: any = [
             {
@@ -152,7 +153,7 @@ router.post("/", async (req: Request, res: Response) => {
         res.send(error);   
     }
 });
-router.post("/hotline", async (req: Request, res: Response) => {
+router.post("/hotline", authAdmin, async (req: Request, res: Response) => {
     try {
         const hotLine: any = 
             {
@@ -166,7 +167,7 @@ router.post("/hotline", async (req: Request, res: Response) => {
     }
 });
 
-router.put("/hotline", async (req: Request, res: Response) => {
+router.put("/hotline", authAdmin, async (req: Request, res: Response) => {
     try {
         const hotline = req.body.hot_line;
         const data = await SettingsModel.findOne({
@@ -186,7 +187,7 @@ router.put("/hotline", async (req: Request, res: Response) => {
     }
 });
 
-router.put("/", async (req: Request, res: Response) => {
+router.put("/", authAdmin, async (req: Request, res: Response) => {
     try {
         const dataSetting = req.body;
         const data: any = await SettingsModel.findAll({

@@ -1,13 +1,14 @@
 import { Router, Request, Response } from "express";
 import { LotteryStoragesModel } from "@models/LotteryStorage";
 import { GridInterface } from "@models/Transformers/Grid";
+import { authAdmin } from "../../../middleware/auth";
 import { Op } from "sequelize";
 import moment from "moment-timezone";
 moment.tz.setDefault("Asia/Ho_Chi_Minh");
 const router = Router();
 
 
-router.get("/", async (req: Request, res: Response) => {
+router.get("/", authAdmin, async (req: Request, res: Response) => {
     try {
         const page: number = parseInt(req.query.page ? req.query.page.toString() : "1");
         const pageSize: number = parseInt(req.query.pageSize ? req.query.pageSize.toString() : "20");
