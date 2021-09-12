@@ -2,9 +2,10 @@ import express, { Response, Request } from "express";
 import { AdminInterface, AdminModel } from "@models/Admin";
 import { excludeFields } from "@util/convert";
 import { GridInterface } from "@models/Transformers/Grid";
+import { authAdmin } from "../../../middleware/auth";
 const router = express.Router();
 
-router.get("/", async (req: Request, res: Response) => {
+router.get("/", authAdmin, async (req: Request, res: Response) => {
   try {
     const query = req.query;
     const page: number = parseInt(!!query.page ? query.page.toString() : "1");
@@ -37,7 +38,7 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/:id", async (req: Request, res: Response) => {
+router.get("/:id", authAdmin, async (req: Request, res: Response) => {
   try {
     const admin = await AdminModel.findByPk(req.params.id);
     const jsonAdmin: any = admin.toJSON();
@@ -50,7 +51,7 @@ router.get("/:id", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/", async (req: Request, res: Response) => {
+router.post("/", authAdmin, async (req: Request, res: Response) => {
   try {
     const admin: AdminModel = req.body;
     if (!admin.username || !admin.password) {
@@ -69,7 +70,7 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-router.put("/:id", async (req: Request, res: Response) => {
+router.put("/:id", authAdmin, async (req: Request, res: Response) => {
   try {
     const updateAdmin = req.body;
     const admin: any = await AdminModel.findByPk(req.params.id);

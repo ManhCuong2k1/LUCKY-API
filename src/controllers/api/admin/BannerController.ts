@@ -1,7 +1,6 @@
 import { Banner } from "@models/Banner";
 import express, { Response, Request } from "express";
-import { GridInterface } from "@models/Transformers/Grid";
-import { Op } from "sequelize";
+import { authAdmin } from "../../../middleware/auth";
 
 const router = express.Router();
 
@@ -9,7 +8,7 @@ const router = express.Router();
  * Thêm mới banner
  */
 
-router.post("/", async (req: Request, res: Response) => {
+router.post("/", authAdmin, async (req: Request, res: Response) => {
     try {
         const banners: any[] = req.body.banners;
         await Banner.destroy({ truncate: true });
@@ -22,7 +21,7 @@ router.post("/", async (req: Request, res: Response) => {
     }
 });
 
-router.get("/", async (req: Request, res: Response) => {
+router.get("/", authAdmin, async (req: Request, res: Response) => {
     try {
         const dataBanner = await Banner.findAll({
             order: [
