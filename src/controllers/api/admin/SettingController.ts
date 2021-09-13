@@ -222,6 +222,110 @@ router.put("/", authAdmin, async (req: Request, res: Response) => {
     }
 });
 
+router.get("/bank", authAdmin, async (req: Request, res: Response) => {
+    try {
+        const dataBank = await SettingsModel.findAll({
+            where: {
+                key: "bank_rerchage_info"
+            }
+        });
+        /* eslint-disable */
+        if(dataBank) {
+            const bankUser: any[] = []; 
+            dataBank.forEach((e) =>  {
+                const data = JSON.parse(e.value);
+                
+                const bankAccount = {
+                    id: e.id,
+                    bank_user: data.bank_user,
+                    bank_name: data.bank_name,
+                    bank_number: data.bank_number,
+                    bank_branch: data.bank_branch
+                };
+                bankUser.push(bankAccount);
+            });
+
+            res.send(bankUser);
+        } else {
+            res.send({data: null});
+        }
+    } catch (error) {
+        res.send(error);   
+    }
+});
+
+router.get("/bank/:id", authAdmin, async (req: Request, res: Response) => {
+    try {
+        /* eslint-disable */
+        const id = req.params.id;
+        const dataBank = await SettingsModel.findByPk(id);
+        if(dataBank) {
+            const data = JSON.parse(dataBank.value);
+                
+            const bankAccount = {
+                id: dataBank.id,
+                bank_user: data.bank_user,
+                bank_name: data.bank_name,
+                bank_number: data.bank_number,
+                bank_branch: data.bank_branch
+            };
+
+            res.send(bankAccount);
+        } else {
+            res.send({data: null});
+        }
+    } catch (error) {
+        res.send(error);   
+    }
+});
+
+router.put("/bank/:id", authAdmin, async (req: Request, res: Response) => {
+    try {
+        /* eslint-disable */
+        const id = req.params.id;
+        const {
+            bank_user,
+            bank_name,
+            bank_number,
+            bank_branch
+        } = req.body;
+        const dataBank = await SettingsModel.findByPk(id);
+        
+        if(dataBank) {
+            const importDB:any = {
+                bank_user,
+                bank_name,
+                bank_number,
+                bank_branch,
+            };
+            const dataUpdate = JSON.stringify(importDB);
+            dataBank.value = dataUpdate;
+            await dataBank.save();
+            res.send(dataBank);
+        } else {
+            res.send({data: null});
+        }
+    } catch (error) {
+        res.send(error);   
+    }
+});
+
+router.delete("/bank/:id", authAdmin, async (req: Request, res: Response) => {
+    try {
+        /* eslint-disable */
+        const id = req.params.id;
+        const dataBank = await SettingsModel.destroy({
+            where: {
+                id: id
+            },
+            force: true
+        });
+        res.send({status: true});
+    } catch (error) {
+        res.send(error);   
+    }
+});
+
 router.post("/update-bank", async (req: Request, res: Response) => {
     try {
         /* eslint-disable */

@@ -28,9 +28,11 @@ const SettingsDefine = {
 };
 
 SettingsModel.init(SettingsDefine, {
+    paranoid: true,
     tableName: "lottery_settings",
     updatedAt: "updatedAt",
     createdAt: "createdAt",
+    deletedAt: "deletedAt",
     sequelize,
 });
 
