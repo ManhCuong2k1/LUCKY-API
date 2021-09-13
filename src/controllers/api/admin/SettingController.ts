@@ -231,7 +231,7 @@ router.post("/update-bank", async (req: Request, res: Response) => {
             bank_number,
             bank_branch
         } = req.body;
-        /* eslint-enable */
+        
         if(bank_user == "" || bank_user == "undefined" || bank_user == null) throw new Error(ERROR_CODES.SomeErrorsOccurredPleaseTryAgain);
         if(bank_name == "" || bank_name == "undefined" || bank_name == null) throw new Error(ERROR_CODES.SomeErrorsOccurredPleaseTryAgain);
         if(bank_number == "" || bank_number == "undefined" || bank_number == null) throw new Error(ERROR_CODES.SomeErrorsOccurredPleaseTryAgain);
@@ -253,6 +253,7 @@ router.post("/update-bank", async (req: Request, res: Response) => {
             status: true,
             message: "Success"
         })
+        /* eslint-enable */
 
     }catch(e) {
         console.log(e.message);
